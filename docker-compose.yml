@@ -1,0 +1,45 @@
+version: '3.7'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "8701:80"
+      - "4701:443"
+    volumes:
+      - ./docker/nginx/hosts:/etc/nginx/conf.d
+      - ./src:/var/www
+      - ./logs/nginx/:/var/log/nginx:cached
+    depends_on:
+      - php
+  php:
+    build:
+      context: ./
+      dockerfile: ./docker/php/Dockerfile
+    container_name: auth_service_app
+    user: "${UID}"
+    volumes:
+      - ./src:/var/www
+      - ./data/composer:/.composer
+      - ./logs/symfony:/var/www/var/logs:cached
+    depends_on:
+      - mysql
+      - redis
+  redis:
+    image: redis:latest
+    container_name: auth_service_redis
+    ports:
+      - "6310:6379"
+
+  mysql:
+    image: mysql:8.3.0
+    platform: linux/x86_64
+    container_name: auth_service_db
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: auth_service_db
+    ports:
+      - "8910:3306"
+    volumes:
+      - ./data/mysql:/var/lib/mysql
