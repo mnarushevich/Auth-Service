@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\ResponseStatus;
 use App\Models\User;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -54,7 +55,7 @@ class AuthController extends Controller implements HasMiddleware
      *     @OA\Response(response=400, description="Bad request")
      * )
      */
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'email' => 'required|email',
@@ -87,7 +88,7 @@ class AuthController extends Controller implements HasMiddleware
      *     @OA\Response(response=401, description="Unauthenticated")
      * )
      */
-    public function me()
+    public function me(): JsonResponse
     {
         return response()->json([
             'user' => Auth::user(),
@@ -108,12 +109,17 @@ class AuthController extends Controller implements HasMiddleware
      *     @OA\Response(response=401, description="Unauthenticated")
      * )
      */
-    public function logout()
+    public function logout(): JsonResponse
     {
         JWTAuth::invalidate(JWTAuth::getToken());
         Auth::logout();
 
-        return response()->json(['status' => ResponseStatus::HTTP_OK->value, 'message' => 'Successfully logged out.']);
+        return response()->json(
+            [
+                'status' => ResponseStatus::HTTP_OK->value,
+                'message' => 'Successfully logged out.',
+            ]
+        );
     }
 
     /**
@@ -129,12 +135,12 @@ class AuthController extends Controller implements HasMiddleware
      *     @OA\Response(response=401, description="Unauthenticated")
      * )
      */
-    public function refresh()
+    public function refresh(): JsonResponse
     {
         return $this->respondWithToken(Auth::refresh());
     }
 
-    protected function respondWithToken($token)
+    protected function respondWithToken($token): JsonResponse
     {
         return response()->json([
             'access_token' => $token,
