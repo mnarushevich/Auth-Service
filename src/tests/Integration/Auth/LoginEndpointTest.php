@@ -5,56 +5,48 @@ declare(strict_types=1);
 namespace Tests\Integration\Auth;
 
 use App\Enums\ResponseStatus;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\Fluent\AssertableJson;
+use tests\Integration\BaseWebTestCase;
 
-class LoginEndpointTest extends BaseWebTestCase
-{
-    use RefreshDatabase;
-    private const array PAYLOAD = ['email' => 'test@test.com', 'password' => 'pass'];
+describe('POST /auth/login', function () {
+    it('rejects login for invalid credentials', function () {
+        $this->postJson(
+            getUrl(BaseWebTestCase::LOGIN_ROUTE_NAME),
+            ['email' => 'email@test.com', 'password' => $this->mockPass]
+        )
+            ->assertStatus(ResponseStatus::UNAUTHORIZED->value)
+            ->assertJson(
+                [
+                    'status'  => ResponseStatus::UNAUTHORIZED->value,
+                    'message' => 'Unauthenticated.',
+                ]
+            );
+    });
 
-    public function setUp(): void
-    {
-        parent::setUp();
+    it('rejects login for empty email', function () {
+        $this->postJson(
+            getUrl(BaseWebTestCase::LOGIN_ROUTE_NAME),
+            ['email' => '', 'password' => $this->mockPass]
+        )
+            ->assertStatus(ResponseStatus::HTTP_BAD_REQUEST->value)
+            ->assertJson(
+                [
+                    'status'  => ResponseStatus::HTTP_BAD_REQUEST->value,
+                    'message' => 'The email field is required.'
+                ]
+            );
+    });
 
-        User::factory()->create([
-            'first_name' => 'Test',
-            'last_name' => 'User',
-            'email' => 'test@test.com',
-            'password' => Hash::make('pass'),
-        ]);
-    }
 
-    public function testUnauthorizedResponse(): void
-    {
-        $response = $this->post(
-            $this->getUrl(self::LOGIN_ROUTE_NAME),
-            ['email' => 'email@test.com', 'password' => 'password']
-        );
+    it('login with correct payload', function () {
+        $this->postJson(
+            getUrl(BaseWebTestCase::LOGIN_ROUTE_NAME),
+            ['email' => $this->user->email, 'password' => $this->mockPass]
+        )
+            ->assertOk()
+            ->assertJson(fn(AssertableJson $json) => $json->hasAll(['access_token', 'token_type', 'expires_in']))
+            ->assertJsonPath('token_type', 'bearer')
+            ->assertJsonPath('expires_in', 3600);
+    });
+})->group('auth', 'login');
 
-        $response->assertJson(['status' => ResponseStatus::UNAUTHORIZED->value, 'message' => 'Unauthenticated.']);
-        $response->assertStatus(ResponseStatus::UNAUTHORIZED->value);
-    }
-
-    public function testValidationResponse(): void
-    {
-        $response = $this->post($this->getUrl(self::LOGIN_ROUTE_NAME), ['email' => '', 'password' => 'pass']);
-
-        $response->assertJson(
-            ['status' => ResponseStatus::HTTP_BAD_REQUEST->value, 'message' => 'The email field is required.']
-        );
-        $response->assertStatus(ResponseStatus::HTTP_BAD_REQUEST->value);
-    }
-
-    public function testSuccessResponse(): void
-    {
-        $response = $this->post($this->getUrl(self::LOGIN_ROUTE_NAME), self::PAYLOAD);
-
-        $responseContent = $this->getResponseData($response);
-        $this->assertArrayHasKey('access_token', $responseContent);
-        $this->assertEquals('bearer', $responseContent['token_type']);
-        $this->assertEquals(3600, $responseContent['expires_in']);
-        $response->assertOk();
-    }
-}

@@ -5,37 +5,37 @@ declare(strict_types=1);
 namespace Tests\Integration\Auth;
 
 use App\Enums\ResponseStatus;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\Fluent\AssertableJson;
+use tests\Integration\BaseWebTestCase;
 
-class AuthUserInfoEndpointTest extends BaseWebTestCase
-{
-    use RefreshDatabase;
 
-    public function setUp(): void
-    {
-        parent::setUp();
+describe('POST /auth/me', function () {
+    it('rejects auth user data for unauthenticated', function () {
+        $this->postJson(getUrl(BaseWebTestCase::USER_INFO_ROUTE_NAME))
+            ->assertStatus(ResponseStatus::UNAUTHORIZED->value)
+            ->assertJson(
+                [
+                    'status'  => ResponseStatus::UNAUTHORIZED->value,
+                    'message' => 'Unauthenticated.',
+                ]
+            );
+    });
 
-        User::factory()->create(['email' => 'test@test.com', 'password' => Hash::make('pass')]);
-    }
+    it('gets auth user data for authenticated', function () {
+        $response = $this->postJson(
+            getUrl(BaseWebTestCase::LOGIN_ROUTE_NAME),
+            ['email' => $this->user->email, 'password' => $this->mockPass]
+        )->decodeResponseJson();
 
-    public function testUnauthorizedResponse(): void
-    {
-        $response = $this->post($this->getUrl(self::USER_INFO_ROUTE_NAME));
+        $this->postJson(
+            getUrl(BaseWebTestCase::USER_INFO_ROUTE_NAME),
+            headers: ['Authorization' => sprintf('Bearer %s', $response['access_token'])]
+        )
+            ->assertOk()
+            ->assertJson(fn(AssertableJson $json) => $json->hasAll(['user', 'payload']))
+            ->assertJsonPath('user.uuid', $this->user->uuid)
+            ->assertJsonPath('user.email', $this->user->email)
+            ->assertJsonPath('payload.userUuid', $this->user->uuid);
+    });
+})->group('auth');
 
-        $response->assertJson(['status' => ResponseStatus::UNAUTHORIZED->value, 'message' => 'Unauthenticated.']);
-        $response->assertStatus(ResponseStatus::UNAUTHORIZED->value);
-    }
-
-    public function testSuccessResponse(): void
-    {
-        $response = $this->post($this->getUrl(self::LOGIN_ROUTE_NAME), ['email' => 'test@test.com', 'password' => 'pass']);
-        $response = $this->post(
-            $this->getUrl(self::USER_INFO_ROUTE_NAME),
-            headers: ['Authorization' => sprintf('Bearer %s', $this->getResponseData($response)['access_token'])]
-        );
-
-        $response->assertOk();
-    }
-}
