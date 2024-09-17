@@ -17,7 +17,7 @@ describe('POST /auth/login', function () {
             ->assertStatus(ResponseStatus::UNAUTHORIZED->value)
             ->assertJson(
                 [
-                    'status'  => ResponseStatus::UNAUTHORIZED->value,
+                    'status' => ResponseStatus::UNAUTHORIZED->value,
                     'message' => 'Unauthenticated.',
                 ]
             );
@@ -31,12 +31,11 @@ describe('POST /auth/login', function () {
             ->assertStatus(ResponseStatus::HTTP_BAD_REQUEST->value)
             ->assertJson(
                 [
-                    'status'  => ResponseStatus::HTTP_BAD_REQUEST->value,
-                    'message' => 'The email field is required.'
+                    'status' => ResponseStatus::HTTP_BAD_REQUEST->value,
+                    'message' => 'The email field is required.',
                 ]
             );
     });
-
 
     it('login with correct payload', function () {
         $this->postJson(
@@ -44,9 +43,8 @@ describe('POST /auth/login', function () {
             ['email' => $this->user->email, 'password' => $this->mockPass]
         )
             ->assertOk()
-            ->assertJson(fn(AssertableJson $json) => $json->hasAll(['access_token', 'token_type', 'expires_in']))
+            ->assertJson(fn (AssertableJson $json) => $json->hasAll(['access_token', 'token_type', 'expires_in']))
             ->assertJsonPath('token_type', 'bearer')
             ->assertJsonPath('expires_in', 3600);
     });
 })->group('auth', 'login');
-

@@ -28,6 +28,7 @@ class UserController extends Controller implements HasMiddleware
      *     operationId="usersList",
      *     tags={"Users"},
      *     security={{"bearerAuth":{}}},
+     *
      *     @OA\Response(response=200, description="Successful operation"),
      *     @OA\Response(response=401, description="Unauthenticated")
      * )
@@ -45,12 +46,16 @@ class UserController extends Controller implements HasMiddleware
      *     operationId="usersCreate",
      *     tags={"Users"},
      *     security={{"bearerAuth":{}}},
+     *
      *     @OA\RequestBody(
+     *
      *         @OA\MediaType(
      *             mediaType="application/json",
+     *
      *             @OA\Schema(ref="#/components/schemas/CreateUser")
      *         )
      *     ),
+     *
      *     @OA\Response(response=200, description="Successful operation"),
      *     @OA\Response(response=401, description="Unauthenticated"),
      *     @OA\Response(response=400, description="Bad request")
@@ -65,7 +70,7 @@ class UserController extends Controller implements HasMiddleware
             'country' => $request->country,
             'phone' => $request->phone,
             'type' => $request->type ?? UserType::USER->value,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
         ]);
 
         return new UserResource($user);
@@ -78,17 +83,20 @@ class UserController extends Controller implements HasMiddleware
      *     description="Update user",
      *     operationId="usersShow",
      *     tags={"Users"},
+     *
      *     @OA\Parameter(
      *          name="uuid",
      *          description="User valid uuid",
      *          in = "path",
      *          required=true,
+     *
      *          @OA\Schema(
      *              type="string",
      *              format="uuid"
      *          )
      *      ),
      *     security={{"bearerAuth":{}}},
+     *
      *     @OA\Response(response=200, description="Successful operation"),
      *     @OA\Response(response=401, description="Unauthenticated"),
      *     @OA\Response(response=404, description="Not Found.")
@@ -107,12 +115,16 @@ class UserController extends Controller implements HasMiddleware
      *     operationId="usersUpdate",
      *     tags={"Users"},
      *     security={{"bearerAuth":{}}},
+     *
      *     @OA\RequestBody(
+     *
      *         @OA\MediaType(
      *             mediaType="application/json",
+     *
      *             @OA\Schema(ref="#/components/schemas/UpdateUser")
      *         )
      *     ),
+     *
      *     @OA\Response(response=200, description="Successful operation"),
      *     @OA\Response(response=401, description="Unauthenticated"),
      *     @OA\Response(response=400, description="Bad request")
@@ -137,17 +149,20 @@ class UserController extends Controller implements HasMiddleware
      *     description="Delete user",
      *     operationId="usersDelete",
      *     tags={"Users"},
+     *
      *     @OA\Parameter(
      *          name="uuid",
      *          description="User valid uuid",
      *          in = "path",
      *          required=true,
+     *
      *          @OA\Schema(
      *              type="string",
      *              format="uuid"
      *          )
      *      ),
      *     security={{"bearerAuth":{}}},
+     *
      *     @OA\Response(response=200, description="Successful operation"),
      *     @OA\Response(response=401, description="Unauthenticated"),
      *     @OA\Response(response=404, description="Not Found.")
@@ -158,7 +173,7 @@ class UserController extends Controller implements HasMiddleware
         $user->delete();
 
         return response()->json([
-            'status'  => 'ok',
+            'status' => 'ok',
             'message' => sprintf('User with uuid %s was deleted.', $user->uuid),
         ]);
     }

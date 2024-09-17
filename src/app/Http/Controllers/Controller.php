@@ -8,9 +8,11 @@ namespace App\Http\Controllers;
  *      title="Auth Service API",
  *      description="L5 Swagger OpenApi description"
  * )
+ *
  * @OA\Server(
  *      url="/api/v1",
  *  ),
+ *
  * @OA\SecurityScheme(
  *       securityScheme="bearerAuth",
  *       in="header",
@@ -20,6 +22,4 @@ namespace App\Http\Controllers;
  *       bearerFormat="JWT",
  *  )
  */
-abstract class Controller
-{
-}
+abstract class Controller {}

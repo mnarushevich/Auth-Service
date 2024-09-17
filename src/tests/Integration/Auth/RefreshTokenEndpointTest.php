@@ -14,7 +14,7 @@ describe('POST /auth/refresh', function () {
             ->assertStatus(ResponseStatus::UNAUTHORIZED->value)
             ->assertJson(
                 [
-                    'status'  => ResponseStatus::UNAUTHORIZED->value,
+                    'status' => ResponseStatus::UNAUTHORIZED->value,
                     'message' => 'Unauthenticated.',
                 ]
             );
@@ -31,7 +31,7 @@ describe('POST /auth/refresh', function () {
             headers: ['Authorization' => sprintf('Bearer %s', $response['access_token'])]
         )
             ->assertOk()
-            ->assertJson(fn(AssertableJson $json) => $json->hasAll(['access_token', 'token_type', 'expires_in']))
+            ->assertJson(fn (AssertableJson $json) => $json->hasAll(['access_token', 'token_type', 'expires_in']))
             ->assertJsonPath('token_type', 'bearer');
     });
 })->group('auth');

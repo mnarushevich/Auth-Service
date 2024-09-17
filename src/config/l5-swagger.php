@@ -5,7 +5,7 @@ return [
     'documentations' => [
         'default' => [
             'api' => [
-                'title' => 'Auth Service API'
+                'title' => 'Auth Service API',
             ],
 
             'routes' => [
