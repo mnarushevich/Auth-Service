@@ -1,24 +1,24 @@
 install_and_start:
-	docker-compose up -d
-	docker exec app_php php artisan key:generate
-	docker exec app_php php artisan jwt:secret --force
+	docker compose up -d
+	docker exec auth_service_app php artisan key:generate
+	docker exec auth_service_app php artisan jwt:secret --force
 
 start:
-	docker-compose up -d
+	docker compose up -d
 
 db-seed:
-	docker exec app_php php artisan db:seed
+	docker exec auth_service_app php artisan db:seed
 
 stop:
-	docker-compose down -v
+	docker compose down -v
 
 tests-setup:
-	docker exec app_php cp .env.testing.example .env.testing
-	docker exec app_php php artisan key:generate --env=testing
-	docker exec app_php php artisan jwt:secret --env=testing --force
+	docker exec auth_service_app cp .env.testing.example .env.testing
+	docker exec auth_service_app php artisan key:generate --env=testing
+	docker exec auth_service_app php artisan jwt:secret --env=testing --force
 
 tests:
-	docker exec app_php ./vendor/bin/phpunit
+	docker exec auth_service_app ./vendor/bin/pest
 
 api-docs-generate:
-	docker exec app_php php artisan l5-swagger:generate
+	docker exec auth_service_app php artisan l5-swagger:generate
