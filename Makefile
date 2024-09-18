@@ -6,6 +6,9 @@ install_and_start:
 start:
 	docker compose up -d
 
+rebuid:
+	docker compose up -d --no-deps --build app
+
 db-seed:
 	docker exec auth_service_app php artisan db:seed
 
