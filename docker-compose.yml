@@ -1,31 +1,22 @@
 version: '3.7'
 
 services:
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    ports:
-      - "8701:80"
-      - "4701:443"
-    volumes:
-      - ./docker/nginx/hosts:/etc/nginx/conf.d
-      - ./src:/var/www
-      - ./logs/nginx/:/var/log/nginx:cached
-    depends_on:
-      - php
-  php:
+  app:
     build:
       context: ./
-      dockerfile: ./docker/php/Dockerfile
+      dockerfile: ./docker/frankenphp/Dockerfile
     container_name: auth_service_app
+    entrypoint: php artisan octane:frankenphp --workers=1 --max-requests=1
     user: "${UID}"
     volumes:
-      - ./src:/var/www
+      - ./src:/app
       - ./data/composer:/.composer
-      - ./logs/symfony:/var/www/var/logs:cached
+    ports:
+      - "8701:8000"
     depends_on:
       - mysql
       - redis
+
   redis:
     image: redis:latest
     container_name: auth_service_redis
