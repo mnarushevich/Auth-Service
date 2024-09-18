@@ -6,17 +6,17 @@ namespace App\Exceptions;
 
 use App\Enums\ResponseStatus;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class ApiExceptionHandler
 {
-    static public function handle(Throwable $exception, Request $request): ?Response
+    public static function handle(Throwable $exception, Request $request): ?Response
     {
-        if (!$request->is('api/*')) {
+        if (! $request->is('api/*')) {
             return null;
         }
 

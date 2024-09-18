@@ -18,6 +18,9 @@ RUN docker-php-ext-enable redis
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+# Install Task
+RUN sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b "/usr/local/bin"
+
 # Set working directory PHP
 WORKDIR /var/www
 
@@ -28,6 +31,6 @@ COPY . /var/www
 # copy nginx config to image
 COPY ./docker/nginx/hosts/. /etc/nginx/conf.d
 
-RUN composer install
+RUN cd ./src && composer install --verbose
 
 CMD ["php-fpm"]

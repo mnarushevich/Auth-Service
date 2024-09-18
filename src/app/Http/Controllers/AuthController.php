@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\ResponseStatus;
 use App\Models\User;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -28,10 +29,14 @@ class AuthController extends Controller implements HasMiddleware
      *     description="Login user via email and password",
      *     operationId="authLogin",
      *     tags={"Auth"},
+     *
      *     @OA\RequestBody(
+     *
      *         @OA\MediaType(
      *             mediaType="application/json",
+     *
      *             @OA\Schema(
+     *
      *                 @OA\Property(
      *                     property="email",
      *                     type="string"
@@ -44,25 +49,26 @@ class AuthController extends Controller implements HasMiddleware
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(response=200, description="Successful operation"),
      *     @OA\Response(response=401, description="Unauthenticated"),
      *     @OA\Response(response=400, description="Bad request")
      * )
      */
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'email'    => 'required|email',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
 
         $user = User::whereEmail($validated['email'])->first();
 
-        if ($user === null || !Hash::check($validated['password'], $user->password)) {
-            throw new AuthenticationException();
+        if ($user === null || ! Hash::check($validated['password'], $user->password)) {
+            throw new AuthenticationException;
         }
 
-        if (!$token = Auth::claims(['userUuid' => $user->uuid])->attempt($validated)) {
+        if (! $token = Auth::claims(['userUuid' => $user->uuid])->attempt($validated)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -77,14 +83,15 @@ class AuthController extends Controller implements HasMiddleware
      *     operationId="authMe",
      *     tags={"Auth"},
      *     security={{"bearerAuth":{}}},
+     *
      *     @OA\Response(response=200, description="Successful operation"),
      *     @OA\Response(response=401, description="Unauthenticated")
      * )
      */
-    public function me()
+    public function me(): JsonResponse
     {
         return response()->json([
-            'user'    => Auth::user(),
+            'user' => Auth::user(),
             'payload' => Auth::payload(),
         ]);
     }
@@ -97,16 +104,22 @@ class AuthController extends Controller implements HasMiddleware
      *     operationId="authLogout",
      *     tags={"Auth"},
      *     security={{"bearerAuth":{}}},
+     *
      *     @OA\Response(response=200, description="Successful operation"),
      *     @OA\Response(response=401, description="Unauthenticated")
      * )
      */
-    public function logout()
+    public function logout(): JsonResponse
     {
         JWTAuth::invalidate(JWTAuth::getToken());
         Auth::logout();
 
-        return response()->json(['status' => ResponseStatus::HTTP_OK->value, 'message' => 'Successfully logged out.']);
+        return response()->json(
+            [
+                'status' => ResponseStatus::HTTP_OK->value,
+                'message' => 'Successfully logged out.',
+            ]
+        );
     }
 
     /**
@@ -117,21 +130,22 @@ class AuthController extends Controller implements HasMiddleware
      *     operationId="authRefresh",
      *     tags={"Auth"},
      *     security={{"bearerAuth":{}}},
+     *
      *     @OA\Response(response=200, description="Successful operation"),
      *     @OA\Response(response=401, description="Unauthenticated")
      * )
      */
-    public function refresh()
+    public function refresh(): JsonResponse
     {
         return $this->respondWithToken(Auth::refresh());
     }
 
-    protected function respondWithToken($token)
+    protected function respondWithToken($token): JsonResponse
     {
         return response()->json([
             'access_token' => $token,
-            'token_type'   => 'bearer',
-            'expires_in'   => Auth::factory()->getTTL() * 60
+            'token_type' => 'bearer',
+            'expires_in' => Auth::factory()->getTTL() * 60,
         ]);
     }
 }

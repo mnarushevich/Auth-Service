@@ -9,6 +9,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *     schema="CreateUser",
  *     title="Create User",
  *     required={"first_name", "email", "password"},
+ *
  * 	@OA\Property(
  *         property="first_name",
  *         type="string"
@@ -57,9 +58,9 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email'      => 'required|email|unique:users|max:255',
+            'email' => 'required|email|unique:users|max:255',
             'first_name' => 'required',
-            'password'   => 'required',
+            'password' => 'required',
         ];
     }
 }

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
  * @OA\Schema(
  *     schema="UpdateUser",
  *     title="Update User",
+ *
  * 	@OA\Property(
  *         property="first_name",
  *         type="string"

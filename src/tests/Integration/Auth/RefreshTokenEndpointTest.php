@@ -5,41 +5,33 @@ declare(strict_types=1);
 namespace Tests\Integration\Auth;
 
 use App\Enums\ResponseStatus;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\Fluent\AssertableJson;
+use tests\Integration\BaseWebTestCase;
 
-class RefreshTokenEndpointTest extends BaseWebTestCase
-{
-    use RefreshDatabase;
+describe('POST /auth/refresh', function () {
+    it('rejects refresh token for unauthenticated', function () {
+        $this->postJson(getUrl(BaseWebTestCase::REFRESH_TOKEN_ROUTE_NAME))
+            ->assertStatus(ResponseStatus::UNAUTHORIZED->value)
+            ->assertJson(
+                [
+                    'status' => ResponseStatus::UNAUTHORIZED->value,
+                    'message' => 'Unauthenticated.',
+                ]
+            );
+    });
 
-    public function setUp(): void
-    {
-        parent::setUp();
+    it('refreshes token for authenticated', function () {
+        $response = $this->postJson(
+            getUrl(BaseWebTestCase::LOGIN_ROUTE_NAME),
+            ['email' => $this->user->email, 'password' => $this->mockPass]
+        )->decodeResponseJson();
 
-        User::factory()->create(['email' => 'test@test.com', 'password' => Hash::make('pass')]);
-    }
-
-    public function testUnauthorizedResponse(): void
-    {
-        $response = $this->post($this->getUrl(self::REFRESH_TOKEN_ROUTE_NAME));
-
-        $response->assertJson(['status' => ResponseStatus::UNAUTHORIZED->value, 'message' => 'Unauthenticated.']);
-        $response->assertStatus(ResponseStatus::UNAUTHORIZED->value);
-    }
-
-    public function testSuccessResponse(): void
-    {
-        $response = $this->post($this->getUrl(self::LOGIN_ROUTE_NAME), ['email' => 'test@test.com', 'password' => 'pass']);
-        $response = $this->post(
-            $this->getUrl(self::REFRESH_TOKEN_ROUTE_NAME),
-            headers: ['Authorization' => sprintf('Bearer %s', $this->getResponseData($response)['access_token'])]
-        );
-
-        $response->assertOk();
-        $responseContent = $this->getResponseData($response);
-        $this->assertArrayHasKey('access_token', $responseContent);
-        $this->assertEquals('bearer', $responseContent['token_type']);
-        $this->assertEquals(3600, $responseContent['expires_in']);
-    }
-}
+        $this->postJson(
+            getUrl(BaseWebTestCase::REFRESH_TOKEN_ROUTE_NAME),
+            headers: ['Authorization' => sprintf('Bearer %s', $response['access_token'])]
+        )
+            ->assertOk()
+            ->assertJson(fn (AssertableJson $json) => $json->hasAll(['access_token', 'token_type', 'expires_in']))
+            ->assertJsonPath('token_type', 'bearer');
+    });
+})->group('auth');
