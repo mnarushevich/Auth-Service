@@ -16,7 +16,7 @@ describe('GET /users', function () {
             ->assertStatus(ResponseStatus::UNAUTHORIZED->value)
             ->assertJson(
                 [
-                    'status'  => ResponseStatus::UNAUTHORIZED->value,
+                    'status' => ResponseStatus::UNAUTHORIZED->value,
                     'message' => 'Unauthenticated.',
                 ]
             );

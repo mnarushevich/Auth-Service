@@ -15,7 +15,7 @@ describe('GET /users/{uuid}', function () {
             ->assertStatus(ResponseStatus::UNAUTHORIZED->value)
             ->assertJson(
                 [
-                    'status'  => ResponseStatus::UNAUTHORIZED->value,
+                    'status' => ResponseStatus::UNAUTHORIZED->value,
                     'message' => 'Unauthenticated.',
                 ]
             );
@@ -29,7 +29,7 @@ describe('GET /users/{uuid}', function () {
             ->assertStatus(ResponseStatus::NOT_FOUND->value)
             ->assertJson(
                 [
-                    'status'  => ResponseStatus::NOT_FOUND->value,
+                    'status' => ResponseStatus::NOT_FOUND->value,
                     'message' => 'Not found.',
                 ]
             );

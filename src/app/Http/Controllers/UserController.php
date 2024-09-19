@@ -57,7 +57,6 @@ class UserController extends Controller implements HasMiddleware
      *     ),
      *
      *     @OA\Response(response=200, description="Successful operation"),
-     *     @OA\Response(response=401, description="Unauthenticated"),
      *     @OA\Response(response=400, description="Bad request")
      * )
      */
@@ -127,7 +126,8 @@ class UserController extends Controller implements HasMiddleware
      *
      *     @OA\Response(response=200, description="Successful operation"),
      *     @OA\Response(response=401, description="Unauthenticated"),
-     *     @OA\Response(response=400, description="Bad request")
+     *     @OA\Response(response=400, description="Bad request"),
+     *     @OA\Response(response=404, description="Not Found.")
      * )
      */
     public function update(UpdateUserRequest $request, User $user)

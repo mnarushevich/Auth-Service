@@ -14,7 +14,7 @@ describe('POST /auth/me', function () {
             ->assertStatus(ResponseStatus::UNAUTHORIZED->value)
             ->assertJson(
                 [
-                    'status'  => ResponseStatus::UNAUTHORIZED->value,
+                    'status' => ResponseStatus::UNAUTHORIZED->value,
                     'message' => 'Unauthenticated.',
                 ]
             );
@@ -26,7 +26,7 @@ describe('POST /auth/me', function () {
             headers: getAuthorizationHeader($this->token),
         )
             ->assertOk()
-            ->assertJson(fn(AssertableJson $json) => $json->hasAll(['user', 'payload']))
+            ->assertJson(fn (AssertableJson $json) => $json->hasAll(['user', 'payload']))
             ->assertJsonPath('user.uuid', $this->user->uuid)
             ->assertJsonPath('user.email', $this->user->email)
             ->assertJsonPath('payload.userUuid', $this->user->uuid);

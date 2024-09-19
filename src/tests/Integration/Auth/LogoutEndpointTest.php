@@ -13,7 +13,7 @@ describe('POST /auth/me', function () {
             ->assertStatus(ResponseStatus::UNAUTHORIZED->value)
             ->assertJson(
                 [
-                    'status'  => ResponseStatus::UNAUTHORIZED->value,
+                    'status' => ResponseStatus::UNAUTHORIZED->value,
                     'message' => 'Unauthenticated.',
                 ]
             );
@@ -27,7 +27,7 @@ describe('POST /auth/me', function () {
             ->assertOk()
             ->assertJson(
                 [
-                    'status'  => ResponseStatus::HTTP_OK->value,
+                    'status' => ResponseStatus::HTTP_OK->value,
                     'message' => 'Successfully logged out.',
                 ]
             );
