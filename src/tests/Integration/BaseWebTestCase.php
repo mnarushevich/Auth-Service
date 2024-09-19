@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace tests\Integration;
+namespace Tests\Integration;
 
 use Tests\TestCase;
 

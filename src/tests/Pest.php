@@ -14,7 +14,7 @@
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
-use tests\Integration\BaseWebTestCase;
+use Tests\Integration\BaseWebTestCase;
 
 pest()->extend(BaseWebTestCase::class)
     ->use(RefreshDatabase::class)

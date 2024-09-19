@@ -6,7 +6,7 @@ install_and_start:
 start:
 	docker compose up -d
 
-rebuid:
+rebuild:
 	docker compose up -d --no-deps --build app
 
 db-seed:
