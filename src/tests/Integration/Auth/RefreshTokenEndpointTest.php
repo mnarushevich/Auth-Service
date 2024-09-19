@@ -14,24 +14,19 @@ describe('POST /auth/refresh', function () {
             ->assertStatus(ResponseStatus::UNAUTHORIZED->value)
             ->assertJson(
                 [
-                    'status' => ResponseStatus::UNAUTHORIZED->value,
+                    'status'  => ResponseStatus::UNAUTHORIZED->value,
                     'message' => 'Unauthenticated.',
                 ]
             );
     });
 
     it('refreshes token for authenticated', function () {
-        $response = $this->postJson(
-            getUrl(BaseWebTestCase::LOGIN_ROUTE_NAME),
-            ['email' => $this->user->email, 'password' => $this->mockPass]
-        )->decodeResponseJson();
-
         $this->postJson(
             getUrl(BaseWebTestCase::REFRESH_TOKEN_ROUTE_NAME),
-            headers: ['Authorization' => sprintf('Bearer %s', $response['access_token'])]
+            headers: getAuthorizationHeader($this->token),
         )
             ->assertOk()
-            ->assertJson(fn (AssertableJson $json) => $json->hasAll(['access_token', 'token_type', 'expires_in']))
+            ->assertJson(fn(AssertableJson $json) => $json->hasAll(['access_token', 'token_type', 'expires_in']))
             ->assertJsonPath('token_type', 'bearer');
-    });
+    })->group('with-auth');
 })->group('auth');

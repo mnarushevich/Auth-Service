@@ -9,6 +9,9 @@ start:
 rebuild:
 	docker compose up -d --no-deps --build app
 
+exec:
+	docker exec -it auth_service_app sh
+
 db-seed:
 	docker exec auth_service_app php artisan db:seed
 

@@ -16,7 +16,7 @@ class ApiExceptionHandler
 {
     public static function handle(Throwable $exception, Request $request): ?Response
     {
-        if (! $request->is('api/*')) {
+        if (!$request->is('api/*')) {
             return null;
         }
 

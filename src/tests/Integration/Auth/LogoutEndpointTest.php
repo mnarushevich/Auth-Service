@@ -13,28 +13,23 @@ describe('POST /auth/me', function () {
             ->assertStatus(ResponseStatus::UNAUTHORIZED->value)
             ->assertJson(
                 [
-                    'status' => ResponseStatus::UNAUTHORIZED->value,
+                    'status'  => ResponseStatus::UNAUTHORIZED->value,
                     'message' => 'Unauthenticated.',
                 ]
             );
     });
 
     it('logout user for authenticated', function () {
-        $response = $this->postJson(
-            getUrl(BaseWebTestCase::LOGIN_ROUTE_NAME),
-            ['email' => $this->user->email, 'password' => $this->mockPass]
-        )->decodeResponseJson();
-
         $this->postJson(
             getUrl(BaseWebTestCase::LOGOUT_ROUTE_NAME),
-            headers: ['Authorization' => sprintf('Bearer %s', $response['access_token'])]
+            headers: getAuthorizationHeader($this->token),
         )
             ->assertOk()
             ->assertJson(
                 [
-                    'status' => ResponseStatus::HTTP_OK->value,
+                    'status'  => ResponseStatus::HTTP_OK->value,
                     'message' => 'Successfully logged out.',
                 ]
             );
-    });
+    })->group('with-auth');
 })->group('auth', 'logout');

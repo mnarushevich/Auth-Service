@@ -2,9 +2,12 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Facades\URL;
-
-function getUrl(string $route): string
+function getUrl(string $route, array $params = []): string
 {
-    return URL::route($route);
+    return route($route, $params);
+}
+
+function getAuthorizationHeader(string $access_token): array
+{
+    return ['Authorization' => sprintf('Bearer %s', $access_token)];
 }

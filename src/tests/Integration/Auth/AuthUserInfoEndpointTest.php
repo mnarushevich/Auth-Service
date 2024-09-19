@@ -14,26 +14,21 @@ describe('POST /auth/me', function () {
             ->assertStatus(ResponseStatus::UNAUTHORIZED->value)
             ->assertJson(
                 [
-                    'status' => ResponseStatus::UNAUTHORIZED->value,
+                    'status'  => ResponseStatus::UNAUTHORIZED->value,
                     'message' => 'Unauthenticated.',
                 ]
             );
     });
 
     it('gets auth user data for authenticated', function () {
-        $response = $this->postJson(
-            getUrl(BaseWebTestCase::LOGIN_ROUTE_NAME),
-            ['email' => $this->user->email, 'password' => $this->mockPass]
-        )->decodeResponseJson();
-
         $this->postJson(
             getUrl(BaseWebTestCase::USER_INFO_ROUTE_NAME),
-            headers: ['Authorization' => sprintf('Bearer %s', $response['access_token'])]
+            headers: getAuthorizationHeader($this->token),
         )
             ->assertOk()
-            ->assertJson(fn (AssertableJson $json) => $json->hasAll(['user', 'payload']))
+            ->assertJson(fn(AssertableJson $json) => $json->hasAll(['user', 'payload']))
             ->assertJsonPath('user.uuid', $this->user->uuid)
             ->assertJsonPath('user.email', $this->user->email)
             ->assertJsonPath('payload.userUuid', $this->user->uuid);
-    });
+    })->group('with-auth');
 })->group('auth');
