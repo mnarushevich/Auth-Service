@@ -10,7 +10,7 @@ services:
     user: "${UID}"
     volumes:
       - ./src:/app
-      - ./data/composer:/.composer
+      - /app/vendor
     ports:
       - "8701:8000"
     depends_on:
