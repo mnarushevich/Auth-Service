@@ -20,14 +20,9 @@ describe('POST /auth/me', function () {
     });
 
     it('logout user for authenticated', function () {
-        $response = $this->postJson(
-            getUrl(BaseWebTestCase::LOGIN_ROUTE_NAME),
-            ['email' => $this->user->email, 'password' => $this->mockPass]
-        )->decodeResponseJson();
-
         $this->postJson(
             getUrl(BaseWebTestCase::LOGOUT_ROUTE_NAME),
-            headers: ['Authorization' => sprintf('Bearer %s', $response['access_token'])]
+            headers: getAuthorizationHeader($this->token),
         )
             ->assertOk()
             ->assertJson(
@@ -36,5 +31,5 @@ describe('POST /auth/me', function () {
                     'message' => 'Successfully logged out.',
                 ]
             );
-    });
+    })->group('with-auth');
 })->group('auth', 'logout');

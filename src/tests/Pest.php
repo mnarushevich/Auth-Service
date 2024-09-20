@@ -26,6 +26,15 @@ pest()->beforeEach(function () {
     $this->user = User::factory()->create(
         ['email' => $this->mockEmail, 'password' => Hash::make($this->mockPass)]
     );
+
+    if (in_array('with-auth', test()->groups())) {
+        $response = $this->postJson(
+            getUrl(BaseWebTestCase::LOGIN_ROUTE_NAME),
+            ['email' => $this->user->email, 'password' => $this->mockPass]
+        )->decodeResponseJson();
+
+        $this->token = $response['access_token'];
+    }
 })->group('auth')->in('Integration');
 
 /*
