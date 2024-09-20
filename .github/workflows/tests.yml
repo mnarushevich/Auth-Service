@@ -1,6 +1,6 @@
 name: Tests
 
-on: ['push', 'pull_request']
+on: ['push']
 
 jobs:
   ci:
@@ -21,6 +21,7 @@ jobs:
         run: |
           composer install --no-interaction --prefer-dist --optimize-autoloader
           touch ./database/database.sqlite
+          cp .env.example .env
           cp .env.testing.example .env.testing
           php artisan key:generate
           php artisan jwt:secret --force
