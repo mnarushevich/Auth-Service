@@ -18,11 +18,12 @@ jobs:
           coverage: xdebug
 
       - name: Install Dependencies
-        run: composer install --no-interaction --prefer-dist --optimize-autoloader
-        working-directory: ./src
-
-      - name: Prepare Database
-        run: touch ./database/database.sqlite
+        run: |
+          composer install --no-interaction --prefer-dist --optimize-autoloader
+          touch ./database/database.sqlite
+          cp .env.testing.example .env.testing
+          php artisan key:generate
+          php artisan jwt:secret --force
         working-directory: ./src
 
       - name: Tests
