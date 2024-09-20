@@ -62,15 +62,15 @@ class UserController extends Controller implements HasMiddleware
      */
     public function store(StoreUserRequest $request)
     {
-        $user = User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'country' => $request->country,
-            'phone' => $request->phone,
-            'type' => $request->type ?? UserType::USER->value,
-            'password' => Hash::make($request->password),
-        ]);
+        $user = User::create(
+            array_merge(
+                $request->only('first_name', 'last_name', 'email', 'country', 'phone', 'type'),
+                [
+                    'password' => Hash::make($request->password),
+                    'type' => $request->type ?? UserType::USER->value,
+                ]
+            )
+        );
 
         return new UserResource($user);
     }
@@ -132,12 +132,9 @@ class UserController extends Controller implements HasMiddleware
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $user->update([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'country' => $request->country,
-            'phone' => $request->phone,
-        ]);
+        $user->update(
+            $request->only('first_name', 'last_name', 'email', 'country', 'phone', 'type'),
+        );
 
         return new UserResource($user);
     }
