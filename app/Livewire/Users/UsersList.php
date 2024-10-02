@@ -3,22 +3,21 @@
 namespace App\Livewire\Users;
 
 use App\Models\User;
-use Illuminate\Support\Collection;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Table;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
-use Livewire\Component;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Livewire\Component;
 
 class UsersList extends Component implements HasForms, HasTable
 {
-    use InteractsWithTable;
     use InteractsWithForms;
-
-    public Collection $users;
+    use InteractsWithTable;
 
     public function table(Table $table): Table
     {
@@ -36,7 +35,9 @@ class UsersList extends Component implements HasForms, HasTable
                                 ->orWhere('last_name', 'like', "%$search%");
                         },
                         isIndividual: true,
-                    ),
+                    )
+                    ->url(fn (User $user): string => route('users.show', $user))
+                    ->tooltip('Click to view details'),
                 TextColumn::make('email')
                     ->sortable()
                     ->searchable(isIndividual: true)
@@ -46,22 +47,15 @@ class UsersList extends Component implements HasForms, HasTable
                     ->copyMessageDuration(1500),
                 TextColumn::make('country')->sortable(),
                 TextColumn::make('phone'),
+                TextColumn::make('created_at')->dateTime(),
+            ])
+            ->actions([
+                EditAction::make()
+                    ->url(fn (User $user): string => route('users.edit', $user))
+                    ->extraAttributes(['wire:navigate' => 'true']),
+                DeleteAction::make(),
             ]);
-//            ->filters([
-//                // ...
-//            ])
-//            ->actions([
-//                // ...
-//            ])
-//            ->bulkActions([
-//                // ...
-//            ]);
     }
-
-//    public function mount(): void
-//    {
-//        $this->users = User::all();
-//    }
 
     public function render()
     {
