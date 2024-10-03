@@ -1,29 +1,61 @@
-<div>
-    <div class="container mx-auto px-4">
-        <div class="flex flex-wrap -mx-1 lg:-mx-4">
-            <div class="my-1 px-1 w-full lg:w-1/2">
-                <div class="p-4 bg-white border rounded shadow">
-                    <div class="flex items  -center">
-{{--                        <div class="flex-shrink-0 mr-4">--}}
-{{--                            <img class="w-12 h-12 rounded-full" src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}">--}}
-{{--                        </div>--}}
-                        <div class="flex-1">
-                            <h2 class="text-lg font-semibold text-gray-900">{{ $user->full_name }}</h2>
-                            <p class="text-sm font-medium text-gray-500">{{ $user->email }}</p>
-                        </div>
-
-                        <div class="flex items  -center">
-                            <a href="{{ route('users.edit', $user) }}" wire:navigate class="text-indigo-600 hover:text-indigo-900">Edit</a>
-
-{{--                            <form action="{{ route('users.destroy', $user) }}" method="POST" class="ml-4">--}}
-{{--                                @csrf--}}
-{{--                                @method('DELETE')--}}
-{{--                                <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>--}}
-{{--                            </form>--}}
-                        </div>
-                    </div>
-                </div>
+<div class="bg-white overflow-hidden shadow rounded-lg border">
+    <div class="flex items-center justify-between h-16 bg-white border-b border-gray-200">
+        <div class="flex items-center">
+            <div class="px-4 py-5 sm:px-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                    {{ $user->full_name }}
+                </h3>
+                <p class="mt-1 max-w-2xl text-sm text-gray-500">
+{{--                    This is some information about the user.--}}
+                </p>
             </div>
         </div>
+        <div class="flex items-center pr-4">
+            {{ ($this->deleteAction)(['user' => $user]) }}
+            <x-filament-actions::modals />
+
+            <a
+                href="{{route('users.edit', $user)}}"
+                wire:navigate
+                class='py-2.5 ml-5 px-6 text-sm bg-orange-50 text-orange-500 rounded-lg cursor-pointer font-semibold text-center shadow-xs transition-all duration-500 hover:bg-indigo-100'>
+                Edit
+            </a>
+        </div>
+    </div>
+    <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
+        <dl class="sm:divide-y sm:divide-gray-200">
+            <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">
+                    User ID:
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ $user->uuid }}
+                </dd>
+            </div>
+            <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">
+                    Email address
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ $user->email }}
+                </dd>
+            </div>
+            <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">
+                    Phone number
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ $user->phone }}
+                </dd>
+            </div>
+            <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">
+                    Country
+                </dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ $user->country }}
+                </dd>
+            </div>
+        </dl>
     </div>
 </div>

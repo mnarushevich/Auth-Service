@@ -54,6 +54,8 @@ class AuthController extends Controller implements HasMiddleware
      *     @OA\Response(response=401, description="Unauthenticated"),
      *     @OA\Response(response=400, description="Bad request")
      * )
+     *
+     * @throws AuthenticationException
      */
     public function login(Request $request): JsonResponse
     {

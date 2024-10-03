@@ -2,11 +2,11 @@
 
 namespace App\Livewire\Users;
 
-use App\Models\User;
+use App\Models\User as UserModel;
+use Filament\Tables\Actions\EditAction;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -18,11 +18,13 @@ class UsersList extends Component implements HasForms, HasTable
 {
     use InteractsWithForms;
     use InteractsWithTable;
+    use UserActionsTrait;
 
     public function table(Table $table): Table
     {
         return $table
-            ->query(User::query())
+            ->query(UserModel::query())
+            ->header(view('livewire.users.layouts.table-header'))
             ->columns([
                 TextColumn::make('full_name')
                     ->sortable(query: function (Builder $query, string $direction): Builder {
@@ -36,7 +38,7 @@ class UsersList extends Component implements HasForms, HasTable
                         },
                         isIndividual: true,
                     )
-                    ->url(fn (User $user): string => route('users.show', $user))
+                    ->url(fn(UserModel $user): string => route('users.show', $user))
                     ->tooltip('Click to view details'),
                 TextColumn::make('email')
                     ->sortable()
@@ -47,13 +49,13 @@ class UsersList extends Component implements HasForms, HasTable
                     ->copyMessageDuration(1500),
                 TextColumn::make('country')->sortable(),
                 TextColumn::make('phone'),
-                TextColumn::make('created_at')->dateTime(),
+                TextColumn::make('created_at')->since(),
             ])
             ->actions([
-                EditAction::make()
-                    ->url(fn (User $user): string => route('users.edit', $user))
-                    ->extraAttributes(['wire:navigate' => 'true']),
-                DeleteAction::make(),
+                $this->processEditActionButton(
+                    EditAction::make()->url(fn(UserModel $user): string => route('users.edit', $user)),
+                ),
+                $this->getDeleteActionButton(),
             ]);
     }
 
