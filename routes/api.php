@@ -4,7 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
+Route::group(['as' => 'api.'], function () {
     Route::apiResource('users', UserController::class);
 
     Route::group(['prefix' => 'auth', 'as' => 'auth.'], function () {

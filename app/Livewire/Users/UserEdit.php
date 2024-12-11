@@ -3,10 +3,7 @@
 namespace App\Livewire\Users;
 
 use App\Enums\UserType;
-use App\Livewire\Users\Forms\UserForm;
 use App\Models\User;
-use App\Models\User as UserModel;
-use Filament\Forms;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;

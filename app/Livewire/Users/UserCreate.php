@@ -11,7 +11,6 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Hash;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 class UserCreate extends Component implements HasForms
@@ -39,7 +38,6 @@ class UserCreate extends Component implements HasForms
                 TextInput::make('password')->password()->required(),
                 TextInput::make('country'),
                 TextInput::make('phone'),
-                    //->numeric(),
                 Radio::make('type')
                     ->options([
                         UserType::USER->value  => 'User',
