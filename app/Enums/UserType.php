@@ -7,5 +7,5 @@ namespace App\Enums;
 enum UserType: string
 {
     case USER = 'user';
-    case DRIVER = 'driver';
+    case ADMIN = 'admin';
 }
