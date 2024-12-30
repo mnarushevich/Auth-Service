@@ -100,6 +100,24 @@ class AuthController extends Controller implements HasMiddleware
 
     /**
      * @OA\Post(
+     *     path="/auth/verify",
+     *     summary="Verify token of authenticated user",
+     *     description="Verify token of authenticated user",
+     *     operationId="authMe",
+     *     tags={"Auth"},
+     *     security={{"bearerAuth":{}}},
+     *
+     *     @OA\Response(response=200, description="Successful operation"),
+     *     @OA\Response(response=401, description="Unauthenticated")
+     * )
+     */
+    public function verify(): JsonResponse
+    {
+        return response()->json(['status' => Auth::check()]);
+    }
+
+    /**
+     * @OA\Post(
      *     path="/auth/logout",
      *     summary="Logout auth user",
      *     description="Logout auth user",
