@@ -4,8 +4,8 @@ namespace App\Livewire\Users;
 
 use App\Enums\UserType;
 use App\Models\User as UserModel;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
@@ -40,7 +40,7 @@ class UserCreate extends Component implements HasForms
                 TextInput::make('phone'),
                 Radio::make('type')
                     ->options([
-                        UserType::USER->value  => 'User',
+                        UserType::USER->value => 'User',
                         UserType::ADMIN->value => 'Admin',
                     ])
                     ->label('User type')

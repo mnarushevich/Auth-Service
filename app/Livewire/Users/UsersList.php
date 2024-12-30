@@ -3,9 +3,9 @@
 namespace App\Livewire\Users;
 
 use App\Models\User as UserModel;
-use Filament\Tables\Actions\EditAction;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -37,7 +37,7 @@ class UsersList extends Component implements HasForms, HasTable
                         },
                         isIndividual: true,
                     )
-                    ->url(fn(UserModel $user): string => route('users.show', $user))
+                    ->url(fn (UserModel $user): string => route('users.show', $user))
                     ->tooltip('Click to view details'),
                 TextColumn::make('email')
                     ->sortable()
@@ -52,7 +52,7 @@ class UsersList extends Component implements HasForms, HasTable
             ])
             ->actions([
                 $this->processEditActionButton(
-                    EditAction::make()->url(fn(UserModel $user): string => route('users.edit', $user)),
+                    EditAction::make()->url(fn (UserModel $user): string => route('users.edit', $user)),
                 ),
                 $this->getDeleteActionButton(),
             ]);

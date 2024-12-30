@@ -1,4 +1,11 @@
 <?php return array (
+  'aaronfrancis/solo' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'AaronFrancis\\Solo\\Providers\\SoloServiceProvider',
+    ),
+  ),
   'anourvalar/eloquent-serialize' => 
   array (
     'aliases' => 
@@ -22,13 +29,13 @@
   ),
   'darkaonline/l5-swagger' => 
   array (
-    'providers' => 
-    array (
-      0 => 'L5Swagger\\L5SwaggerServiceProvider',
-    ),
     'aliases' => 
     array (
       'L5Swagger' => 'L5Swagger\\L5SwaggerFacade',
+    ),
+    'providers' => 
+    array (
+      0 => 'L5Swagger\\L5SwaggerServiceProvider',
     ),
   ),
   'filament/actions' => 
@@ -128,13 +135,13 @@
   ),
   'livewire/livewire' => 
   array (
-    'providers' => 
-    array (
-      0 => 'Livewire\\LivewireServiceProvider',
-    ),
     'aliases' => 
     array (
       'Livewire' => 'Livewire\\Livewire',
+    ),
+    'providers' => 
+    array (
+      0 => 'Livewire\\LivewireServiceProvider',
     ),
   ),
   'nesbot/carbon' => 
@@ -171,13 +178,13 @@
   ),
   'spatie/laravel-ignition' => 
   array (
-    'providers' => 
-    array (
-      0 => 'Spatie\\LaravelIgnition\\IgnitionServiceProvider',
-    ),
     'aliases' => 
     array (
       'Flare' => 'Spatie\\LaravelIgnition\\Facades\\Flare',
+    ),
+    'providers' => 
+    array (
+      0 => 'Spatie\\LaravelIgnition\\IgnitionServiceProvider',
     ),
   ),
   'tymon/jwt-auth' => 

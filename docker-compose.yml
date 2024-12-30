@@ -1,5 +1,5 @@
 services:
-    laravel.test:
+    auth_service:
         build:
             context: './vendor/laravel/sail/runtimes/8.3'
             dockerfile: Dockerfile
@@ -21,14 +21,15 @@ services:
         volumes:
             - '.:/var/www/html'
         networks:
-            - sail
+            - sbc
         depends_on:
-            - mysql
-            - redis
-    mysql:
+            - auth_mysql
+            - auth_redis
+    auth_mysql:
         image: 'mysql/mysql-server:8.0'
         ports:
             - '${FORWARD_DB_PORT:-3306}:3306'
+        container_name: auth_db
         environment:
             MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
             MYSQL_ROOT_HOST: '%'
@@ -37,10 +38,10 @@ services:
             MYSQL_PASSWORD: '${DB_PASSWORD}'
             MYSQL_ALLOW_EMPTY_PASSWORD: 1
         volumes:
-            - 'sail-mysql:/var/lib/mysql'
+            - 'sbc-auth-mysql:/var/lib/mysql'
             - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
         networks:
-            - sail
+            - sbc
         healthcheck:
             test:
                 - CMD
@@ -49,14 +50,15 @@ services:
                 - '-p${DB_PASSWORD}'
             retries: 3
             timeout: 5s
-    redis:
+    auth_redis:
         image: 'redis:alpine'
         ports:
             - '${FORWARD_REDIS_PORT:-6379}:6379'
+        container_name: auth_redis
         volumes:
-            - 'sail-redis:/data'
+            - 'sbc-auth-redis:/data'
         networks:
-            - sail
+            - sbc
         healthcheck:
             test:
                 - CMD
@@ -65,10 +67,10 @@ services:
             retries: 3
             timeout: 5s
 networks:
-    sail:
+    sbc:
         driver: bridge
 volumes:
-    sail-mysql:
+    sbc-auth-mysql:
         driver: local
-    sail-redis:
+    sbc-auth-redis:
         driver: local

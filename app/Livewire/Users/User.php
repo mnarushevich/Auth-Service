@@ -8,13 +8,11 @@ use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Livewire\Component;
 use Filament\Notifications\Notification;
+use Livewire\Component;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-class User extends Component implements HasForms, HasActions
+class User extends Component implements HasActions, HasForms
 {
     use InteractsWithActions;
     use InteractsWithForms;
@@ -47,7 +45,7 @@ class User extends Component implements HasForms, HasActions
     public function generateJWTToken(): void
     {
         $claims = ['userUuid' => $this->user->uuid];
-        $this->token =  JWTAuth::claims($claims)->fromUser($this->user);
+        $this->token = JWTAuth::claims($claims)->fromUser($this->user);
     }
 
     public function mount(UserModel $user)
