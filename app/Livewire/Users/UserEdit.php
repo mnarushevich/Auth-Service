@@ -9,8 +9,8 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
-use Livewire\Component;
 use Illuminate\Contracts\View\View;
+use Livewire\Component;
 
 class UserEdit extends Component implements HasForms
 {
@@ -40,7 +40,7 @@ class UserEdit extends Component implements HasForms
                 TextInput::make('phone'),
                 Radio::make('type')
                     ->options([
-                        UserType::USER->value  => 'User',
+                        UserType::USER->value => 'User',
                         UserType::ADMIN->value => 'Admin',
                     ])
                     ->label('User type')

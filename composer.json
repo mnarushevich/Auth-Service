@@ -8,7 +8,7 @@
         "php": "^8.3",
         "darkaonline/l5-swagger": "^8.6",
         "filament/filament": "^3.2",
-        "laravel/framework": "^11.0",
+        "laravel/framework": "^11.33",
         "laravel/octane": "^2.5",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
@@ -17,6 +17,7 @@
         "zircote/swagger-php": "^4.10"
     },
     "require-dev": {
+        "aaronfrancis/solo": "^0.2.2",
         "fakerphp/faker": "^1.23",
         "laravel/pint": "^1.17",
         "laravel/sail": "^1.34",

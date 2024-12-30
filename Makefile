@@ -24,6 +24,9 @@ db-seed:
 stop:
 	./vendor/bin/sail down
 
+solo:
+	docker exec -it auth_service_app php artisan solo
+
 setup-tests:
 	touch database/database.sqlite
 	docker exec auth_service_app cp .env.testing.example .env.testing
