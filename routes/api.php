@@ -12,5 +12,6 @@ Route::group(['as' => 'api.'], function () {
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
         Route::post('refresh', [AuthController::class, 'refresh'])->name('refresh');
         Route::post('me', [AuthController::class, 'me'])->name('me');
+        Route::post('verify', [AuthController::class, 'verify'])->name('verify');
     });
 });

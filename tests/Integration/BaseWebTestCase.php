@@ -10,6 +10,8 @@ abstract class BaseWebTestCase extends TestCase
 {
     public const string USER_INFO_ROUTE_NAME = 'api.auth.me';
 
+    public const string VERIFY_TOKEN_ROUTE_NAME = 'api.auth.verify';
+
     public const string LOGIN_ROUTE_NAME = 'api.auth.login';
 
     public const string LOGOUT_ROUTE_NAME = 'api.auth.logout';
