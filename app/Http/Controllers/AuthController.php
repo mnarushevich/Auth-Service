@@ -11,6 +11,7 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller implements HasMiddleware
@@ -111,8 +112,12 @@ class AuthController extends Controller implements HasMiddleware
      *     @OA\Response(response=401, description="Unauthenticated")
      * )
      */
-    public function verify(): JsonResponse
+    public function verify(Request $request): JsonResponse
     {
+        if ($request->has('source')) {
+            Log::info("Auth Verify Request: " . $request->get('source'));
+        }
+
         return response()->json(['status' => Auth::check()]);
     }
 
