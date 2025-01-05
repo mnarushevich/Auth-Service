@@ -24,6 +24,7 @@ class SoloServiceProvider extends ServiceProvider
             ->addCommands([
                 EnhancedTailCommand::make('Logs', 'tail -f -n 100 '.storage_path('logs/laravel.log')),
                 'Vite' => 'npm run dev',
+                'Pail' => 'php artisan pail',
                 // 'HTTP' => 'php artisan serve',
                 //'Start Web UI' => 'npm run dev',
                 'About' => 'php artisan solo:about',

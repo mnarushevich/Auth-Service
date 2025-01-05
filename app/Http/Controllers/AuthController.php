@@ -115,7 +115,7 @@ class AuthController extends Controller implements HasMiddleware
     public function verify(Request $request): JsonResponse
     {
         if ($request->has('source')) {
-            Log::info("Auth Verify Request: " . $request->get('source'));
+            Log::info('Auth Verify Request: '.$request->get('source'));
         }
 
         return response()->json(['status' => Auth::check()]);

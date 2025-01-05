@@ -26,22 +26,22 @@ describe('POST /users', function () {
             [
                 [
                     'email' => 'Test',
-                    'first_name' => fake()->firstName,
-                    'password' => fake()->password,
+                    'first_name' => fake()->firstName(),
+                    'password' => fake()->password(),
                 ],
                 'The email field must be a valid email address.',
             ],
             [
                 [
-                    'email' => fake()->email,
-                    'password' => fake()->password,
+                    'email' => fake()->email(),
+                    'password' => fake()->password(),
                 ],
                 'The first name field is required.',
             ],
             [
                 [
-                    'email' => fake()->email,
-                    'first_name' => fake()->firstName,
+                    'email' => fake()->email(),
+                    'first_name' => fake()->firstName(),
                 ],
                 'The password field is required.',
             ],
@@ -52,24 +52,24 @@ describe('POST /users', function () {
             [
                 [
                     'email' => 'test@test.com',
-                    'first_name' => fake()->firstName,
-                    'password' => fake()->password,
+                    'first_name' => fake()->firstName(),
+                    'password' => fake()->password(),
                 ],
                 'The email has already been taken.',
             ],
         ]);
 
     it('creates new user with valid payload', function () {
-        $mockEmail = fake()->email;
-        $mockFirstName = fake()->firstName;
-        $mockLastName = fake()->lastName;
+        $mockEmail = fake()->email();
+        $mockFirstName = fake()->firstName();
+        $mockLastName = fake()->lastName();
         $this->postJson(
             getUrl(BaseWebTestCase::CREATE_USER_ROUTE_NAME),
             [
                 'email' => $mockEmail,
                 'first_name' => $mockFirstName,
                 'last_name' => $mockLastName,
-                'password' => fake()->password,
+                'password' => fake()->password(),
                 'type' => UserType::USER->value,
             ],
         )
