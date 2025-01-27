@@ -60,18 +60,20 @@ class AuthController extends Controller implements HasMiddleware
     public function login(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+            'email' => ['required', 'email'],
+            'password' => ['required'],
         ]);
 
-        $user = User::whereEmail($validated['email'])->first();
+        $user = User::query()
+            ->where('email', $validated['email'])
+            ->first();
 
         if ($user === null || ! Hash::check($validated['password'], $user->password)) {
             throw new AuthenticationException;
         }
 
         if (! $token = Auth::claims(['userUuid' => $user->uuid])->attempt($validated)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'Unauthorized'],  ResponseStatus::UNAUTHORIZED);
         }
 
         return $this->respondWithToken($token);
@@ -100,6 +102,24 @@ class AuthController extends Controller implements HasMiddleware
 
     /**
      * @OA\Post(
+     *     path="/auth/verify",
+     *     summary="Verify token of authenticated user",
+     *     description="Verify token of authenticated user",
+     *     operationId="authMe",
+     *     tags={"Auth"},
+     *     security={{"bearerAuth":{}}},
+     *
+     *     @OA\Response(response=200, description="Successful operation"),
+     *     @OA\Response(response=401, description="Unauthenticated")
+     * )
+     */
+    public function verify(): JsonResponse
+    {
+        return response()->json(['status' => Auth::check()]);
+    }
+
+    /**
+     * @OA\Post(
      *     path="/auth/logout",
      *     summary="Logout auth user",
      *     description="Logout auth user",
@@ -118,7 +138,7 @@ class AuthController extends Controller implements HasMiddleware
 
         return response()->json(
             [
-                'status' => ResponseStatus::HTTP_OK->value,
+                'status' => ResponseStatus::HTTP_OK,
                 'message' => 'Successfully logged out.',
             ]
         );

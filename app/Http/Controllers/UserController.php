@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\UserType;
+use App\Enums\UserRole;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserCollection;
@@ -10,6 +10,7 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller implements HasMiddleware
@@ -35,7 +36,9 @@ class UserController extends Controller implements HasMiddleware
      */
     public function index()
     {
-        return new UserCollection(User::where('type', UserType::USER->value)->get());
+        return new UserCollection(
+            User::query()->where('role', UserRole::USER->value
+            )->get());
     }
 
     /**
@@ -62,15 +65,15 @@ class UserController extends Controller implements HasMiddleware
      */
     public function store(StoreUserRequest $request)
     {
-        $user = User::create(
-            array_merge(
-                $request->only('first_name', 'last_name', 'email', 'country', 'phone', 'type'),
-                [
-                    'password' => Hash::make($request->password),
-                    'type' => $request->type ?? UserType::USER->value,
-                ]
-            )
-        );
+        $user = new User();
+        $user->first_name = $request->input('first_name');
+        $user->last_name = $request->input('last_name');
+        $user->email = $request->input('email');
+        $user->country = $request->input('country');
+        $user->phone = $request->input('phone');
+        $user->role = $request->input('role') ?? UserRole::USER->value;
+        $user->password = Hash::make($request->input('password'));
+        $user->save();
 
         return new UserResource($user);
     }
@@ -103,7 +106,12 @@ class UserController extends Controller implements HasMiddleware
      */
     public function show(string $uuid)
     {
-        return new UserResource(User::where('uuid', $uuid)->where('type', UserType::USER->value)->firstOrFail());
+        return new UserResource(
+            User::query()
+                ->where('uuid', $uuid)
+                ->where('role', UserRole::USER->value)
+                ->firstOrFail()
+        );
     }
 
     /**
@@ -132,9 +140,15 @@ class UserController extends Controller implements HasMiddleware
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $user->update(
-            $request->only('first_name', 'last_name', 'email', 'country', 'phone', 'type'),
-        );
+        Gate::authorize('update', $user);
+        
+        $user->first_name = $request->input('first_name');
+        $user->last_name = $request->input('last_name');
+        $user->email = $request->input('email');
+        $user->country = $request->input('country');
+        $user->phone = $request->input('phone');
+        $user->role = $request->input('role') ?? UserRole::USER->value;
+        $user->save();
 
         return new UserResource($user);
     }
@@ -167,6 +181,7 @@ class UserController extends Controller implements HasMiddleware
      */
     public function destroy(User $user)
     {
+        Gate::authorize('delete', $user);
         $user->delete();
 
         return response()->json([

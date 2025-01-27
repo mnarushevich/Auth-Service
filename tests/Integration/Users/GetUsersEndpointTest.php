@@ -39,7 +39,7 @@ describe('GET /users', function () {
                             'uuid',
                             'first_name',
                             'last_name',
-                            'type',
+                            'role',
                             'country',
                             'phone',
                             'email',
@@ -49,7 +49,6 @@ describe('GET /users', function () {
                     ],
                 ]
             )
-            //->assertJsonPath('data.*.uuid', $this->user->uuid)
             ->assertJsonFragment(['uuid' => $this->user->uuid])
             ->assertJsonPath('meta.count', 11);
     })->group('with-auth');

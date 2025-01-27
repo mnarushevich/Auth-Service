@@ -31,7 +31,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *         type="string"
  *    ),
  *  @OA\Property(
- *         property="type",
+ *         property="role",
  *         type="string"
  *     ),
  *  @OA\Property(

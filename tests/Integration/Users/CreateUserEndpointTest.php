@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Auth;
 
 use App\Enums\ResponseStatus;
-use App\Enums\UserType;
+use App\Enums\UserRole;
 use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
@@ -70,13 +70,13 @@ describe('POST /users', function () {
                 'first_name' => $mockFirstName,
                 'last_name' => $mockLastName,
                 'password' => fake()->password,
-                'type' => UserType::USER->value,
+                'role' => UserRole::USER->value,
             ],
         )
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJsonPath('data.first_name', $mockFirstName)
             ->assertJsonPath('data.last_name', $mockLastName)
-            ->assertJsonPath('data.type', UserType::USER->value)
+            ->assertJsonPath('data.role', UserRole::USER->value)
             ->assertJsonPath('data.email', $mockEmail);
     });
 })->group('users');

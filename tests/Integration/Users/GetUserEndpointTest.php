@@ -44,7 +44,7 @@ describe('GET /users/{uuid}', function () {
             ->assertJsonPath('data.uuid', $this->user->uuid)
             ->assertJsonPath('data.first_name', $this->user->first_name)
             ->assertJsonPath('data.last_name', $this->user->last_name)
-            ->assertJsonPath('data.type', $this->user->type)
+            ->assertJsonPath('data.role', $this->user->role)
             ->assertJsonPath('data.email', $this->user->email);
     })->group('with-auth');
 })->group('users');

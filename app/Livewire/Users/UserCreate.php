@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Users;
 
-use App\Enums\UserType;
+use App\Enums\UserRole;
 use App\Models\User as UserModel;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\TextInput;
@@ -38,15 +38,15 @@ class UserCreate extends Component implements HasForms
                 TextInput::make('password')->password()->required(),
                 TextInput::make('country'),
                 TextInput::make('phone'),
-                Radio::make('type')
+                Radio::make('role')
                     ->options([
-                        UserType::USER->value => 'User',
-                        UserType::ADMIN->value => 'Admin',
+                        UserRole::USER->value  => 'User',
+                        UserRole::ADMIN->value => 'Admin',
                     ])
-                    ->label('User type')
+                    ->label('User role')
                     ->inline()
-                    ->default(UserType::USER->value)
-                    ->enum(UserType::class),
+                    ->default(UserRole::USER->value)
+                    ->enum(UserRole::class),
             ])
             ->statePath('data')
             ->model(UserModel::class);
