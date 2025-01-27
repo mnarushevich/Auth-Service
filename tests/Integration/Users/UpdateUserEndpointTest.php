@@ -64,10 +64,10 @@ describe('PATCH /users/{uuid}', function () {
         ])->group('with-auth');
 
     it('updates user with valid payload', function () {
-        $mockEmail = fake()->email;
-        $mockFirstName = fake()->firstName;
-        $mockLastName = fake()->lastName;
-        $mockPhoneNumber = fake()->phoneNumber;
+        $mockEmail = fake()->email();
+        $mockFirstName = fake()->firstName();
+        $mockLastName = fake()->lastName();
+        $mockPhoneNumber = fake()->phoneNumber();
         $this->patchJson(
             getUrl(BaseWebTestCase::UPDATE_USER_BY_UUID_ROUTE_NAME, ['user' => $this->user->uuid]),
             [
@@ -75,7 +75,7 @@ describe('PATCH /users/{uuid}', function () {
                 'first_name' => $mockFirstName,
                 'last_name' => $mockLastName,
                 'phone' => $mockPhoneNumber,
-                'password' => fake()->password,
+                'password' => fake()->password(),
                 'type' => UserType::USER->value,
             ],
         )
