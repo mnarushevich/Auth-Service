@@ -24,6 +24,7 @@ class SoloServiceProvider extends ServiceProvider
             ->addCommands([
                 EnhancedTailCommand::make('Logs', 'tail -f -n 100 '.storage_path('logs/laravel.log')),
                 'Vite' => 'npm run dev',
+                'Pail' => 'php artisan pail',
                 // 'HTTP' => 'php artisan serve',
                 //'Start Web UI' => 'npm run dev',
                 'About' => 'php artisan solo:about',
@@ -33,7 +34,7 @@ class SoloServiceProvider extends ServiceProvider
                 'Queue' => 'php artisan queue:listen --tries=1',
                 // 'Reverb' => 'php artisan reverb:start',
                 'Pint' => './vendor/bin/pint --ansi',
-                'Tests' => 'php artisan test --colors=always',
+                'Tests' => 'php artisan test --colors=always --env=testing',
             ])
             // FQCNs of trusted classes that can add commands.
             ->allowCommandsAddedFrom([

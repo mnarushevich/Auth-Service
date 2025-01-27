@@ -19,6 +19,7 @@
     "require-dev": {
         "aaronfrancis/solo": "^0.2.2",
         "fakerphp/faker": "^1.23",
+        "laravel/pail": "^1.2",
         "laravel/pint": "^1.17",
         "laravel/sail": "^1.34",
         "mockery/mockery": "^1.6",
