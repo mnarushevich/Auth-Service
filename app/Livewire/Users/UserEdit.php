@@ -40,7 +40,7 @@ class UserEdit extends Component implements HasForms
                 TextInput::make('phone'),
                 Radio::make('role')
                     ->options([
-                        UserRole::USER->value  => 'User',
+                        UserRole::USER->value => 'User',
                         UserRole::ADMIN->value => 'Admin',
                     ])
                     ->label('User role')

@@ -101,7 +101,7 @@ describe('POST /users', function () {
             ->assertJsonPath('data.first_name', $mockFirstName)
             ->assertJsonPath('data.last_name', $mockLastName)
             ->assertJsonPath('data.role', UserRole::USER->value)
-           ->assertJsonPath('data.address.country', $mockCountry)
+            ->assertJsonPath('data.address.country', $mockCountry)
             ->assertJsonPath('data.email', $mockEmail);
     });
 })->group('users');

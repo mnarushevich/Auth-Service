@@ -8,6 +8,7 @@ use App\Enums\ResponseStatus;
 use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use tests\Integration\BaseWebTestCase;
+
 use function PHPUnit\Framework\assertTrue;
 
 describe('DELETE /users/{uuid}', function () {

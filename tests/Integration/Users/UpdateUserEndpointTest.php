@@ -9,6 +9,7 @@ use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Illuminate\Support\Facades\Hash;
 use tests\Integration\BaseWebTestCase;
+
 use function PHPUnit\Framework\assertTrue;
 
 describe('PATCH /users/{uuid}', function () {

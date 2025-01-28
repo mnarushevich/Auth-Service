@@ -73,7 +73,7 @@ class AuthController extends Controller implements HasMiddleware
         }
 
         if (! $token = Auth::claims(['userUuid' => $user->uuid])->attempt($validated)) {
-            return response()->json(['error' => 'Unauthorized'],  ResponseStatus::UNAUTHORIZED);
+            return response()->json(['error' => 'Unauthorized'], ResponseStatus::UNAUTHORIZED);
         }
 
         return $this->respondWithToken($token);
