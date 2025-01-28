@@ -11,7 +11,7 @@
 |
 */
 
-use App\Models\User;
+use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\Integration\BaseWebTestCase;
@@ -23,9 +23,10 @@ pest()->extend(BaseWebTestCase::class)
 pest()->beforeEach(function () {
     $this->mockPass = 'pass';
     $this->mockEmail = 'test@test.com';
-    $this->user = User::factory()->create(
+    $this->user = UserFactory::new()->create(
         ['email' => $this->mockEmail, 'password' => Hash::make($this->mockPass)]
     );
+    $this->user->address()->create(['country' => fake()->country]);
 
     if (in_array('with-auth', test()->groups())) {
         $response = $this->postJson(

@@ -105,7 +105,7 @@ class AuthController extends Controller implements HasMiddleware
      *     path="/auth/verify",
      *     summary="Verify token of authenticated user",
      *     description="Verify token of authenticated user",
-     *     operationId="authMe",
+     *     operationId="verify",
      *     tags={"Auth"},
      *     security={{"bearerAuth":{}}},
      *

@@ -28,6 +28,9 @@ describe('POST /users', function () {
                     'email' => 'Test',
                     'first_name' => fake()->firstName(),
                     'password' => fake()->password(),
+                    'address' => [
+                        'country' => fake()->country(),
+                    ],
                 ],
                 'The email field must be a valid email address.',
             ],
@@ -35,6 +38,9 @@ describe('POST /users', function () {
                 [
                     'email' => fake()->email(),
                     'password' => fake()->password(),
+                    'address' => [
+                        'country' => fake()->country(),
+                    ],
                 ],
                 'The first name field is required.',
             ],
@@ -42,20 +48,34 @@ describe('POST /users', function () {
                 [
                     'email' => fake()->email(),
                     'first_name' => fake()->firstName(),
+                    'address' => [
+                        'country' => fake()->country(),
+                    ],
                 ],
                 'The password field is required.',
             ],
             [
                 [],
-                'The email field is required. (and 2 more errors)',
+                'The email field is required. (and 3 more errors)',
             ],
             [
                 [
                     'email' => 'test@test.com',
                     'first_name' => fake()->firstName(),
                     'password' => fake()->password(),
+                    'address' => [
+                        'country' => fake()->country(),
+                    ],
                 ],
                 'The email has already been taken.',
+            ],
+            [
+                [
+                    'email' => fake()->email(),
+                    'first_name' => fake()->firstName(),
+                    'password' => fake()->password(),
+                ],
+                'The address.country field is required.',
             ],
         ]);
 
@@ -63,6 +83,7 @@ describe('POST /users', function () {
         $mockEmail = fake()->email();
         $mockFirstName = fake()->firstName();
         $mockLastName = fake()->lastName();
+        $mockCountry = fake()->country();
         $this->postJson(
             getUrl(BaseWebTestCase::CREATE_USER_ROUTE_NAME),
             [
@@ -71,12 +92,16 @@ describe('POST /users', function () {
                 'last_name' => $mockLastName,
                 'password' => fake()->password(),
                 'type' => UserRole::USER->value,
+                'address' => [
+                    'country' => $mockCountry,
+                ],
             ],
         )
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJsonPath('data.first_name', $mockFirstName)
             ->assertJsonPath('data.last_name', $mockLastName)
             ->assertJsonPath('data.role', UserRole::USER->value)
+           ->assertJsonPath('data.address.country', $mockCountry)
             ->assertJsonPath('data.email', $mockEmail);
     });
 })->group('users');

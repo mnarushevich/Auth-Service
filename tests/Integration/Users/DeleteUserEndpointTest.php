@@ -6,7 +6,7 @@ namespace Tests\Integration\Auth;
 
 use App\Enums\ResponseStatus;
 use App\Enums\UserRole;
-use App\Models\User;
+use Database\Factories\UserFactory;
 use tests\Integration\BaseWebTestCase;
 use function PHPUnit\Framework\assertTrue;
 
@@ -61,7 +61,7 @@ describe('DELETE /users/{uuid}', function () {
             headers: getAuthorizationHeader($this->token)
         )->assertOk();
 
-        $newUser = User::factory()->create();
+        $newUser = UserFactory::new()->create();
 
         assertTrue($this->user->role === UserRole::USER->value);
         $this->deleteJson(

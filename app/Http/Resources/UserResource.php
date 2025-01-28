@@ -19,11 +19,11 @@ class UserResource extends JsonResource
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'role' => $this->role,
-            'country' => $this->country,
             'phone' => $this->phone,
             'email' => $this->email,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'address' => new AddressResource($this->whenLoaded('address')),
         ];
     }
 }

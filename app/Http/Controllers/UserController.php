@@ -69,11 +69,15 @@ class UserController extends Controller implements HasMiddleware
         $user->first_name = $request->input('first_name');
         $user->last_name = $request->input('last_name');
         $user->email = $request->input('email');
-        $user->country = $request->input('country');
         $user->phone = $request->input('phone');
         $user->role = $request->input('role') ?? UserRole::USER->value;
         $user->password = Hash::make($request->input('password'));
         $user->save();
+
+        $user->address()->create([
+            'country' => $request->input('address.country'),
+        ]);
+        $user->refresh()->load('address');
 
         return new UserResource($user);
     }
@@ -108,6 +112,7 @@ class UserController extends Controller implements HasMiddleware
     {
         return new UserResource(
             User::query()
+                ->with('address')
                 ->where('uuid', $uuid)
                 ->where('role', UserRole::USER->value)
                 ->firstOrFail()
@@ -141,14 +146,19 @@ class UserController extends Controller implements HasMiddleware
     public function update(UpdateUserRequest $request, User $user)
     {
         Gate::authorize('update', $user);
-        
+
         $user->first_name = $request->input('first_name');
         $user->last_name = $request->input('last_name');
         $user->email = $request->input('email');
-        $user->country = $request->input('country');
         $user->phone = $request->input('phone');
         $user->role = $request->input('role') ?? UserRole::USER->value;
         $user->save();
+
+        if ($request->has('address.country')) {
+            $user->address()->update(
+                ['country' => $request->input('address.country')]
+            );
+        }
 
         return new UserResource($user);
     }

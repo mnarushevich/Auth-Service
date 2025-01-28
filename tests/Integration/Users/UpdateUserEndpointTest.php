@@ -6,7 +6,7 @@ namespace Tests\Integration\Auth;
 
 use App\Enums\ResponseStatus;
 use App\Enums\UserRole;
-use App\Models\User;
+use Database\Factories\UserFactory;
 use Illuminate\Support\Facades\Hash;
 use tests\Integration\BaseWebTestCase;
 use function PHPUnit\Framework\assertTrue;
@@ -27,7 +27,7 @@ describe('PATCH /users/{uuid}', function () {
 
     it('rejects with invalid payload data', function (array $payload, string $errorMessage) {
         $alreadyUsedEmail = 'test-used@test.com';
-        User::factory()->create(
+        UserFactory::new()->create(
             [
                 'email' => $alreadyUsedEmail,
                 'password' => Hash::make($this->mockPass),
@@ -94,7 +94,7 @@ describe('PATCH /users/{uuid}', function () {
             headers: getAuthorizationHeader($this->token)
         )->assertOk();
 
-        $newUser = User::factory()->create();
+        $newUser = UserFactory::new()->create();
 
         assertTrue($this->user->role === UserRole::USER->value);
         $this->patchJson(

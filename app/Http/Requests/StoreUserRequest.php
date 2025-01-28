@@ -61,6 +61,7 @@ class StoreUserRequest extends FormRequest
             'email' => 'required|email|unique:users|max:255',
             'first_name' => 'required',
             'password' => 'required',
+            'address.country' => 'required',
         ];
     }
 }

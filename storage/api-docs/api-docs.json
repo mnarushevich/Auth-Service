@@ -76,6 +76,29 @@
                 ]
             }
         },
+        "/auth/verify": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Verify token of authenticated user",
+                "description": "Verify token of authenticated user",
+                "operationId": "verify",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/auth/logout": {
             "post": {
                 "tags": [
@@ -310,7 +333,7 @@
                     "phone": {
                         "type": "string"
                     },
-                    "type": {
+                    "role": {
                         "type": "string"
                     },
                     "password": {

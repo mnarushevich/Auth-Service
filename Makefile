@@ -34,7 +34,7 @@ setup-tests:
 	docker exec auth_service_app php artisan jwt:secret --env=testing --force
 
 run-tests:
-	docker exec auth_service_app ./vendor/bin/pest
+	docker exec auth_service_app php artisan test --colors=always --env=testing
 
 api-docs-generate:
 	docker exec auth_service_app php artisan l5-swagger:generate
