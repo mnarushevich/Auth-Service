@@ -56,7 +56,7 @@ class UpdateUserRequest extends FormRequest
             'first_name' => 'sometimes|required',
             'last_name' => 'sometimes|required',
             'country' => 'sometimes|required',
-            'type' => 'sometimes|required',
+            'role' => 'sometimes|required',
             'phone' => 'sometimes|required',
         ];
     }

@@ -12,5 +12,6 @@ enum ResponseStatus: int
     case UNAUTHORIZED = Response::HTTP_UNAUTHORIZED;
     case NOT_FOUND = Response::HTTP_NOT_FOUND;
     case HTTP_BAD_REQUEST = Response::HTTP_BAD_REQUEST;
+    case HTTP_FORBIDDEN = Response::HTTP_FORBIDDEN;
     case HTTP_INTERNAL_SERVER_ERROR = Response::HTTP_INTERNAL_SERVER_ERROR;
 }

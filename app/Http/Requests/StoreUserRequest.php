@@ -31,7 +31,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *         type="string"
  *    ),
  *  @OA\Property(
- *         property="type",
+ *         property="role",
  *         type="string"
  *     ),
  *  @OA\Property(
@@ -61,6 +61,7 @@ class StoreUserRequest extends FormRequest
             'email' => 'required|email|unique:users|max:255',
             'first_name' => 'required',
             'password' => 'required',
+            'address.country' => 'required',
         ];
     }
 }

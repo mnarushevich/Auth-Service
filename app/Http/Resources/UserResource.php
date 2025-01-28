@@ -18,12 +18,12 @@ class UserResource extends JsonResource
             'uuid' => $this->uuid,
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
-            'type' => $this->type,
-            'country' => $this->country,
+            'role' => $this->role,
             'phone' => $this->phone,
             'email' => $this->email,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'address' => new AddressResource($this->whenLoaded('address')),
         ];
     }
 }

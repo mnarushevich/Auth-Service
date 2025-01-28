@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Users;
 
-use App\Enums\UserType;
+use App\Enums\UserRole;
 use App\Models\User;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\TextInput;
@@ -38,14 +38,14 @@ class UserEdit extends Component implements HasForms
                     ->filled(),
                 TextInput::make('country'),
                 TextInput::make('phone'),
-                Radio::make('type')
+                Radio::make('role')
                     ->options([
-                        UserType::USER->value => 'User',
-                        UserType::ADMIN->value => 'Admin',
+                        UserRole::USER->value => 'User',
+                        UserRole::ADMIN->value => 'Admin',
                     ])
-                    ->label('User type')
+                    ->label('User role')
                     ->inline()
-                    ->enum(UserType::class),
+                    ->enum(UserRole::class),
             ])
             ->statePath('data')
             ->model($this->user);

@@ -11,7 +11,6 @@ use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller implements HasMiddleware
@@ -61,18 +60,20 @@ class AuthController extends Controller implements HasMiddleware
     public function login(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+            'email' => ['required', 'email'],
+            'password' => ['required'],
         ]);
 
-        $user = User::whereEmail($validated['email'])->first();
+        $user = User::query()
+            ->where('email', $validated['email'])
+            ->first();
 
         if ($user === null || ! Hash::check($validated['password'], $user->password)) {
             throw new AuthenticationException;
         }
 
         if (! $token = Auth::claims(['userUuid' => $user->uuid])->attempt($validated)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'Unauthorized'], ResponseStatus::UNAUTHORIZED);
         }
 
         return $this->respondWithToken($token);
@@ -104,7 +105,7 @@ class AuthController extends Controller implements HasMiddleware
      *     path="/auth/verify",
      *     summary="Verify token of authenticated user",
      *     description="Verify token of authenticated user",
-     *     operationId="authMe",
+     *     operationId="verify",
      *     tags={"Auth"},
      *     security={{"bearerAuth":{}}},
      *
@@ -112,12 +113,8 @@ class AuthController extends Controller implements HasMiddleware
      *     @OA\Response(response=401, description="Unauthenticated")
      * )
      */
-    public function verify(Request $request): JsonResponse
+    public function verify(): JsonResponse
     {
-        if ($request->has('source')) {
-            Log::info('Auth Verify Request: '.$request->get('source'));
-        }
-
         return response()->json(['status' => Auth::check()]);
     }
 
@@ -141,7 +138,7 @@ class AuthController extends Controller implements HasMiddleware
 
         return response()->json(
             [
-                'status' => ResponseStatus::HTTP_OK->value,
+                'status' => ResponseStatus::HTTP_OK,
                 'message' => 'Successfully logged out.',
             ]
         );

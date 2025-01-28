@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Auth;
 
 use App\Enums\ResponseStatus;
-use App\Models\User;
+use Database\Factories\UserFactory;
 use tests\Integration\BaseWebTestCase;
 
 describe('GET /users', function () {
@@ -23,7 +23,7 @@ describe('GET /users', function () {
     });
 
     it('returns users for authenticated', function () {
-        User::factory()->count(10)->create();
+        UserFactory::new()->count(10)->create();
         $this->getJson(
             getUrl(BaseWebTestCase::GET_USERS_ROUTE_NAME),
             headers: getAuthorizationHeader($this->token)
@@ -39,8 +39,7 @@ describe('GET /users', function () {
                             'uuid',
                             'first_name',
                             'last_name',
-                            'type',
-                            'country',
+                            'role',
                             'phone',
                             'email',
                             'created_at',
@@ -49,7 +48,6 @@ describe('GET /users', function () {
                     ],
                 ]
             )
-            //->assertJsonPath('data.*.uuid', $this->user->uuid)
             ->assertJsonFragment(['uuid' => $this->user->uuid])
             ->assertJsonPath('meta.count', 11);
     })->group('with-auth');

@@ -5,7 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Ramsey\Uuid\Uuid;
@@ -13,7 +13,6 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasFactory;
     use HasUuids;
     use Notifiable;
 
@@ -28,9 +27,8 @@ class User extends Authenticatable implements JWTSubject
         'first_name',
         'last_name',
         'country',
-        'type',
+        'role',
         'phone',
-        'email',
         'password',
     ];
 
@@ -81,6 +79,11 @@ class User extends Authenticatable implements JWTSubject
     public function uniqueIds(): array
     {
         return ['uuid'];
+    }
+
+    public function address(): HasOne
+    {
+        return $this->hasOne(Address::class, 'user_uuid');
     }
 
     protected function fullName(): Attribute
