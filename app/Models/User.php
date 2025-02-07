@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -29,6 +30,7 @@ class User extends Authenticatable implements JWTSubject
         'last_name',
         'country',
         'role',
+        'email',
         'phone',
         'password',
     ];

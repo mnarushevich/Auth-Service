@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\User;
 
-use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
@@ -38,13 +39,7 @@ final class UpdateUserController extends Controller
     public function __invoke(UpdateUserRequest $request, User $user)
     {
         Gate::authorize('update', $user);
-
-        $user->first_name = $request->input('first_name');
-        $user->last_name = $request->input('last_name');
-        $user->email = $request->input('email');
-        $user->phone = $request->input('phone');
-        $user->role = $request->input('role') ?? UserRole::USER->value;
-        $user->save();
+        $user->update($request->validated());
 
         if ($request->has('address.country')) {
             $user->address()->update(

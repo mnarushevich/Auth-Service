@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\User;
 
 use App\Enums\UserRole;
@@ -23,6 +25,10 @@ final class ShowUserListController extends Controller
      */
     public function __invoke()
     {
-        return new UserCollection(User::query()->where('role', UserRole::USER->value)->get());
+        return new UserCollection(
+            User::query()
+                ->where('role', UserRole::USER->value)
+                ->get(),
+        );
     }
 }
