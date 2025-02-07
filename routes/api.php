@@ -25,7 +25,7 @@ Route::as('api.')->group(function () {
         });
 
         Route::prefix('auth')->as('auth.')->group(function () {
-            Route::post('login', LoginController::class)->name('login')->withoutMiddleware(['auth:api']);;
+            Route::post('login', LoginController::class)->name('login')->withoutMiddleware(['auth:api']);
             Route::post('logout', LogoutController::class)->name('logout');
             Route::post('refresh', RefreshTokenController::class)->name('refresh');
             Route::post('me', AuthUserInfoController::class)->name('me');

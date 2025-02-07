@@ -3,7 +3,6 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -11,10 +10,7 @@ class ResetPasswordNotification extends Notification
 {
     use Queueable;
 
-    public function __construct(private readonly string $token)
-    {
-
-    }
+    public function __construct(private readonly string $token) {}
 
     /**
      * Get the notification's delivery channels.
