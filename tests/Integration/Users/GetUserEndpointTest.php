@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
-use App\Enums\ResponseStatus;
+use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
 describe('GET /users/{uuid}', function () {
@@ -12,10 +12,10 @@ describe('GET /users/{uuid}', function () {
         $this->getJson(
             getUrl(BaseWebTestCase::GET_USER_BY_UUID_ROUTE_NAME, ['user' => 'test']),
         )
-            ->assertStatus(ResponseStatus::UNAUTHORIZED->value)
+            ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson(
                 [
-                    'status' => ResponseStatus::UNAUTHORIZED->value,
+                    'status' => Response::HTTP_UNAUTHORIZED,
                     'message' => 'Unauthenticated.',
                 ]
             );
@@ -26,10 +26,10 @@ describe('GET /users/{uuid}', function () {
             getUrl(BaseWebTestCase::GET_USER_BY_UUID_ROUTE_NAME, ['user' => 'test']),
             headers: getAuthorizationHeader($this->token)
         )
-            ->assertStatus(ResponseStatus::NOT_FOUND->value)
+            ->assertStatus(Response::HTTP_NOT_FOUND)
             ->assertJson(
                 [
-                    'status' => ResponseStatus::NOT_FOUND->value,
+                    'status' => Response::HTTP_NOT_FOUND,
                     'message' => 'Not found.',
                 ]
             );

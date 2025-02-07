@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Enums\ResponseStatus;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\AuthenticationException;
@@ -10,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response;
 
 final class LoginController extends Controller
 {
@@ -64,7 +64,7 @@ final class LoginController extends Controller
         }
 
         if (! $token = Auth::claims(['userUuid' => $user->uuid])->attempt($validated)) {
-            return response()->json(['error' => 'Unauthorized'], ResponseStatus::UNAUTHORIZED);
+            return response()->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
         }
 
         return $this->respondWithToken($token);

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Enums\ResponseStatus;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 final class LogoutController extends Controller
@@ -30,7 +30,7 @@ final class LogoutController extends Controller
 
         return response()->json(
             [
-                'status' => ResponseStatus::HTTP_OK,
+                'status' => Response::HTTP_OK,
                 'message' => 'Successfully logged out.',
             ]
         );

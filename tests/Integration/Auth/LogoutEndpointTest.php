@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
-use App\Enums\ResponseStatus;
+use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
 describe('POST /auth/me', function () {
     it('rejects logout user for unauthenticated', function () {
         $this->postJson(getUrl(BaseWebTestCase::LOGOUT_ROUTE_NAME))
-            ->assertStatus(ResponseStatus::UNAUTHORIZED->value)
+            ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson(
                 [
-                    'status' => ResponseStatus::UNAUTHORIZED->value,
+                    'status' => Response::HTTP_UNAUTHORIZED,
                     'message' => 'Unauthenticated.',
                 ]
             );
@@ -27,7 +27,7 @@ describe('POST /auth/me', function () {
             ->assertOk()
             ->assertJson(
                 [
-                    'status' => ResponseStatus::HTTP_OK->value,
+                    'status' => Response::HTTP_OK,
                     'message' => 'Successfully logged out.',
                 ]
             );
