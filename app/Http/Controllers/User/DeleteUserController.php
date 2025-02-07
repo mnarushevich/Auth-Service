@@ -6,6 +6,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Gate;
 
 final class DeleteUserController extends Controller
@@ -36,7 +37,7 @@ final class DeleteUserController extends Controller
      *     @OA\Response(response=404, description="Not Found.")
      * )
      */
-    public function __invoke(User $user)
+    public function __invoke(User $user): JsonResponse
     {
         Gate::authorize('delete', $user);
         $user->delete();

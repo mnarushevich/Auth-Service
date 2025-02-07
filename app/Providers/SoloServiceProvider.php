@@ -10,7 +10,7 @@ use Illuminate\Support\ServiceProvider;
 
 class SoloServiceProvider extends ServiceProvider
 {
-    public function register()
+    public function register(): void
     {
         // Solo may not (should not!) exist in prod, so we have to
         // check here first to see if it's installed.
@@ -19,7 +19,7 @@ class SoloServiceProvider extends ServiceProvider
         }
     }
 
-    public function configure()
+    public function configure(): void
     {
         Solo::useTheme('dark')
             // Commands that auto start.
@@ -37,14 +37,10 @@ class SoloServiceProvider extends ServiceProvider
                 // 'Reverb' => 'php artisan reverb:start',
                 'Pint' => './vendor/bin/pint --ansi',
                 'Tests' => 'php artisan test --colors=always --env=testing',
-            ])
-            // FQCNs of trusted classes that can add commands.
-            ->allowCommandsAddedFrom([
-                //
             ]);
     }
 
-    public function boot()
+    public function boot(): void
     {
         //
     }

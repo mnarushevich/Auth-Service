@@ -8,6 +8,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /**
+ * @property \App\Models\User $user
+ *
  * @OA\Schema(
  *     schema="UpdateUser",
  *     title="Update User",

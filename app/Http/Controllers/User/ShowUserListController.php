@@ -23,7 +23,7 @@ final class ShowUserListController extends Controller
      *     @OA\Response(response=401, description="Unauthenticated")
      * )
      */
-    public function __invoke()
+    public function __invoke(): UserCollection
     {
         return new UserCollection(
             User::query()

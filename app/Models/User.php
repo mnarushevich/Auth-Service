@@ -13,6 +13,17 @@ use Illuminate\Notifications\Notifiable;
 use Ramsey\Uuid\Uuid;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
+/**
+ * @property string $uuid
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $role
+ * @property string $password
+ * @property string $phone
+ * @property string $email
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ */
 class User extends Authenticatable implements JWTSubject
 {
     use HasUuids;

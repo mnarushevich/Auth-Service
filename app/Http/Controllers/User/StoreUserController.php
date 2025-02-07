@@ -35,7 +35,7 @@ final class StoreUserController extends Controller
      *     @OA\Response(response=400, description="Bad request")
      * )
      */
-    public function __invoke(StoreUserRequest $request)
+    public function __invoke(StoreUserRequest $request): UserResource
     {
         $user = new User;
         $user->first_name = $request->input('first_name');

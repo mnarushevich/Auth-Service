@@ -37,7 +37,7 @@ final class ShowUserController extends Controller
      *     @OA\Response(response=404, description="Not Found.")
      * )
      */
-    public function __invoke(string $uuid)
+    public function __invoke(string $uuid): UserResource
     {
         return new UserResource(
             User::query()

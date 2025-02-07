@@ -13,6 +13,7 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\View\View;
 use Livewire\Component;
 
 class UsersList extends Component implements HasForms, HasTable
@@ -60,7 +61,7 @@ class UsersList extends Component implements HasForms, HasTable
             ]);
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.users.users-list');
     }

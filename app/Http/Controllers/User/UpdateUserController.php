@@ -36,7 +36,7 @@ final class UpdateUserController extends Controller
      *     @OA\Response(response=404, description="Not Found.")
      * )
      */
-    public function __invoke(UpdateUserRequest $request, User $user)
+    public function __invoke(UpdateUserRequest $request, User $user): UserResource
     {
         Gate::authorize('update', $user);
         $user->update($request->validated());
