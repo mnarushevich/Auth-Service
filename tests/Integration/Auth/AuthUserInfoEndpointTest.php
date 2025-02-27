@@ -29,6 +29,6 @@ describe('POST /auth/me', function () {
             ->assertJson(fn (AssertableJson $json) => $json->hasAll(['user', 'payload']))
             ->assertJsonPath('user.uuid', $this->user->uuid)
             ->assertJsonPath('user.email', $this->user->email)
-            ->assertJsonPath('payload.userUuid', $this->user->uuid);
+            ->assertJsonPath('payload.internal_user_id', $this->user->uuid);
     })->group('with-auth');
 })->group('auth');
