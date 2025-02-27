@@ -65,7 +65,7 @@ final class LoginController extends Controller
             throw new AuthenticationException;
         }
 
-        if (! $token = Auth::claims(['userUuid' => $user->uuid])->attempt($validated)) {
+        if (! $token = Auth::claims(['internal_user_id' => $user->uuid])->attempt($validated)) {
             return response()->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
         }
 
