@@ -13,18 +13,21 @@ declare(strict_types=1);
 |
 */
 
+use App\Models\User;
 use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\Integration\BaseWebTestCase;
+
+const TEST_USER_EMAIL = 'test@test.com';
 
 pest()->extend(BaseWebTestCase::class)
     ->use(RefreshDatabase::class)
     ->in('Integration');
 
 pest()->beforeEach(function () {
-    $this->mockPass = 'pass';
-    $this->mockEmail = 'test@test.com';
+    $this->mockPass = fake()->password();
+    $this->mockEmail = TEST_USER_EMAIL;
     $this->user = UserFactory::new()->create(
         ['email' => $this->mockEmail, 'password' => Hash::make($this->mockPass)]
     );
@@ -66,7 +69,9 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function createUser(string $email, string $password): User
 {
-    // ..
+    return UserFactory::new()->create(
+        ['email' => $email, 'password' => Hash::make($password)]
+    );
 }

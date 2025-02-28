@@ -9,24 +9,18 @@ use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
 describe('POST /users', function () {
-    it('rejects with invalid payload data', function (array $payload, string $errorMessage) {
-        $this->postJson(
-            getUrl(BaseWebTestCase::CREATE_USER_ROUTE_NAME), $payload,
-        )
-            ->assertStatus(Response::HTTP_BAD_REQUEST)
-            ->assertJson(
-                [
-                    'status' => Response::HTTP_BAD_REQUEST,
-                    'message' => $errorMessage,
-                ]
-            );
-    })->with(
-        [
+    beforeEach(function () {
+        $this->mockPass = fake()->password();
+    });
+
+    it('rejects with invalid payload data', function () {
+        $dataset = [
             [
                 [
                     'email' => 'Test',
                     'first_name' => fake()->firstName(),
-                    'password' => fake()->password(),
+                    'password' => $this->mockPass,
+                    'password_confirmation' => $this->mockPass,
                     'address' => [
                         'country' => fake()->country(),
                     ],
@@ -36,7 +30,8 @@ describe('POST /users', function () {
             [
                 [
                     'email' => fake()->email(),
-                    'password' => fake()->password(),
+                    'password' => $this->mockPass,
+                    'password_confirmation' => $this->mockPass,
                     'address' => [
                         'country' => fake()->country(),
                     ],
@@ -61,7 +56,8 @@ describe('POST /users', function () {
                 [
                     'email' => 'test@test.com',
                     'first_name' => fake()->firstName(),
-                    'password' => fake()->password(),
+                    'password' => $this->mockPass,
+                    'password_confirmation' => $this->mockPass,
                     'address' => [
                         'country' => fake()->country(),
                     ],
@@ -72,11 +68,26 @@ describe('POST /users', function () {
                 [
                     'email' => fake()->email(),
                     'first_name' => fake()->firstName(),
-                    'password' => fake()->password(),
+                    'password' => $this->mockPass,
+                    'password_confirmation' => $this->mockPass,
                 ],
                 'The address.country field is required.',
             ],
-        ]);
+        ];
+
+        foreach ($dataset as [$payload, $errorMessage]) {
+            $this->postJson(
+                getUrl(BaseWebTestCase::CREATE_USER_ROUTE_NAME), $payload,
+            )
+                ->assertStatus(Response::HTTP_BAD_REQUEST)
+                ->assertJson(
+                    [
+                        'status' => Response::HTTP_BAD_REQUEST,
+                        'message' => $errorMessage,
+                    ]
+                );
+        }
+    });
 
     it('creates new user with valid payload', function () {
         $mockEmail = fake()->email();
@@ -89,7 +100,8 @@ describe('POST /users', function () {
                 'email' => $mockEmail,
                 'first_name' => $mockFirstName,
                 'last_name' => $mockLastName,
-                'password' => fake()->password(),
+                'password' => $this->mockPass,
+                'password_confirmation' => $this->mockPass,
                 'type' => UserRole::USER->value,
                 'address' => [
                     'country' => $mockCountry,

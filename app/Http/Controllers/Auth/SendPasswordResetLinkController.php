@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use Symfony\Component\HttpFoundation\Response;
 
 final class SendPasswordResetLinkController extends Controller
 {
@@ -17,12 +18,16 @@ final class SendPasswordResetLinkController extends Controller
             'email' => ['required', 'email', 'exists:users,email'],
         ]);
 
-        $status = Password::sendResetLink($request->only('email'));
+        try {
+            $status = Password::sendResetLink($request->only('email'));
 
-        if ($status === Password::RESET_LINK_SENT) {
-            return response()->json(['message' => 'Reset link sent successfully.']);
+            if ($status === Password::RESET_LINK_SENT) {
+                return response()->json(['status' => Response::HTTP_OK, 'message' => 'Reset link sent successfully.']);
+            }
+
+            return response()->json(['message' => 'Failed to send reset link.'], Response::HTTP_BAD_REQUEST);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        return response()->json(['message' => 'Failed to send reset link.'], 400);
     }
 }
