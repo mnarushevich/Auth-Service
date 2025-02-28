@@ -27,6 +27,7 @@ services:
         depends_on:
             - auth_mysql
             - auth_redis
+
     auth_mysql:
         image: 'mysql/mysql-server:8.0'
         ports:
@@ -68,6 +69,15 @@ services:
                 - ping
             retries: 3
             timeout: 5s
+
+    mailpit:
+        image: axllent/mailpit
+        networks:
+            - sbc
+        ports:
+            - "8025:8025"
+            - "1025:1025"
+
 networks:
     sbc:
         driver: bridge

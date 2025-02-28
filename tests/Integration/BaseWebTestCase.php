@@ -27,4 +27,8 @@ abstract class BaseWebTestCase extends TestCase
     public const string DELETE_USER_BY_UUID_ROUTE_NAME = 'api.users.destroy';
 
     public const string CREATE_USER_ROUTE_NAME = 'api.users.store';
+
+    public const string PASSWORD_SEND_RESET_LINK_ROUTE_NAME = 'api.password.send-reset-link';
+
+    public const string PASSWORD_RESET_ROUTE_NAME = 'api.password.reset';
 }

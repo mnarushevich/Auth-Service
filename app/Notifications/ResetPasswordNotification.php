@@ -33,9 +33,14 @@ class ResetPasswordNotification extends Notification
 
         return (new MailMessage)
             ->subject('Reset Your Password')
-            ->line('Click the button below to reset your password.')
-            ->action('Reset Password', url('/password/reset', $this->token))
+            ->line('Use this token to reset a password.')
+            ->line($this->token)
             ->line('If you did not request a password reset, no further action is required.');
+    }
+
+    public function getToken(): string
+    {
+        return $this->token;
     }
 
     /**
@@ -45,8 +50,6 @@ class ResetPasswordNotification extends Notification
      */
     public function toArray(object $notifiable): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 }

@@ -30,10 +30,9 @@ Route::as('api.')->group(function () {
             Route::post('refresh', RefreshTokenController::class)->name('refresh');
             Route::post('me', AuthUserInfoController::class)->name('me');
             Route::post('verify', VerifyTokenController::class)->name('verify');
-
-            Route::post('password/send-reset-link', SendPasswordResetLinkController::class);
         });
     });
 
-    Route::post('password/reset', ResetPasswordController::class);
+    Route::post('password/send-reset-link', SendPasswordResetLinkController::class)->name('password.send-reset-link');
+    Route::post('password/reset', ResetPasswordController::class)->name('password.reset');
 });
