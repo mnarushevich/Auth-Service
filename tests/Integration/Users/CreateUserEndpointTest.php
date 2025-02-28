@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
-use App\Enums\ResponseStatus;
 use App\Enums\UserRole;
 use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
@@ -14,10 +13,10 @@ describe('POST /users', function () {
         $this->postJson(
             getUrl(BaseWebTestCase::CREATE_USER_ROUTE_NAME), $payload,
         )
-            ->assertStatus(ResponseStatus::HTTP_BAD_REQUEST->value)
+            ->assertStatus(Response::HTTP_BAD_REQUEST)
             ->assertJson(
                 [
-                    'status' => ResponseStatus::HTTP_BAD_REQUEST->value,
+                    'status' => Response::HTTP_BAD_REQUEST,
                     'message' => $errorMessage,
                 ]
             );

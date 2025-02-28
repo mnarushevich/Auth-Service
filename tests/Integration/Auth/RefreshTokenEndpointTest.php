@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
-use App\Enums\ResponseStatus;
 use Illuminate\Testing\Fluent\AssertableJson;
+use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
 describe('POST /auth/refresh', function () {
     it('rejects refresh token for unauthenticated', function () {
         $this->postJson(getUrl(BaseWebTestCase::REFRESH_TOKEN_ROUTE_NAME))
-            ->assertStatus(ResponseStatus::UNAUTHORIZED->value)
+            ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson(
                 [
-                    'status' => ResponseStatus::UNAUTHORIZED->value,
+                    'status' => Response::HTTP_UNAUTHORIZED,
                     'message' => 'Unauthenticated.',
                 ]
             );

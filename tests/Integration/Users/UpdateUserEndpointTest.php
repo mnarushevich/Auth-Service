@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
-use App\Enums\ResponseStatus;
 use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
 use function PHPUnit\Framework\assertTrue;
@@ -17,10 +17,10 @@ describe('PATCH /users/{uuid}', function () {
         $this->patchJson(
             getUrl(BaseWebTestCase::UPDATE_USER_BY_UUID_ROUTE_NAME, ['user' => 'test']),
         )
-            ->assertStatus(ResponseStatus::UNAUTHORIZED->value)
+            ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson(
                 [
-                    'status' => ResponseStatus::UNAUTHORIZED->value,
+                    'status' => Response::HTTP_UNAUTHORIZED,
                     'message' => 'Unauthenticated.',
                 ]
             );
@@ -39,10 +39,10 @@ describe('PATCH /users/{uuid}', function () {
             getUrl(BaseWebTestCase::UPDATE_USER_BY_UUID_ROUTE_NAME, ['user' => $this->user->uuid]),
             $payload,
         )
-            ->assertStatus(ResponseStatus::HTTP_BAD_REQUEST->value)
+            ->assertStatus(Response::HTTP_BAD_REQUEST)
             ->assertJson(
                 [
-                    'status' => ResponseStatus::HTTP_BAD_REQUEST->value,
+                    'status' => Response::HTTP_BAD_REQUEST,
                     'message' => $errorMessage,
                 ]
             );
@@ -105,6 +105,6 @@ describe('PATCH /users/{uuid}', function () {
                 'first_name' => fake()->firstName,
                 'last_name' => fake()->lastName,
             ],
-        )->assertStatus(ResponseStatus::HTTP_FORBIDDEN->value);
+        )->assertStatus(Response::HTTP_FORBIDDEN);
     })->group('with-auth');
 })->group('users');

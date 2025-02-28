@@ -24,6 +24,9 @@ db-seed:
 stop:
 	./vendor/bin/sail down
 
+setup-hooks:
+	docker exec -it auth_service_app git config core.hooksPath .githooks
+
 solo:
 	docker exec -it auth_service_app php artisan solo
 

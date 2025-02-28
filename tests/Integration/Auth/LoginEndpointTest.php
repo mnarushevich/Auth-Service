@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
-use App\Enums\ResponseStatus;
 use Illuminate\Testing\Fluent\AssertableJson;
+use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
 describe('POST /auth/login', function () {
@@ -14,10 +14,10 @@ describe('POST /auth/login', function () {
             getUrl(BaseWebTestCase::LOGIN_ROUTE_NAME),
             ['email' => 'email@test.com', 'password' => $this->mockPass]
         )
-            ->assertStatus(ResponseStatus::UNAUTHORIZED->value)
+            ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson(
                 [
-                    'status' => ResponseStatus::UNAUTHORIZED->value,
+                    'status' => Response::HTTP_UNAUTHORIZED,
                     'message' => 'Unauthenticated.',
                 ]
             );
@@ -28,10 +28,10 @@ describe('POST /auth/login', function () {
             getUrl(BaseWebTestCase::LOGIN_ROUTE_NAME),
             ['email' => '', 'password' => $this->mockPass]
         )
-            ->assertStatus(ResponseStatus::HTTP_BAD_REQUEST->value)
+            ->assertStatus(Response::HTTP_BAD_REQUEST)
             ->assertJson(
                 [
-                    'status' => ResponseStatus::HTTP_BAD_REQUEST->value,
+                    'status' => Response::HTTP_BAD_REQUEST,
                     'message' => 'The email field is required.',
                 ]
             );

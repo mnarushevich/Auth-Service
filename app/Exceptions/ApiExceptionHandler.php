@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Exceptions;
 
-use App\Enums\ResponseStatus;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -22,18 +21,18 @@ class ApiExceptionHandler
         }
 
         $status = match (get_class($exception)) {
-            AuthenticationException::class => ResponseStatus::UNAUTHORIZED,
-            ValidationException::class => ResponseStatus::HTTP_BAD_REQUEST,
-            NotFoundHttpException::class => ResponseStatus::NOT_FOUND,
-            AccessDeniedHttpException::class => ResponseStatus::HTTP_FORBIDDEN,
-            default => ResponseStatus::HTTP_INTERNAL_SERVER_ERROR,
+            AuthenticationException::class => Response::HTTP_UNAUTHORIZED,
+            ValidationException::class => Response::HTTP_BAD_REQUEST,
+            NotFoundHttpException::class => Response::HTTP_NOT_FOUND,
+            AccessDeniedHttpException::class => Response::HTTP_FORBIDDEN,
+            default => Response::HTTP_INTERNAL_SERVER_ERROR,
         };
 
-        $message = match ($status->name) {
-            ResponseStatus::NOT_FOUND->name => 'Not found.',
+        $message = match ($status) {
+            Response::HTTP_NOT_FOUND => 'Not found.',
             default => $exception->getMessage()
         };
 
-        return response()->json(['status' => $status->value, 'message' => $message], $status->value);
+        return response()->json(['status' => $status, 'message' => $message], $status);
     }
 }

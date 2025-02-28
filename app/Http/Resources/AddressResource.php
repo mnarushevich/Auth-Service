@@ -1,15 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property string $street_address
+ * @property string $address_line_2
+ * @property string $city
+ * @property string $state
+ * @property string $country
+ * @property string $postal_code
+ * @property float $latitude
+ * @property float $longitude
+ */
 class AddressResource extends JsonResource
 {
     /**
-     * Transform the resource into an array.
-     *
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array

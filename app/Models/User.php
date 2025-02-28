@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -11,6 +13,17 @@ use Illuminate\Notifications\Notifiable;
 use Ramsey\Uuid\Uuid;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
+/**
+ * @property string $uuid
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $role
+ * @property string $password
+ * @property string $phone
+ * @property string $email
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ */
 class User extends Authenticatable implements JWTSubject
 {
     use HasUuids;
@@ -28,6 +41,7 @@ class User extends Authenticatable implements JWTSubject
         'last_name',
         'country',
         'role',
+        'email',
         'phone',
         'password',
     ];
@@ -84,6 +98,11 @@ class User extends Authenticatable implements JWTSubject
     public function address(): HasOne
     {
         return $this->hasOne(Address::class, 'user_uuid');
+    }
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 
     protected function fullName(): Attribute
