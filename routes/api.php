@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\Auth\AuthUserInfoController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
@@ -7,6 +9,9 @@ use App\Http\Controllers\Auth\RefreshTokenController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\SendPasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyTokenController;
+use App\Http\Controllers\Roles\DeleteRoleController;
+use App\Http\Controllers\Roles\ShowRolesListController;
+use App\Http\Controllers\Roles\StoreRoleController;
 use App\Http\Controllers\User\DeleteUserController;
 use App\Http\Controllers\User\ShowUserController;
 use App\Http\Controllers\User\ShowUserListController;
@@ -30,6 +35,14 @@ Route::as('api.')->group(function () {
             Route::post('refresh', RefreshTokenController::class)->name('refresh');
             Route::post('me', AuthUserInfoController::class)->name('me');
             Route::post('verify', VerifyTokenController::class)->name('verify');
+        });
+
+        Route::prefix('roles')->as('roles.')->group(function () {
+            Route::get('/', ShowRolesListController::class)->name('index');
+            Route::post('/', StoreRoleController::class)->name('store');
+            Route::delete('/{name}', DeleteRoleController::class)
+                ->name('destroy')
+                ->where('name', '[A-Za-z]+');
         });
     });
 

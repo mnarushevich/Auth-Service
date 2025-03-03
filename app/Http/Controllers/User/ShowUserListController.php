@@ -28,7 +28,7 @@ final class ShowUserListController extends Controller
         return new UserCollection(
             User::query()
                 ->where('role', RolesEnum::USER->value)
-                ->get(),
+                ->paginate(15),
         );
     }
 }
