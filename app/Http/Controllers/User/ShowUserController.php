@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\User;
 
-use App\Enums\UserRole;
+use App\Enums\RolesEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -43,7 +43,7 @@ final class ShowUserController extends Controller
             User::query()
                 ->with('address')
                 ->where('uuid', $uuid)
-                ->where('role', UserRole::USER->value)
+                ->where('role', RolesEnum::USER->value)
                 ->firstOrFail()
         );
     }

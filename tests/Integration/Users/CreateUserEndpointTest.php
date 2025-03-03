@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
-use App\Enums\UserRole;
+use App\Enums\RolesEnum;
 use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
@@ -102,7 +102,7 @@ describe('POST /users', function () {
                 'last_name' => $mockLastName,
                 'password' => $this->mockPass,
                 'password_confirmation' => $this->mockPass,
-                'type' => UserRole::USER->value,
+                'type' => RolesEnum::USER->value,
                 'address' => [
                     'country' => $mockCountry,
                 ],
@@ -111,7 +111,7 @@ describe('POST /users', function () {
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJsonPath('data.first_name', $mockFirstName)
             ->assertJsonPath('data.last_name', $mockLastName)
-            ->assertJsonPath('data.role', UserRole::USER->value)
+            ->assertJsonPath('data.role', RolesEnum::USER->value)
             ->assertJsonPath('data.address.country', $mockCountry)
             ->assertJsonPath('data.email', $mockEmail);
     });

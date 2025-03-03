@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
-use App\Enums\UserRole;
+use App\Enums\RolesEnum;
 use Database\Factories\UserFactory;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
@@ -78,13 +78,13 @@ describe('PATCH /users/{uuid}', function () {
                 'last_name' => $mockLastName,
                 'phone' => $mockPhoneNumber,
                 'password' => fake()->password(),
-                'role' => UserRole::USER->value,
+                'role' => RolesEnum::USER->value,
             ],
         )
             ->assertOk()
             ->assertJsonPath('data.first_name', $mockFirstName)
             ->assertJsonPath('data.last_name', $mockLastName)
-            ->assertJsonPath('data.role', UserRole::USER->value)
+            ->assertJsonPath('data.role', RolesEnum::USER->value)
             ->assertJsonPath('data.phone', $mockPhoneNumber)
             ->assertJsonPath('data.email', $mockEmail);
     })->group('with-auth');
@@ -97,7 +97,7 @@ describe('PATCH /users/{uuid}', function () {
 
         $newUser = UserFactory::new()->create();
 
-        assertTrue($this->user->role === UserRole::USER->value);
+        assertTrue($this->user->role === RolesEnum::USER->value);
         $this->patchJson(
             getUrl(BaseWebTestCase::UPDATE_USER_BY_UUID_ROUTE_NAME, ['user' => $newUser->uuid]),
             [

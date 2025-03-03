@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\User;
 
-use App\Enums\UserRole;
+use App\Enums\RolesEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\UserResource;
@@ -42,7 +42,7 @@ final class StoreUserController extends Controller
         $user->last_name = $request->input('last_name');
         $user->email = $request->input('email');
         $user->phone = $request->input('phone');
-        $user->role = $request->input('role') ?? UserRole::USER->value;
+        $user->role = $request->input('role') ?? RolesEnum::USER->value;
         $user->password = Hash::make($request->input('password'));
         $user->save();
 

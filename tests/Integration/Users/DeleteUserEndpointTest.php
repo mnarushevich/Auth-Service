@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
-use App\Enums\UserRole;
+use App\Enums\RolesEnum;
 use Database\Factories\UserFactory;
 use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
@@ -64,7 +64,7 @@ describe('DELETE /users/{uuid}', function () {
 
         $newUser = UserFactory::new()->create();
 
-        assertTrue($this->user->role === UserRole::USER->value);
+        assertTrue($this->user->role === RolesEnum::USER->value);
         $this->deleteJson(
             getUrl(BaseWebTestCase::DELETE_USER_BY_UUID_ROUTE_NAME, ['user' => $newUser->uuid]),
             headers: getAuthorizationHeader($this->token)
