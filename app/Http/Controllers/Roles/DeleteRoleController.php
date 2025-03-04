@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Roles;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DeleteRoleRequest;
 use App\Models\Role;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,14 +20,12 @@ final class DeleteRoleController extends Controller
      *     operationId="rolesDelete",
      *     tags={"Roles"},
      *
-     *     @OA\Parameter(
-     *          name="name",
-     *          description="Role valid name",
-     *          in = "path",
-     *          required=true,
+     *     @OA\RequestBody(
      *
-     *          @OA\Schema(
-     *              type="string"
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *
+     *              @OA\Schema(ref="#/components/schemas/DeleteRole")
      *          )
      *      ),
      *     security={{"bearerAuth":{}}},
@@ -36,13 +35,15 @@ final class DeleteRoleController extends Controller
      *     @OA\Response(response=404, description="Not Found.")
      * )
      */
-    public function __invoke(string $name): JsonResponse
+    public function __invoke(DeleteRoleRequest $request): JsonResponse
     {
-        $role = Role::query()->where('name', $name)->first();
+        $name = $request->input('name');
+        $guardName = $request->input('guard_name');
+        $role = Role::query()->where('name', $name)->where('guard_name', $guardName)->first();
         if ($role === null) {
             return response()->json([
                 'status' => 'error',
-                'message' => sprintf('Role with name %s not found.', $name),
+                'message' => sprintf('Role with name `%s` and guard name `%s` not found.', $name, $guardName),
             ], Response::HTTP_NOT_FOUND);
         }
 
@@ -50,7 +51,7 @@ final class DeleteRoleController extends Controller
 
         return response()->json([
             'status' => 'ok',
-            'message' => sprintf('Roles with name %s was deleted.', $name),
+            'message' => sprintf('Role with name `%s` and guard name `%s` was deleted.', $name, $guardName),
         ]);
     }
 }

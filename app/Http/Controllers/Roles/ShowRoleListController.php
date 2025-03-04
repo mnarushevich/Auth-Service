@@ -22,7 +22,7 @@ use Illuminate\Http\Request;
  *     @OA\Response(response=401, description="Unauthenticated")
  * )
  */
-class ShowRolesListController extends Controller
+class ShowRoleListController extends Controller
 {
     public function __invoke(Request $request): RolesCollection
     {
@@ -30,6 +30,10 @@ class ShowRolesListController extends Controller
 
         if ($request->has('guard_name') && in_array($request->input('guard_name'), GuardsEnum::all())) {
             $roles->where('guard_name', $request->input('guard_name'));
+        }
+
+        if ($request->has('name')) {
+            $roles->where('name', $request->input('name'));
         }
 
         return new RolesCollection($roles->paginate(15));

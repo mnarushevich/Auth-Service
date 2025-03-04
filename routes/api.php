@@ -9,8 +9,11 @@ use App\Http\Controllers\Auth\RefreshTokenController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\SendPasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyTokenController;
+use App\Http\Controllers\Permissions\DeletePermissionController;
+use App\Http\Controllers\Permissions\ShowPermissionListController;
+use App\Http\Controllers\Permissions\StorePermissionController;
 use App\Http\Controllers\Roles\DeleteRoleController;
-use App\Http\Controllers\Roles\ShowRolesListController;
+use App\Http\Controllers\Roles\ShowRoleListController;
 use App\Http\Controllers\Roles\StoreRoleController;
 use App\Http\Controllers\User\DeleteUserController;
 use App\Http\Controllers\User\ShowUserController;
@@ -38,11 +41,15 @@ Route::as('api.')->group(function () {
         });
 
         Route::prefix('roles')->as('roles.')->group(function () {
-            Route::get('/', ShowRolesListController::class)->name('index');
+            Route::get('/', ShowRoleListController::class)->name('index');
             Route::post('/', StoreRoleController::class)->name('store');
-            Route::delete('/{name}', DeleteRoleController::class)
-                ->name('destroy')
-                ->where('name', '[A-Za-z]+');
+            Route::delete('/', DeleteRoleController::class)->name('destroy');
+        });
+
+        Route::prefix('permissions')->as('permissions.')->group(function () {
+            Route::get('/', ShowPermissionListController::class)->name('index');
+            Route::post('/', StorePermissionController::class)->name('store');
+            Route::delete('/', DeletePermissionController::class)->name('destroy');
         });
     });
 
