@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
-use function PHPUnit\Framework\assertTrue;
-
 describe('PATCH /users/{uuid}', function () {
     it('rejects for unauthorized', function () {
         $this->patchJson(
@@ -78,13 +76,11 @@ describe('PATCH /users/{uuid}', function () {
                 'last_name' => $mockLastName,
                 'phone' => $mockPhoneNumber,
                 'password' => fake()->password(),
-                'role' => RolesEnum::USER->value,
             ],
         )
             ->assertOk()
             ->assertJsonPath('data.first_name', $mockFirstName)
             ->assertJsonPath('data.last_name', $mockLastName)
-            ->assertJsonPath('data.role', RolesEnum::USER->value)
             ->assertJsonPath('data.phone', $mockPhoneNumber)
             ->assertJsonPath('data.email', $mockEmail);
     })->group('with-auth');
@@ -95,9 +91,8 @@ describe('PATCH /users/{uuid}', function () {
             headers: getAuthorizationHeader($this->token)
         )->assertOk();
 
-        $newUser = UserFactory::new()->create();
-
-        assertTrue($this->user->role === RolesEnum::USER->value);
+        $newUser = UserFactory::new()->withUserRole()->create();
+        expect($newUser->getRoleNames())->toContain(RolesEnum::USER->value);
         $this->patchJson(
             getUrl(BaseWebTestCase::UPDATE_USER_BY_UUID_ROUTE_NAME, ['user' => $newUser->uuid]),
             [
@@ -107,4 +102,4 @@ describe('PATCH /users/{uuid}', function () {
             ],
         )->assertStatus(Response::HTTP_FORBIDDEN);
     })->group('with-auth');
-})->group('users');
+})->group('users', 'with-roles-and-permissions');

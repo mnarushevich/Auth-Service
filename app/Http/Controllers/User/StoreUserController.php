@@ -42,10 +42,10 @@ final class StoreUserController extends Controller
         $user->last_name = $request->input('last_name');
         $user->email = $request->input('email');
         $user->phone = $request->input('phone');
-        $user->role = $request->input('role') ?? RolesEnum::USER->value;
         $user->password = Hash::make($request->input('password'));
         $user->save();
 
+        $user->assignRole(RolesEnum::USER);
         $user->address()->create([
             'country' => $request->input('address.country'),
         ]);

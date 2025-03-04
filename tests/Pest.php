@@ -13,8 +13,10 @@ declare(strict_types=1);
 |
 */
 
+use App\Enums\RolesEnum;
 use App\Models\User;
 use Database\Factories\UserFactory;
+use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\Integration\BaseWebTestCase;
@@ -40,6 +42,11 @@ pest()->beforeEach(function () {
         )->decodeResponseJson();
 
         $this->token = $response['access_token'];
+    }
+
+    if (in_array('with-roles-and-permissions', test()->groups())) {
+        $this->artisan('db:seed', ['--class' => RolesAndPermissionsSeeder::class]);
+        $this->user->assignRole(RolesEnum::USER);
     }
 })->group('auth')->in('Integration');
 

@@ -9,8 +9,6 @@ use Database\Factories\UserFactory;
 use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
-use function PHPUnit\Framework\assertTrue;
-
 describe('DELETE /users/{uuid}', function () {
     it('rejects for unauthorized', function () {
         $this->deleteJson(
@@ -62,12 +60,11 @@ describe('DELETE /users/{uuid}', function () {
             headers: getAuthorizationHeader($this->token)
         )->assertOk();
 
-        $newUser = UserFactory::new()->create();
-
-        assertTrue($this->user->role === RolesEnum::USER->value);
+        $newUser = UserFactory::new()->withUserRole()->create();
+        expect($newUser->getRoleNames())->toContain(RolesEnum::USER->value);
         $this->deleteJson(
             getUrl(BaseWebTestCase::DELETE_USER_BY_UUID_ROUTE_NAME, ['user' => $newUser->uuid]),
             headers: getAuthorizationHeader($this->token)
         )->assertStatus(Response::HTTP_FORBIDDEN);
     })->group('with-auth');
-})->group('users');
+})->group('users', 'with-roles-and-permissions');

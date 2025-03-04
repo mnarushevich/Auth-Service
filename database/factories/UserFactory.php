@@ -29,7 +29,6 @@ class UserFactory extends Factory
             'last_name' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'phone' => fake()->phoneNumber(),
-            'role' => RolesEnum::USER->value,
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
@@ -40,6 +39,13 @@ class UserFactory extends Factory
     {
         return $this->afterCreating(function (User $user) {
             $user->address()->save(AddressFactory::new()->make());
+        });
+    }
+
+    public function withUserRole(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $user->assignRole(RolesEnum::USER);
         });
     }
 

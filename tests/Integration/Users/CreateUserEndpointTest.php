@@ -111,8 +111,7 @@ describe('POST /users', function () {
             ->assertStatus(Response::HTTP_CREATED)
             ->assertJsonPath('data.first_name', $mockFirstName)
             ->assertJsonPath('data.last_name', $mockLastName)
-            ->assertJsonPath('data.role', RolesEnum::USER->value)
             ->assertJsonPath('data.address.country', $mockCountry)
             ->assertJsonPath('data.email', $mockEmail);
     });
-})->group('users');
+})->group('users', 'with-roles-and-permissions');
