@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.4",
         "darkaonline/l5-swagger": "^8.6",
+        "datadog/dd-trace": "^1.7",
         "filament/filament": "^3.2",
         "laravel/framework": "^11.33",
         "laravel/octane": "^2.5",

@@ -10,7 +10,7 @@ up:
 	./vendor/bin/sail up -d
 
 rebuild:
-	docker compose up -d --no-deps --build app
+	docker compose up -d --no-deps --build auth_service
 
 exec:
 	docker exec -it auth_service_app bash
