@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\DeletePermissionRequest;
 use App\Models\Permission;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 final class DeletePermissionController extends Controller
 {
@@ -41,10 +41,9 @@ final class DeletePermissionController extends Controller
         $guardName = $request->input('guard_name');
         $permission = Permission::query()->where('name', $name)->where('guard_name', $guardName)->first();
         if ($permission === null) {
-            return response()->json([
-                'status' => 'error',
-                'message' => sprintf('Permission with name `%s` and guard name `%s` not found.', $name, $guardName),
-            ], Response::HTTP_NOT_FOUND);
+            throw new NotFoundHttpException(
+                sprintf('Permission with name `%s` and guard name `%s` not found.', $name, $guardName),
+            );
         }
 
         $permission->delete();

@@ -9,7 +9,7 @@ use App\Http\Requests\StorePermissionRequest;
 use App\Http\Resources\PermissionResource;
 use App\Models\Permission;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 final class StorePermissionController extends Controller
 {
@@ -40,10 +40,7 @@ final class StorePermissionController extends Controller
         $permissionName = $request->input('name');
 
         if (Permission::query()->where('name', $permissionName)->exists()) {
-            return response()->json(
-                ['error' => "Permission with name `$permissionName` already exist"],
-                Response::HTTP_BAD_REQUEST,
-            );
+            throw new BadRequestHttpException("Permission with name `$permissionName` already exist");
         }
 
         $permission = new Permission;

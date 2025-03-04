@@ -56,8 +56,8 @@ describe('DELETE /permissions', function () {
         )->assertNotFound()
             ->assertJson(
                 [
-                    'status' => 'error',
-                    'message' => sprintf('Permission with name `%s` and guard name `%s` not found.', $invalidName, GuardsEnum::API->value),
+                    'status' => Response::HTTP_NOT_FOUND,
+                    'message' => 'Not found.',
                 ]
             );
     })->group('with-auth');

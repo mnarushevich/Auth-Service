@@ -9,7 +9,7 @@ use App\Http\Requests\StoreRoleRequest;
 use App\Http\Resources\RoleResource;
 use App\Models\Role;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 final class StoreRoleController extends Controller
 {
@@ -40,10 +40,7 @@ final class StoreRoleController extends Controller
         $roleName = $request->input('name');
 
         if (Role::query()->where('name', $roleName)->exists()) {
-            return response()->json(
-                ['error' => "Role with name `$roleName` already exist"],
-                Response::HTTP_BAD_REQUEST,
-            );
+            throw new BadRequestHttpException("Role with name `$roleName` already exist");
         }
 
         $role = new Role;

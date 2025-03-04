@@ -36,7 +36,11 @@ abstract class BaseWebTestCase extends TestCase
 
     public const string DELETE_ROLES_ROUTE_NAME = 'api.roles.destroy';
 
+    public const string CREATE_ROLE_ROUTE_NAME = 'api.roles.store';
+
     public const string GET_PERMISSIONS_ROUTE_NAME = 'api.permissions.index';
 
     public const string DELETE_PERMISSIONS_ROUTE_NAME = 'api.permissions.destroy';
+
+    public const string CREATE_PERMISSION_ROUTE_NAME = 'api.permissions.store';
 }

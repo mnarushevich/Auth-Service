@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\DeleteRoleRequest;
 use App\Models\Role;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 final class DeleteRoleController extends Controller
 {
@@ -41,10 +41,9 @@ final class DeleteRoleController extends Controller
         $guardName = $request->input('guard_name');
         $role = Role::query()->where('name', $name)->where('guard_name', $guardName)->first();
         if ($role === null) {
-            return response()->json([
-                'status' => 'error',
-                'message' => sprintf('Role with name `%s` and guard name `%s` not found.', $name, $guardName),
-            ], Response::HTTP_NOT_FOUND);
+            throw new NotFoundHttpException(
+                sprintf('Role with name `%s` and guard name `%s` not found.', $name, $guardName),
+            );
         }
 
         $role->delete();
