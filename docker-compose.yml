@@ -1,7 +1,7 @@
 services:
     auth_service:
         build:
-            context: './vendor/laravel/sail/runtimes/8.4'
+            context: './docker/8.4'
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'
@@ -42,7 +42,7 @@ services:
             MYSQL_ALLOW_EMPTY_PASSWORD: 1
         volumes:
             - 'sbc-auth-mysql:/var/lib/mysql'
-            - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+            - './docker/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
         networks:
             - sbc
         healthcheck:
@@ -77,6 +77,27 @@ services:
         ports:
             - "8025:8025"
             - "1025:1025"
+
+
+    datadog:
+        image: gcr.io/datadoghq/agent:7
+        environment:
+             DD_API_KEY: '${DD_API_KEY}'
+             DD_SITE: '${DD_SITE}'
+             DD_ENV: local
+             DD_SERVICE: your-laravel-app
+             DD_LOGS_ENABLED: true
+             DD_APM_ENABLED: true
+             DD_DOGSTATSD_NON_LOCAL_TRAFFIC: true
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - /proc/:/host/proc/:ro
+            - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+            - /var/lib/docker/containers:/var/lib/docker/containers:ro
+        ports:
+            - "8126:8126"
+        networks:
+            - sbc
 
 networks:
     sbc:

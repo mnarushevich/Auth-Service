@@ -58,6 +58,14 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        'datadog' => [
+            'driver' => 'monolog',
+            'handler' => Monolog\Handler\SocketHandler::class,
+            'with' => [
+                'connectionString' => 'tcp://datadog:10514',
+            ],
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
