@@ -12,7 +12,9 @@ use App\Http\Controllers\Auth\VerifyTokenController;
 use App\Http\Controllers\Permissions\DeletePermissionController;
 use App\Http\Controllers\Permissions\ShowPermissionListController;
 use App\Http\Controllers\Permissions\StorePermissionController;
+use App\Http\Controllers\Roles\AssignUserRoleController;
 use App\Http\Controllers\Roles\DeleteRoleController;
+use App\Http\Controllers\Roles\RemoveUserRoleController;
 use App\Http\Controllers\Roles\ShowRoleListController;
 use App\Http\Controllers\Roles\StoreRoleController;
 use App\Http\Controllers\User\DeleteUserController;
@@ -30,6 +32,9 @@ Route::as('api.')->group(function () {
             Route::get('/{user}', ShowUserController::class)->name('show');
             Route::patch('/{user}', UpdateUserController::class)->name('update');
             Route::delete('/{user}', DeleteUserController::class)->name('destroy');
+
+            Route::post('/{user}/assign-role', AssignUserRoleController::class)->name('assign-user-role');
+            Route::post('/{user}/remove-role', RemoveUserRoleController::class)->name('remove-user-role');
         });
 
         Route::prefix('auth')->as('auth.')->group(function () {

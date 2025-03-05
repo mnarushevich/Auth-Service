@@ -76,7 +76,13 @@ describe('DELETE /roles', function () {
                 'guard_name' => $role->guard_name,
             ],
             headers: getAuthorizationHeader($this->token),
-        )->assertOk();
+        )->assertOk()
+            ->assertJson(
+                [
+                    'status' => Response::HTTP_OK,
+                    'message' => sprintf('Role with name `%s` and guard name `%s` was deleted.', $role->name, $role->guard_name),
+                ]
+            );
         expect(Role::query()
             ->where('name', $role->name)
             ->where('guard_name', $role->guard_name)
