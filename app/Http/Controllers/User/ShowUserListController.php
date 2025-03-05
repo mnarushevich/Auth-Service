@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\User;
 
-use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserCollection;
 use App\Models\User;
@@ -27,8 +26,8 @@ final class ShowUserListController extends Controller
     {
         return new UserCollection(
             User::query()
-                ->where('role', UserRole::USER->value)
-                ->get(),
+                ->without('roles')
+                ->paginate(15),
         );
     }
 }

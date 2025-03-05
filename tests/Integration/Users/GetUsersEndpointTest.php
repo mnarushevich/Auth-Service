@@ -23,7 +23,7 @@ describe('GET /users', function () {
     });
 
     it('returns users for authenticated', function () {
-        UserFactory::new()->count(10)->create();
+        UserFactory::new()->count(10)->withUserRole()->create();
         $this->getJson(
             getUrl(BaseWebTestCase::GET_USERS_ROUTE_NAME),
             headers: getAuthorizationHeader($this->token)
@@ -39,7 +39,6 @@ describe('GET /users', function () {
                             'uuid',
                             'first_name',
                             'last_name',
-                            'role',
                             'phone',
                             'email',
                             'created_at',
@@ -48,7 +47,9 @@ describe('GET /users', function () {
                     ],
                 ]
             )
+            ->assertJsonMissingPath('data.roles')
+            ->assertJsonMissingPath('data.permissions')
             ->assertJsonFragment(['uuid' => $this->user->uuid])
             ->assertJsonPath('meta.count', 11);
     })->group('with-auth');
-})->group('users');
+})->group('users', 'with-roles-and-permissions');

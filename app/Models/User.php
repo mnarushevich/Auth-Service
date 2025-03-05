@@ -11,13 +11,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Ramsey\Uuid\Uuid;
+use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * @property string $uuid
  * @property string $first_name
  * @property string $last_name
- * @property string $role
  * @property string $password
  * @property string $phone
  * @property string $email
@@ -26,6 +26,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  */
 class User extends Authenticatable implements JWTSubject
 {
+    use HasRoles;
     use HasUuids;
     use Notifiable;
 
@@ -40,7 +41,6 @@ class User extends Authenticatable implements JWTSubject
         'first_name',
         'last_name',
         'country',
-        'role',
         'email',
         'phone',
         'password',

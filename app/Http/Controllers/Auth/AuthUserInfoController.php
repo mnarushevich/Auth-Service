@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,7 +27,9 @@ final class AuthUserInfoController extends Controller
     public function __invoke(): JsonResponse
     {
         return response()->json([
-            'user' => Auth::user(),
+            'user' => new UserResource(
+                resource: Auth::user()->load('roles', 'permissions'),
+                isAuthUser: true),
             'payload' => Auth::payload(),
         ]);
     }

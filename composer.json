@@ -13,6 +13,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
+        "spatie/laravel-permission": "^6.16",
         "tymon/jwt-auth": "^2.1",
         "zircote/swagger-php": "^4.10"
     },

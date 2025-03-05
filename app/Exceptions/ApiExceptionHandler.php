@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -22,7 +23,7 @@ class ApiExceptionHandler
 
         $status = match (get_class($exception)) {
             AuthenticationException::class => Response::HTTP_UNAUTHORIZED,
-            ValidationException::class => Response::HTTP_BAD_REQUEST,
+            ValidationException::class, BadRequestHttpException::class => Response::HTTP_BAD_REQUEST,
             NotFoundHttpException::class => Response::HTTP_NOT_FOUND,
             AccessDeniedHttpException::class => Response::HTTP_FORBIDDEN,
             default => Response::HTTP_INTERNAL_SERVER_ERROR,

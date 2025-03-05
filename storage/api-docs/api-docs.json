@@ -11,6 +11,29 @@
         }
     ],
     "paths": {
+        "/auth/me": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get auth user data",
+                "description": "Get authenticated user data",
+                "operationId": "authMe",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/auth/login": {
             "post": {
                 "tags": [
@@ -53,14 +76,37 @@
                 }
             }
         },
-        "/auth/me": {
+        "/auth/logout": {
             "post": {
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Get auth user data",
-                "description": "Get authenticated user data",
-                "operationId": "authMe",
+                "summary": "Logout auth user",
+                "description": "Logout auth user",
+                "operationId": "authLogout",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Refresh auth user JWT token",
+                "description": "Refresh auth user JWT token",
+                "operationId": "authRefresh",
                 "responses": {
                     "200": {
                         "description": "Successful operation"
@@ -99,14 +145,50 @@
                 ]
             }
         },
-        "/auth/logout": {
-            "post": {
+        "/roles/{name}": {
+            "delete": {
                 "tags": [
-                    "Auth"
+                    "Roles"
                 ],
-                "summary": "Logout auth user",
-                "description": "Logout auth user",
-                "operationId": "authLogout",
+                "summary": "Delete role",
+                "description": "Delete role",
+                "operationId": "rolesDelete",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "description": "Role valid name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "Not Found."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/roles": {
+            "get": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Get a list of roles",
+                "operationId": "rolesList",
                 "responses": {
                     "200": {
                         "description": "Successful operation"
@@ -120,22 +202,103 @@
                         "bearerAuth": []
                     }
                 ]
-            }
-        },
-        "/auth/refresh": {
+            },
             "post": {
                 "tags": [
-                    "Auth"
+                    "Roles"
                 ],
-                "summary": "Refresh auth user JWT token",
-                "description": "Refresh auth user JWT token",
-                "operationId": "authRefresh",
+                "summary": "Create new role",
+                "description": "Create new role",
+                "operationId": "rolesCreate",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateRole"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/users/{uuid}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update user",
+                "description": "Update user",
+                "operationId": "usersShow",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "User valid uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Successful operation"
                     },
                     "401": {
                         "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "Not Found."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Delete user",
+                "description": "Delete user",
+                "operationId": "usersDelete",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "User valid uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "404": {
+                        "description": "Not Found."
                     }
                 },
                 "security": [
@@ -232,84 +395,26 @@
                     }
                 ]
             }
-        },
-        "/users/{uuid}": {
-            "get": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Update user",
-                "description": "Update user",
-                "operationId": "usersShow",
-                "parameters": [
-                    {
-                        "name": "uuid",
-                        "in": "path",
-                        "description": "User valid uuid",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "404": {
-                        "description": "Not Found."
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "delete": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Delete user",
-                "description": "Delete user",
-                "operationId": "usersDelete",
-                "parameters": [
-                    {
-                        "name": "uuid",
-                        "in": "path",
-                        "description": "User valid uuid",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation"
-                    },
-                    "401": {
-                        "description": "Unauthenticated"
-                    },
-                    "404": {
-                        "description": "Not Found."
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
         }
     },
     "components": {
         "schemas": {
+            "CreateRole": {
+                "title": "Create Role",
+                "required": [
+                    "name",
+                    "guard_name"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "guard_name": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "CreateUser": {
                 "title": "Create User",
                 "required": [
@@ -375,6 +480,10 @@
         {
             "name": "Auth",
             "description": "Auth"
+        },
+        {
+            "name": "Roles",
+            "description": "Roles"
         },
         {
             "name": "Users",

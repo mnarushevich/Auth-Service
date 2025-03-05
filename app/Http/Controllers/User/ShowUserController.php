@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\User;
 
-use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -41,9 +40,8 @@ final class ShowUserController extends Controller
     {
         return new UserResource(
             User::query()
-                ->with('address')
+                ->with(['address', 'roles', 'permissions'])
                 ->where('uuid', $uuid)
-                ->where('role', UserRole::USER->value)
                 ->firstOrFail()
         );
     }
