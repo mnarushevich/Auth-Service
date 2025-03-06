@@ -24,6 +24,7 @@ services:
             - '.:/var/www/html'
         networks:
             - sbc
+            - sbs-shared
         depends_on:
             - auth_mysql
             - auth_redis
@@ -46,6 +47,7 @@ services:
             - './docker/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
         networks:
             - sbc
+            - sbs-shared
         healthcheck:
             test:
                 - CMD
@@ -63,6 +65,7 @@ services:
             - 'sbc-auth-redis:/data'
         networks:
             - sbc
+            - sbs-shared
         healthcheck:
             test:
                 - CMD
@@ -75,6 +78,7 @@ services:
         image: axllent/mailpit
         networks:
             - sbc
+            - sbs-shared
         ports:
             - "8025:8025"
             - "1025:1025"
@@ -85,6 +89,7 @@ services:
             - "9092:9092"
         networks:
             - sbc
+            - sbs-shared
         environment:
             # Configure listeners for both docker and host communication
             KAFKA_LISTENERS: CONTROLLER://localhost:9091,HOST://0.0.0.0:9092,DOCKER://0.0.0.0:9093
@@ -113,10 +118,13 @@ services:
             KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9093
         networks:
             - sbc
+            - sbs-shared
         depends_on:
             - kafka
 
 networks:
+    sbs-shared:
+        external: true
     sbc:
         driver: bridge
 volumes:
