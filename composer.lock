@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e4e181768244f2de1eabb485b516b007",
+    "content-hash": "1f3a98b76d8d88d8d5c8631a0a3e3d66",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -4274,33 +4274,33 @@
         },
         {
             "name": "mnarushevich/laravel-audit-logs",
-            "version": "dev-main",
+            "version": "v0.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnarushevich/laravel-audit-logs.git",
-                "reference": "9805b6827a19dc0523e7d94d40c10a30765082d1"
+                "reference": "50438f7d03ae591e486743f1f4e257a96c4f2ca5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnarushevich/laravel-audit-logs/zipball/9805b6827a19dc0523e7d94d40c10a30765082d1",
-                "reference": "9805b6827a19dc0523e7d94d40c10a30765082d1",
+                "url": "https://api.github.com/repos/mnarushevich/laravel-audit-logs/zipball/50438f7d03ae591e486743f1f4e257a96c4f2ca5",
+                "reference": "50438f7d03ae591e486743f1f4e257a96c4f2ca5",
                 "shasum": ""
             },
             "require": {
                 "aws/aws-sdk-php": "^3.342",
+                "illuminate/database": "^12.1",
                 "illuminate/support": "^10.0 || ^12.1",
                 "php": ">=8.4"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "laravel": {
-                    "providers": [
-                        "MNarushevich\\AuditLogs\\AuditLogsServiceProvider"
-                    ],
                     "aliases": {
                         "AuditLogs": "MNarushevich\\AuditLogs\\Facades\\AuditLogs"
-                    }
+                    },
+                    "providers": [
+                        "MNarushevich\\AuditLogs\\AuditLogsServiceProvider"
+                    ]
                 }
             },
             "autoload": {
@@ -4308,12 +4308,13 @@
                     "MNarushevich\\AuditLogs\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "description": "A Laravel package for audit logging",
             "support": {
-                "source": "https://github.com/mnarushevich/laravel-audit-logs/tree/main",
-                "issues": "https://github.com/mnarushevich/laravel-audit-logs/issues"
+                "issues": "https://github.com/mnarushevich/laravel-audit-logs/issues",
+                "source": "https://github.com/mnarushevich/laravel-audit-logs/tree/v0.0.1"
             },
-            "time": "2025-03-07T07:58:05+00:00"
+            "time": "2025-03-12T16:37:52+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -12797,9 +12798,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "mnarushevich/laravel-audit-logs": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

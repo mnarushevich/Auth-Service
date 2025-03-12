@@ -15,7 +15,7 @@
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
         "mateusjunges/laravel-kafka": "^2.5",
-        "mnarushevich/laravel-audit-logs": "dev-main",
+        "mnarushevich/laravel-audit-logs": "v0.0.1",
         "spatie/laravel-permission": "^6.16",
         "tymon/jwt-auth": "^2.1"
     },
@@ -32,12 +32,6 @@
         "soloterm/solo": "^0.4.0",
         "spatie/laravel-ignition": "^2.8"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/mnarushevich/laravel-audit-logs.git"
-        }
-    ],
     "autoload": {
         "psr-4": {
             "App\\": "app/",
