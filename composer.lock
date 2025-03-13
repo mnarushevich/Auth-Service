@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1f3a98b76d8d88d8d5c8631a0a3e3d66",
+    "content-hash": "3fccf2332486d3a9893388f6e91af8f4",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -4274,20 +4274,19 @@
         },
         {
             "name": "mnarushevich/laravel-audit-logs",
-            "version": "v0.0.1",
+            "version": "v0.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mnarushevich/laravel-audit-logs.git",
-                "reference": "50438f7d03ae591e486743f1f4e257a96c4f2ca5"
+                "reference": "5657f49c4c688687a9f3ff0ae1c837268397ff76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mnarushevich/laravel-audit-logs/zipball/50438f7d03ae591e486743f1f4e257a96c4f2ca5",
-                "reference": "50438f7d03ae591e486743f1f4e257a96c4f2ca5",
+                "url": "https://api.github.com/repos/mnarushevich/laravel-audit-logs/zipball/5657f49c4c688687a9f3ff0ae1c837268397ff76",
+                "reference": "5657f49c4c688687a9f3ff0ae1c837268397ff76",
                 "shasum": ""
             },
             "require": {
-                "aws/aws-sdk-php": "^3.342",
                 "illuminate/database": "^12.1",
                 "illuminate/support": "^10.0 || ^12.1",
                 "php": ">=8.4"
@@ -4312,9 +4311,9 @@
             "description": "A Laravel package for audit logging",
             "support": {
                 "issues": "https://github.com/mnarushevich/laravel-audit-logs/issues",
-                "source": "https://github.com/mnarushevich/laravel-audit-logs/tree/v0.0.1"
+                "source": "https://github.com/mnarushevich/laravel-audit-logs/tree/v0.0.2"
             },
-            "time": "2025-03-12T16:37:52+00:00"
+            "time": "2025-03-13T16:33:03+00:00"
         },
         {
             "name": "monolog/monolog",

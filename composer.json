@@ -15,7 +15,7 @@
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
         "mateusjunges/laravel-kafka": "^2.5",
-        "mnarushevich/laravel-audit-logs": "v0.0.1",
+        "mnarushevich/laravel-audit-logs": "^0.0.2",
         "spatie/laravel-permission": "^6.16",
         "tymon/jwt-auth": "^2.1"
     },
