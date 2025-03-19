@@ -5,7 +5,10 @@ declare(strict_types=1);
 use App\Enums\RolesEnum;
 use App\Models\User;
 use App\Services\UserService;
+use Database\Factories\UserFactory;
+use Illuminate\Support\Str;
 use Junges\Kafka\Facades\Kafka;
+use Junges\Kafka\Message\Message;
 use Tests\TestCase;
 
 uses(TestCase::class);
@@ -21,8 +24,9 @@ describe('UserService::publishUserCreatedEvent method', function () {
         Kafka::fake();
 
         $now = now();
-        $user = new User([
-            'uuid' => '123e4567-e89b-12d3-a456-426614174000',
+        $uuid = Str::uuid()->toString();
+        $user = UserFactory::new()->make([
+            'uuid' => $uuid,
             'email' => 'test@test.com',
             'first_name' => 'John',
             'last_name' => 'Doe',
@@ -37,6 +41,18 @@ describe('UserService::publishUserCreatedEvent method', function () {
 
         (new UserService)->publishUserCreatedEvent($user);
 
-        Kafka::assertPublished();
+        $expectedMessage = new Message(
+            headers: ['event-type' => 'user-created'],
+            body: [
+                'id' => $uuid,
+                'email' => 'test@test.com',
+                'first_name' => 'John',
+                'last_name' => 'Doe',
+                'roles' => [RolesEnum::USER],
+                'created_at' => $now->toIso8601String(),
+            ]
+        );
+
+        Kafka::assertPublished($expectedMessage);
     });
 });

@@ -18,7 +18,6 @@ final class UserService
     {
         try {
             $message = new Message(
-                partition: 1,
                 headers: ['event-type' => 'user-created'],
                 body: [
                     'id' => $user->uuid,
@@ -26,9 +25,8 @@ final class UserService
                     'first_name' => $user->first_name,
                     'last_name' => $user->last_name,
                     'roles' => $user->getRoleNames()->toArray(),
-                    // 'created_at' => $user->created_at->toIso8601String(),
+                    'created_at' => $user->created_at->toIso8601String(),
                 ],
-                key: 'kafka key here'
             );
 
             Kafka::publish(config('kafka.brokers'))
