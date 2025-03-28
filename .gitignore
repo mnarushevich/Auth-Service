@@ -1,7 +1,6 @@
 data
 .fleet
 .idea
-.vscode
 logs
 
 .phpunit.cache

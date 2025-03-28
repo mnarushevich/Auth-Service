@@ -35,6 +35,8 @@ setup-tests:
 	docker exec auth_service_app cp .env.testing.example .env.testing
 	docker exec auth_service_app php artisan key:generate --env=testing
 	docker exec auth_service_app php artisan jwt:secret --env=testing --force
+	docker exec auth_service_app php artisan migrate:fresh --env=testing
+	docker exec auth_service_app php artisan config:clear --env=testing
 
 run-tests:
 	docker exec auth_service_app php artisan test --colors=always --env=testing

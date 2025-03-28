@@ -11,6 +11,59 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @OA\Post(
+ *     path="/auth/reset-password",
+ *     summary="Reset password",
+ *     description="Reset user's password using the token received via email",
+ *     tags={"Auth"},
+ *
+ *     @OA\RequestBody(
+ *         required=true,
+ *
+ *         @OA\JsonContent(
+ *             required={"token", "email", "password", "password_confirmation"},
+ *
+ *             @OA\Property(property="token", type="string", example="1234-5678-abcd-efgh"),
+ *             @OA\Property(property="email", type="string", format="email", example="user@example.com"),
+ *             @OA\Property(property="password", type="string", format="password", example="newPassword123"),
+ *             @OA\Property(property="password_confirmation", type="string", format="password", example="newPassword123")
+ *         )
+ *     ),
+ *
+ *     @OA\Response(
+ *         response=200,
+ *         description="Password reset successful",
+ *
+ *         @OA\JsonContent(
+ *
+ *             @OA\Property(property="status", type="integer", example=200),
+ *             @OA\Property(property="message", type="string", example="Password reset successful.")
+ *         )
+ *     ),
+ *
+ *     @OA\Response(
+ *         response=400,
+ *         description="Invalid token or email",
+ *
+ *         @OA\JsonContent(
+ *
+ *             @OA\Property(property="message", type="string", example="Invalid token or email.")
+ *         )
+ *     ),
+ *
+ *     @OA\Response(
+ *         response=422,
+ *         description="Validation error",
+ *
+ *         @OA\JsonContent(
+ *
+ *             @OA\Property(property="message", type="string", example="The password confirmation does not match."),
+ *             @OA\Property(property="errors", type="object")
+ *         )
+ *     )
+ * )
+ */
 final class ResetPasswordController extends Controller
 {
     public function __invoke(Request $request): JsonResponse

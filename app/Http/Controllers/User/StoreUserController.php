@@ -9,10 +9,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Support\Facades\Hash;
 
 final class StoreUserController extends Controller
 {
+    public function __construct(
+        private readonly UserService $userService,
+    ) {}
+
     /**
      * @OA\Post(
      *     path="/users",
@@ -49,6 +54,9 @@ final class StoreUserController extends Controller
         $user->address()->create([
             'country' => $request->input('address.country'),
         ]);
+
+        $this->userService->publishUserCreatedEvent($user);
+
         $user->refresh()->load('address');
 
         return new UserResource($user);
