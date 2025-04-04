@@ -11,11 +11,11 @@ class UserPolicy
 {
     public function delete(User $authUser, User $user): bool
     {
-        return $authUser->role === RolesEnum::ADMIN || $authUser->uuid === $user->uuid;
+        return $authUser->hasRole(RolesEnum::ADMIN->value) || $authUser->uuid === $user->uuid;
     }
 
     public function update(User $authUser, User $user): bool
     {
-        return $authUser->role === RolesEnum::ADMIN->value || $authUser->uuid === $user->uuid;
+        return $authUser->hasRole(RolesEnum::ADMIN->value) || $authUser->uuid === $user->uuid;
     }
 }

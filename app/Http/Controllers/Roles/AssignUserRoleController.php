@@ -8,12 +8,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AssignUserRoleRequest;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class AssignUserRoleController extends Controller
 {
-    public function __invoke(User $user, AssignUserRoleRequest $request)
+    public function __invoke(User $user, AssignUserRoleRequest $request): JsonResponse
     {
         $roleName = $request->input('role_name');
 
