@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Resources\RoleResource;
 use App\Models\Role;
-use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 final class StoreRoleController extends Controller
@@ -35,7 +34,7 @@ final class StoreRoleController extends Controller
      *     @OA\Response(response=400, description="Bad request")
      * )
      */
-    public function __invoke(StoreRoleRequest $request): JsonResponse|RoleResource
+    public function __invoke(StoreRoleRequest $request): RoleResource
     {
         $roleName = $request->input('name');
 
