@@ -14,7 +14,6 @@ enum RolesEnum: string
         return match ($this) {
             RolesEnum::ADMIN => 'Admins',
             RolesEnum::USER => 'Users',
-            RolesEnum::USERMANAGER => 'User Managers',
         };
     }
 }

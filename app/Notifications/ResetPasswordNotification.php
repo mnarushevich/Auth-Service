@@ -7,6 +7,7 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 
 class ResetPasswordNotification extends Notification
 {
@@ -29,7 +30,7 @@ class ResetPasswordNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        \Log::info('Sending an email to reset password');
+        Log::info('Sending an email to reset password');
 
         return (new MailMessage)
             ->subject('Reset Your Password')
