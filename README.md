@@ -1,66 +1,109 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Auth Service
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## About The Project
 
-## About Laravel
+Auth Service is a Laravel-based microservice responsible for user authentication and management. It provides a robust set of features including:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+*   User registration and login (via email and password).
+*   JWT (JSON Web Token) based authentication.
+*   Retrieval of authenticated user data, including roles and permissions.
+*   Password reset functionality.
+*   Token verification and refresh mechanisms.
+*   Role-Based Access Control (RBAC) using Spatie's Laravel Permission library.
+*   Publishes `user-created` events to a Kafka topic upon new user registration.
+*   Uses UUIDs for user primary keys.
+*   Includes audit logging capabilities.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+The service is designed to be run in a containerized environment using Docker.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Getting Started
 
-## Learning Laravel
+### Prerequisites
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+To run this service, you will need Docker and Docker Compose installed on your system.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+*   **Docker:** [Installation Guide](https://docs.docker.com/get-docker/)
+*   **Docker Compose:** [Installation Guide](https://docs.docker.com/compose/install/)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Installation
 
-## Laravel Sponsors
+1.  **Clone the repository:**
+    ```sh
+    git clone <your-repository-url>
+    cd auth-service # Or your project's root directory
+    ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+2.  **Environment Configuration:**
+    This project uses a `.env` file for environment-specific settings. If an `.env.example` file is present, copy it to `.env`:
+    ```sh
+    cp .env.example .env
+    ```
+    Review the `.env` file and update variables as needed. Key variables include:
+    *   `APP_PORT` (defaults to `8701` in `docker-compose.yml`)
+    *   `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` (ensure these match your desired MySQL setup or the defaults in `docker-compose.yml`)
+    *   Kafka connection details (if different from defaults).
 
-### Premium Partners
+3.  **Build and Start Services:**
+    Use Docker Compose to build the images and start all services:
+    ```sh
+    docker-compose build
+    docker-compose up -d
+    ```
+    For newer versions of Docker Compose, you might use:
+    ```sh
+    docker compose build
+    docker compose up -d
+    ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+4.  **Application Setup:**
+    Once the containers are running, execute the following commands to set up the Laravel application:
+    ```sh
+    docker-compose exec auth_service composer install
+    docker-compose exec auth_service php artisan key:generate
+    docker-compose exec auth_service php artisan migrate
+    ```
+    If you have database seeders, you can run them with:
+    ```sh
+    docker-compose exec auth_service php artisan db:seed
+    ```
+
+## Usage
+
+Once the installation is complete and services are running:
+
+*   **Auth Service API:** The service will be accessible at `http://localhost:${APP_PORT}` (defaulting to `http://localhost:8701`). Refer to the API documentation (if available, e.g., via a Swagger/OpenAPI endpoint) for details on available endpoints, request, and response formats. Key API endpoints include:
+    *   `POST /auth/login` - User login
+    *   `POST /auth/me` - Get authenticated user data
+    *   (Other endpoints for registration, logout, password reset, etc.)
+
+*   **Mailpit (Email Testing):** View emails sent by the application (e.g., password reset emails) at `http://localhost:8025`.
+
+*   **Kafka UI:** Monitor and manage Kafka topics and messages at `http://localhost:8080`. The Kafka cluster `local` should be pre-configured, connecting to `kafka:9093`.
+
+## Key Technologies
+
+*   Laravel Framework (PHP)
+*   Docker & Docker Compose
+*   MySQL
+*   Redis
+*   Apache Kafka
+*   JWT Authentication (Tymon/JWTAuth)
+*   Role-Based Access Control (Spatie Laravel Permission)
+*   Mailpit
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-## Code of Conduct
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1.  Fork the Project
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the Branch (`git push origin feature/AmazingFeature`)
+5.  Open a Pull Request
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Distributed under the MIT License. See `LICENSE.txt` (or `LICENSE`) for more information. (You may need to create this file if it doesn't exist).
