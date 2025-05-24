@@ -1,36 +1,136 @@
-version: '3.7'
-
 services:
-  app:
-    build:
-      context: ./
-      dockerfile: ./docker/frankenphp/Dockerfile
-    container_name: auth_service_app
-    entrypoint: php artisan octane:frankenphp --workers=1 --max-requests=1
-    user: "${UID}"
-    volumes:
-      - ./src:/app
-      - /app/vendor
-    ports:
-      - "8701:8000"
-    depends_on:
-      - mysql
-      - redis
+    auth_service:
+        build:
+            context: './docker/8.4'
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP}'
+        image: 'sail-8.4/app'
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        ports:
+            - '${APP_PORT:-8701}:80'
+            - '${APP_DEBUG_PORT:-9001}:9003'
+            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+        container_name: auth_service_app
+        environment:
+            WWWUSER: '${WWWUSER}'
+            LARAVEL_SAIL: 1
+            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal} client_port=9003'
+            IGNITION_LOCAL_SITES_PATH: '${PWD}'
+            PHP_IDE_CONFIG: "serverName=Docker"
+        volumes:
+            - '.:/var/www/html'
+        networks:
+            - sbc
+            - sbs-shared
+        depends_on:
+            - auth_mysql
+            - auth_redis
+            - kafka
 
-  redis:
-    image: redis:latest
-    container_name: auth_service_redis
-    ports:
-      - "6310:6379"
+    auth_mysql:
+        image: 'mysql/mysql-server:8.0'
+        ports:
+            - '${FORWARD_DB_PORT:-3306}:3306'
+        container_name: auth_db
+        environment:
+            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ROOT_HOST: '%'
+            MYSQL_DATABASE: '${DB_DATABASE}'
+            MYSQL_USER: '${DB_USERNAME}'
+            MYSQL_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ALLOW_EMPTY_PASSWORD: 1
+        volumes:
+            - 'sbc-auth-mysql:/var/lib/mysql'
+            - './docker/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+        networks:
+            - sbc
+            - sbs-shared
+        healthcheck:
+            test:
+                - CMD
+                - mysqladmin
+                - ping
+                - '-p${DB_PASSWORD}'
+            retries: 3
+            timeout: 5s
+    auth_redis:
+        image: 'redis:alpine'
+        ports:
+            - '${FORWARD_REDIS_PORT:-6379}:6379'
+        container_name: auth_redis
+        volumes:
+            - 'sbc-auth-redis:/data'
+        networks:
+            - sbc
+            - sbs-shared
+        healthcheck:
+            test:
+                - CMD
+                - redis-cli
+                - ping
+            retries: 3
+            timeout: 5s
 
-  mysql:
-    image: mysql:8.3.0
-    platform: linux/x86_64
-    container_name: auth_service_db
-    environment:
-      MYSQL_ROOT_PASSWORD: pass
-      MYSQL_DATABASE: auth_service_db
-    ports:
-      - "8910:3306"
-    volumes:
-      - ./data/mysql:/var/lib/mysql
+    mailpit:
+        image: axllent/mailpit
+        networks:
+            - sbc
+            - sbs-shared
+        ports:
+            - "8025:8025"
+            - "1025:1025"
+
+    kafka:
+        image: apache/kafka-native
+        ports:
+            - "9092:9092"
+        networks:
+            - sbc
+            - sbs-shared
+        environment:
+            # Configure listeners for both docker and host communication
+            KAFKA_LISTENERS: CONTROLLER://localhost:9091,HOST://0.0.0.0:9092,DOCKER://0.0.0.0:9093
+            KAFKA_ADVERTISED_LISTENERS: HOST://localhost:9092,DOCKER://kafka:9093
+            KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,DOCKER:PLAINTEXT,HOST:PLAINTEXT
+
+            # Settings required for KRaft mode
+            KAFKA_NODE_ID: 1
+            KAFKA_PROCESS_ROLES: broker,controller
+            KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+            KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9091
+
+            # Listener to use for broker-to-broker communication
+            KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER
+
+            # Required for a single node cluster
+            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+    kafka-ui:
+        image: ghcr.io/kafbat/kafka-ui:latest
+        ports:
+            - 8080:8080
+        environment:
+            DYNAMIC_CONFIG_ENABLED: "true"
+            KAFKA_CLUSTERS_0_NAME: local
+            KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9093
+        networks:
+            - sbc
+            - sbs-shared
+        depends_on:
+            - kafka
+
+networks:
+    sbs-shared:
+        external: true
+    sbc:
+        driver: bridge
+volumes:
+    sbc-auth-mysql:
+        driver: local
+    sbc-auth-redis:
+        driver: local
+    kafka-data:
+        driver: local
