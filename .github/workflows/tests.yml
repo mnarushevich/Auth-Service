@@ -25,8 +25,8 @@ jobs:
           cp .env.testing.example .env.testing
           php artisan key:generate --env=testing
           php artisan jwt:secret --env=testing --force
-        working-directory: ./src
+        working-directory: ./var/www/html
 
       - name: Tests
         run: ./vendor/bin/pest --ci
-        working-directory: ./src
+        working-directory: ./var/www/html
