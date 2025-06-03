@@ -29,17 +29,13 @@ class UsersList extends Component implements HasForms, HasTable
             ->header(view('livewire.users.layouts.table-header'))
             ->columns([
                 TextColumn::make('full_name')
-                    ->sortable(query: function (Builder $query, string $direction): Builder {
-                        return $query
-                            ->orderBy('last_name', $direction)
-                            ->orderBy('first_name', $direction);
-                    })->searchable(
-                        query: function (Builder $query, string $search): Builder {
-                            return $query->where('first_name', 'like', "%$search%")
-                                ->orWhere('last_name', 'like', "%$search%");
-                        },
-                        isIndividual: true,
-                    )
+                    ->sortable(query: fn (Builder $query, string $direction): Builder => $query
+                        ->orderBy('last_name', $direction)
+                        ->orderBy('first_name', $direction))->searchable(
+                            query: fn (Builder $query, string $search): Builder => $query->where('first_name', 'like', sprintf('%%%s%%', $search))
+                                ->orWhere('last_name', 'like', sprintf('%%%s%%', $search)),
+                            isIndividual: true,
+                        )
                     ->url(fn (UserModel $user): string => route('users.show', $user))
                     ->tooltip('Click to view details'),
                 TextColumn::make('email')

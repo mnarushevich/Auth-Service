@@ -76,7 +76,7 @@ final class ResetPasswordController extends Controller
 
         $status = Password::reset(
             $validated,
-            function ($user, $password) {
+            function ($user, $password): void {
                 $user->forceFill([
                     'password' => Hash::make($password),
                 ])->save();

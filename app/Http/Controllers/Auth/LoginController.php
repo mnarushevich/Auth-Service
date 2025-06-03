@@ -72,7 +72,7 @@ final class LoginController extends Controller
         return $this->respondWithToken($token);
     }
 
-    protected function respondWithToken($token): JsonResponse
+    private function respondWithToken($token): JsonResponse
     {
         return response()->json([
             'access_token' => $token,

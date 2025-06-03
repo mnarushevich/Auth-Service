@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Notification;
 use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
-describe('Reset password flow', function () {
-    it('fails to send reset password email with invalid payload', function () {
+describe('Reset password flow', function (): void {
+    it('fails to send reset password email with invalid payload', function (): void {
         $this->postJson(
             getUrl(BaseWebTestCase::PASSWORD_SEND_RESET_LINK_ROUTE_NAME)
         )
@@ -23,7 +23,7 @@ describe('Reset password flow', function () {
             );
     });
 
-    it('fails to reset password with invalid payload', function (array $payload, string $errorMessage) {
+    it('fails to reset password with invalid payload', function (array $payload, string $errorMessage): void {
         $this->postJson(
             getUrl(BaseWebTestCase::PASSWORD_RESET_ROUTE_NAME), $payload,
         )
@@ -43,7 +43,7 @@ describe('Reset password flow', function () {
             [['email' => TEST_USER_EMAIL, 'token' => 'Test', 'password' => 'Test1234', 'password_confirmation' => 'Test'], 'The password field confirmation does not match.'],
         ]);
 
-    it('it sends email with password reset code', function () {
+    it('it sends email with password reset code', function (): void {
         Notification::fake();
         $email = fake()->email;
         $password = fake()->password();
@@ -64,7 +64,7 @@ describe('Reset password flow', function () {
         Notification::assertSentTo(
             $user,
             ResetPasswordNotification::class,
-            function ($notification, $channels) use (&$resetToken) {
+            function ($notification, $channels) use (&$resetToken): bool {
                 $resetToken = $notification->getToken();
 
                 return in_array('mail', $channels);

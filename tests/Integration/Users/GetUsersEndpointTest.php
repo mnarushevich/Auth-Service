@@ -8,8 +8,8 @@ use Database\Factories\UserFactory;
 use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
-describe('GET /users', function () {
-    it('rejects for unauthorized', function () {
+describe('GET /users', function (): void {
+    it('rejects for unauthorized', function (): void {
         $this->getJson(
             getUrl(BaseWebTestCase::GET_USERS_ROUTE_NAME),
         )
@@ -22,7 +22,7 @@ describe('GET /users', function () {
             );
     });
 
-    it('returns users for authenticated', function () {
+    it('returns users for authenticated', function (): void {
         UserFactory::new()->count(10)->withUserRole()->create();
         $this->getJson(
             getUrl(BaseWebTestCase::GET_USERS_ROUTE_NAME),

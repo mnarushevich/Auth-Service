@@ -24,7 +24,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  */
 class UserResource extends JsonResource
 {
-    public function __construct($resource, private bool $isAuthUser = false)
+    public function __construct($resource, private readonly bool $isAuthUser = false)
     {
         parent::__construct($resource);
     }
@@ -32,6 +32,7 @@ class UserResource extends JsonResource
     /**
      * @return array<string, mixed>
      */
+    #[\Override]
     public function toArray(Request $request): array
     {
         return [

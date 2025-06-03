@@ -19,11 +19,11 @@ class RemoveUserRoleController extends Controller
         $roleName = $request->input('role_name');
 
         if (! Role::query()->where('name', $roleName)->exists()) {
-            throw new BadRequestHttpException("Role with name `$roleName` does not exist");
+            throw new BadRequestHttpException(sprintf('Role with name `%s` does not exist', $roleName));
         }
 
         if (! $user->hasRole($roleName)) {
-            throw new BadRequestHttpException("User does not have role `$roleName`");
+            throw new BadRequestHttpException(sprintf('User does not have role `%s`', $roleName));
         }
 
         $user->removeRole($roleName);

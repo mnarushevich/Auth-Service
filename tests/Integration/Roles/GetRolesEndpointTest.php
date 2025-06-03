@@ -10,8 +10,8 @@ use App\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
-describe('GET /roles', function () {
-    it('rejects for unauthorized', function () {
+describe('GET /roles', function (): void {
+    it('rejects for unauthorized', function (): void {
         $this->getJson(
             getUrl(BaseWebTestCase::GET_ROLES_ROUTE_NAME),
         )
@@ -24,7 +24,7 @@ describe('GET /roles', function () {
             );
     });
 
-    it('returns roles list', function () {
+    it('returns roles list', function (): void {
         $role = Role::create([
             'name' => RolesEnum::USER->value,
             'guard_name' => GuardsEnum::API->value,

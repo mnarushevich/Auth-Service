@@ -28,7 +28,7 @@ final class RefreshTokenController extends Controller
         return $this->respondWithToken(Auth::refresh());
     }
 
-    protected function respondWithToken($token): JsonResponse
+    private function respondWithToken($token): JsonResponse
     {
         return response()->json([
             'access_token' => $token,

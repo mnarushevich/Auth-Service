@@ -19,11 +19,11 @@ class AssignUserRoleController extends Controller
         $roleName = $request->input('role_name');
 
         if (! Role::query()->where('name', $roleName)->exists()) {
-            throw new BadRequestHttpException("Role with name `$roleName` does not exist");
+            throw new BadRequestHttpException(sprintf('Role with name `%s` does not exist', $roleName));
         }
 
         if ($user->hasRole($roleName)) {
-            throw new BadRequestHttpException("User already has role `$roleName`");
+            throw new BadRequestHttpException(sprintf('User already has role `%s`', $roleName));
         }
 
         $user->assignRole($roleName);

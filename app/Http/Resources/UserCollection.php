@@ -9,6 +9,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class UserCollection extends ResourceCollection
 {
+    #[\Override]
     public function toArray(Request $request): array
     {
         return [

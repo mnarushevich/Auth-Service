@@ -1,3 +1,8 @@
+<?php
+
+declare(strict_types=1);
+
+?>
 <footer class="bg-green-700
         text-3xl text-white text-center
         border-t-4 border-red-500
@@ -54,3 +59,4 @@ This is sticky fixed Footer.">
         </div>
     </div>
 </footer>
+<?php 

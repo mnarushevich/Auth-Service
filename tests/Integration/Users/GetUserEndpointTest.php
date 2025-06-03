@@ -9,8 +9,8 @@ use Illuminate\Testing\Fluent\AssertableJson;
 use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
-describe('GET /users/{uuid}', function () {
-    it('rejects for unauthorized', function () {
+describe('GET /users/{uuid}', function (): void {
+    it('rejects for unauthorized', function (): void {
         $this->getJson(
             getUrl(BaseWebTestCase::GET_USER_BY_UUID_ROUTE_NAME, ['user' => 'test']),
         )
@@ -23,7 +23,7 @@ describe('GET /users/{uuid}', function () {
             );
     });
 
-    it('returns not found for invalid UUID', function () {
+    it('returns not found for invalid UUID', function (): void {
         $this->getJson(
             getUrl(BaseWebTestCase::GET_USER_BY_UUID_ROUTE_NAME, ['user' => 'test']),
             headers: getAuthorizationHeader($this->token)
@@ -37,7 +37,7 @@ describe('GET /users/{uuid}', function () {
             );
     })->group('with-auth');
 
-    it('returns user data for valid UUID for USER role', function () {
+    it('returns user data for valid UUID for USER role', function (): void {
         expect($this->user->getRoleNames()->toArray())
             ->toBeArray()
             ->toHaveCount(1)
@@ -48,7 +48,7 @@ describe('GET /users/{uuid}', function () {
             headers: getAuthorizationHeader($this->token)
         )
             ->assertOk()
-            ->assertJson(fn (AssertableJson $json) => $json->has('data.roles'))
+            ->assertJson(fn (AssertableJson $json): \Illuminate\Testing\Fluent\AssertableJson => $json->has('data.roles'))
             ->assertJsonMissingPath('data.permissions')
             ->assertJsonPath('data.uuid', $this->user->uuid)
             ->assertJsonPath('data.first_name', $this->user->first_name)
@@ -58,7 +58,7 @@ describe('GET /users/{uuid}', function () {
             ->assertJsonPath('data.address.country', $this->user->address->country);
     })->group('with-auth');
 
-    it('returns user data for valid UUID for ADMIN role', function () {
+    it('returns user data for valid UUID for ADMIN role', function (): void {
         $this->user->removeRole(RolesEnum::USER);
         $this->user->assignRole(RolesEnum::ADMIN);
         expect($this->user->getRoleNames()->toArray())
@@ -71,7 +71,7 @@ describe('GET /users/{uuid}', function () {
             headers: getAuthorizationHeader($this->token)
         )
             ->assertOk()
-            ->assertJson(fn (AssertableJson $json) => $json->hasAll(['data.roles', 'data.permissions']))
+            ->assertJson(fn (AssertableJson $json): \Illuminate\Testing\Fluent\AssertableJson => $json->hasAll(['data.roles', 'data.permissions']))
             ->assertJsonPath('data.uuid', $this->user->uuid)
             ->assertJsonPath('data.first_name', $this->user->first_name)
             ->assertJsonPath('data.last_name', $this->user->last_name)

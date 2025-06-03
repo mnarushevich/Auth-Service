@@ -40,7 +40,7 @@ final class StorePermissionController extends Controller
         $permissionName = $request->input('name');
 
         if (Permission::query()->where('name', $permissionName)->exists()) {
-            throw new BadRequestHttpException("Permission with name `$permissionName` already exist");
+            throw new BadRequestHttpException(sprintf('Permission with name `%s` already exist', $permissionName));
         }
 
         $permission = new Permission;

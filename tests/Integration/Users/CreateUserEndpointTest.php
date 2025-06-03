@@ -8,12 +8,12 @@ use App\Enums\RolesEnum;
 use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
-describe('POST /users', function () {
-    beforeEach(function () {
+describe('POST /users', function (): void {
+    beforeEach(function (): void {
         $this->mockPass = fake()->password();
     });
 
-    it('rejects with invalid payload data', function () {
+    it('rejects with invalid payload data', function (): void {
         $dataset = [
             [
                 [
@@ -89,7 +89,7 @@ describe('POST /users', function () {
         }
     });
 
-    it('creates new user with valid payload', function () {
+    it('creates new user with valid payload', function (): void {
         $mockEmail = fake()->email();
         $mockFirstName = fake()->firstName();
         $mockLastName = fake()->lastName();

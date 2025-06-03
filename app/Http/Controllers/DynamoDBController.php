@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -7,7 +9,7 @@ use MNarushevich\AuditLogs\Services\AWS\DynamoDBService;
 
 class DynamoDBController extends Controller
 {
-    public function __construct(private DynamoDBService $dynamoDBService) {}
+    public function __construct(private readonly DynamoDBService $dynamoDBService) {}
 
     public function createTable()
     {

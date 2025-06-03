@@ -25,9 +25,9 @@ use App\Http\Controllers\User\StoreUserController;
 use App\Http\Controllers\User\UpdateUserController;
 use Illuminate\Support\Facades\Route;
 
-Route::as('api.')->group(function () {
-    Route::middleware(['auth:api'])->group(function () {
-        Route::prefix('users')->as('users.')->group(function () {
+Route::as('api.')->group(function (): void {
+    Route::middleware(['auth:api'])->group(function (): void {
+        Route::prefix('users')->as('users.')->group(function (): void {
             Route::get('/', ShowUserListController::class)->name('index');
             Route::post('/', StoreUserController::class)->name('store')->withoutMiddleware(['auth:api']);
             Route::get('/{user}', ShowUserController::class)->name('show');
@@ -38,7 +38,7 @@ Route::as('api.')->group(function () {
             Route::post('/{user}/remove-role', RemoveUserRoleController::class)->name('remove-user-role');
         });
 
-        Route::prefix('auth')->as('auth.')->group(function () {
+        Route::prefix('auth')->as('auth.')->group(function (): void {
             Route::post('login', LoginController::class)->name('login')->withoutMiddleware(['auth:api']);
             Route::post('logout', LogoutController::class)->name('logout');
             Route::post('refresh', RefreshTokenController::class)->name('refresh');
@@ -46,13 +46,13 @@ Route::as('api.')->group(function () {
             Route::post('verify', VerifyTokenController::class)->name('verify');
         });
 
-        Route::prefix('roles')->as('roles.')->group(function () {
+        Route::prefix('roles')->as('roles.')->group(function (): void {
             Route::get('/', ShowRoleListController::class)->name('index');
             Route::post('/', StoreRoleController::class)->name('store');
             Route::delete('/', DeleteRoleController::class)->name('destroy');
         });
 
-        Route::prefix('permissions')->as('permissions.')->group(function () {
+        Route::prefix('permissions')->as('permissions.')->group(function (): void {
             Route::get('/', ShowPermissionListController::class)->name('index');
             Route::post('/', StorePermissionController::class)->name('store');
             Route::delete('/', DeletePermissionController::class)->name('destroy');

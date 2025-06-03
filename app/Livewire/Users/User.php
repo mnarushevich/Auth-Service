@@ -21,7 +21,7 @@ class User extends Component implements HasActions, HasForms
 
     public UserModel $user;
 
-    public ?string $token;
+    public ?string $token = null;
 
     public function deleteAction(): Action
     {
@@ -50,7 +50,7 @@ class User extends Component implements HasActions, HasForms
         $this->token = JWTAuth::claims($claims)->fromUser($this->user);
     }
 
-    public function mount(UserModel $user)
+    public function mount(UserModel $user): void
     {
         $this->user = $user;
     }

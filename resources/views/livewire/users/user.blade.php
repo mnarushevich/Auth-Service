@@ -1,3 +1,8 @@
+<?php
+
+declare(strict_types=1);
+
+?>
 <div class="px-20">
     <div class="bg-white overflow-hidden shadow rounded-lg border">
         <div class="flex items-center justify-between h-16 bg-white border-b border-gray-200">
@@ -79,3 +84,4 @@
         </div>
     </div>
 </div>
+<?php 
