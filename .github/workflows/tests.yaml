@@ -29,6 +29,14 @@ jobs:
           path: vendor
           key: dependencies-php-composer-${{ hashFiles('composer.lock') }}
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: json, dom, curl, libxml, mbstring, zip, rdkafka
+          tools: composer:v2
+          coverage: xdebug
+
       - name: Setup Problem Matches
         run: |
           echo "::add-matcher::${{ runner.tool_cache }}/php.json"
