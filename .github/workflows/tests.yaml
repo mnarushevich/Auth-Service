@@ -48,7 +48,7 @@ jobs:
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Install PHP dependencies
-        if: steps.php-cache.outputs.cache-hit != 'true'
+#        if: steps.php-cache.outputs.cache-hit != 'true'
         run: |
           mkdir -p storage/framework/views
           composer install --no-interaction --no-progress --ansi --optimize-autoloader
@@ -76,10 +76,11 @@ jobs:
 
       - name: Prepare Laravel
         run: |
-          cp .env.example .env
-          mkdir -p bootstrap/cache
-          chmod -R 775 storage
-          chmod -R 775 bootstrap/cache
+          cp .env.testing.example .env
+#          mkdir -p storage/framework/views
+#          mkdir -p bootstrap/cache
+#          chmod -R 775 storage
+#          chmod -R 775 bootstrap/cache
           php artisan key:generate
           php artisan jwt:secret --force
 
