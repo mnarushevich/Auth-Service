@@ -1,13 +1,13 @@
 install_and_start:
-	composer install
+	herd isolate 8.4
+	herd composer install
 	cp .env.example .env
-	php artisan sail:install
-	./vendor/bin/sail up -d
-	docker exec auth_service_app php artisan key:generate
-	docker exec auth_service_app php artisan jwt:secret --force
+	docker compose up -d
+	herd php artisan key:generate
+	herd php artisan jwt:secret --force
 
 up:
-	./vendor/bin/sail up -d
+	docker compose up -d
 
 rebuild:
 	docker compose up -d --no-deps --build app
@@ -16,30 +16,30 @@ exec:
 	docker exec -it auth_service_app bash
 
 front:
-	docker exec -it auth_service_app npm run dev
+	npm run dev
 
 db-seed:
-	docker exec auth_service_app php artisan db:seed
+	herd php artisan db:seed
 
 stop:
-	./vendor/bin/sail down
+	docker compose down
 
 setup-hooks:
-	docker exec -it auth_service_app git config core.hooksPath .githooks
+	git config core.hooksPath .githooks
 
 solo:
-	docker exec -it auth_service_app php artisan solo
+	herd php artisan solo
 
 setup-tests:
 	touch database/database.sqlite
-	docker exec auth_service_app cp .env.testing.example .env.testing
-	docker exec auth_service_app php artisan key:generate --env=testing
-	docker exec auth_service_app php artisan jwt:secret --env=testing --force
-	docker exec auth_service_app php artisan migrate:fresh --env=testing
-	docker exec auth_service_app php artisan config:clear --env=testing
+	cp .env.testing.example .env.testing
+	herd php artisan key:generate --env=testing
+	herd php artisan jwt:secret --env=testing --force
+	herd php artisan migrate:fresh --env=testing
+	herd php artisan config:clear --env=testing
 
 run-tests:
-	docker exec auth_service_app php artisan test --colors=always --env=testing
+	herd php artisan test --colors=always --env=testing
 
 api-docs-generate:
-	docker exec auth_service_app php artisan l5-swagger:generate
+	herd php artisan l5-swagger:generate
