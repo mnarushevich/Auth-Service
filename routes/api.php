@@ -9,7 +9,6 @@ use App\Http\Controllers\Auth\RefreshTokenController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\SendPasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyTokenController;
-use App\Http\Controllers\DynamoDBController;
 use App\Http\Controllers\Permissions\DeletePermissionController;
 use App\Http\Controllers\Permissions\ShowPermissionListController;
 use App\Http\Controllers\Permissions\StorePermissionController;
@@ -57,11 +56,6 @@ Route::as('api.')->group(function (): void {
             Route::post('/', StorePermissionController::class)->name('store');
             Route::delete('/', DeletePermissionController::class)->name('destroy');
         });
-
-        Route::get('/dynamodb/create-table', [DynamoDBController::class, 'createTable']);
-        Route::post('/dynamodb/store', [DynamoDBController::class, 'store']);
-        Route::get('/dynamodb/show/{id}', [DynamoDBController::class, 'show']);
-        Route::delete('/dynamodb/delete/{id}', [DynamoDBController::class, 'destroy']);
     });
 
     Route::post('password/send-reset-link', SendPasswordResetLinkController::class)->name('password.send-reset-link');

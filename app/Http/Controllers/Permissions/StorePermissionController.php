@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePermissionRequest;
 use App\Http\Resources\PermissionResource;
 use App\Models\Permission;
-use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 final class StorePermissionController extends Controller
@@ -35,7 +34,7 @@ final class StorePermissionController extends Controller
      *     @OA\Response(response=400, description="Bad request")
      * )
      */
-    public function __invoke(StorePermissionRequest $request): JsonResponse|PermissionResource
+    public function __invoke(StorePermissionRequest $request): PermissionResource
     {
         $permissionName = $request->input('name');
 
