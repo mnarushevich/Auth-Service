@@ -43,7 +43,7 @@ jobs:
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Install PHP dependencies
-        run: composer install --no-interaction --no-progress --ansi --optimize-autoloader
+        run: composer install --no-interaction --no-progress --optimize-autoloader
 
       - name: Prepare Laravel
         run: |
