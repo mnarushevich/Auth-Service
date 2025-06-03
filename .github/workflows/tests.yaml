@@ -71,8 +71,10 @@ jobs:
             mkdir -p storage/framework/views
             composer install --no-interaction --no-progress --ansi --optimize-autoloader
 
-      - name: Copy .env
-        run: cp .env.testing.example .env
+      - name: Setup test env configuration
+        run: |
+          touch database/database.sqlite
+          cp .env.testing.example .env
 
       - name: Create Laravel storage folders
         run: |
@@ -89,5 +91,5 @@ jobs:
           php artisan key:generate
           php artisan jwt:secret --force
 
-      - name: Tests
+      - name: Run tests
         run: composer test
