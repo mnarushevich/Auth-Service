@@ -29,6 +29,14 @@ jobs:
 #          path: vendor
 #          key: dependencies-php-composer-${{ hashFiles('composer.lock') }}
 
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -46,12 +54,6 @@ jobs:
         run: |
           echo "::add-matcher::${{ runner.tool_cache }}/php.json"
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
-
-      - name: Install PHP dependencies
-#        if: steps.php-cache.outputs.cache-hit != 'true'
-        run: |
-          mkdir -p storage/framework/views
-          composer install --no-interaction --no-progress --ansi --optimize-autoloader
 
       - name: Get NPM cache directory
         id: npm-cache-dir
@@ -74,9 +76,26 @@ jobs:
       - name: Build dependencies
         run: npm run build
 
-      - name: Prepare Laravel
+      - name: Install PHP dependencies
         run: |
-          cp .env.testing.example .env
+            composer install --no-interaction --no-progress --ansi --optimize-autoloader
+
+      - name: Copy .env
+        run: cp .env.testing.example .env
+
+      - name: Create Laravel storage folders
+        run: |
+          mkdir -p storage/framework/cache
+          mkdir -p storage/framework/sessions
+          mkdir -p storage/framework/views
+          mkdir -p storage/logs
+          mkdir -p bootstrap/cache
+
+      - name: Set permissions
+        run: chmod -R 775 storage bootstrap/cache
+
+      - name: Generate app key and JWT secret
+        run: |
           php artisan key:generate
           php artisan jwt:secret --force
 
