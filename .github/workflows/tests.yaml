@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [8.4]
+        php: [ 8.4 ]
 
     name: Tests
 
@@ -37,19 +37,47 @@ jobs:
           tools: composer:v2
           coverage: xdebug
 
+      - name: Set up Node & NPM
+        uses: actions/setup-node@v2
+        with:
+            node-version: '22.x'
+
       - name: Setup Problem Matches
         run: |
           echo "::add-matcher::${{ runner.tool_cache }}/php.json"
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Install PHP dependencies
+        if: steps.php-cache.outputs.cache-hit != 'true'
         run: |
           mkdir -p storage/framework/views
           composer install --no-interaction --no-progress --ansi --optimize-autoloader
 
+      - name: Get NPM cache directory
+        id: npm-cache-dir
+        shell: bash
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+
+      - name: Cache dependencies
+        id: npm-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm install
+
+      - name: Build dependencies
+        run: npm run build
+
       - name: Prepare Laravel
         run: |
           cp .env.example .env
+          mkdir -p bootstrap/cache
           php artisan key:generate
           php artisan jwt:secret --force
 

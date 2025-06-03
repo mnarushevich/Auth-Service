@@ -68,12 +68,14 @@
         "lint": "pint",
         "test:lint": "pint --test",
         "test:types": "phpstan analyse --memory-limit=512M",
+        "test:unit": "pest --colors=always --stop-on-failure",
         "test:type-coverage": "php -d memory_limit=2G ./vendor/bin/pest --type-coverage --compact --min=95",
         "test": [
             "@test:type-coverage",
             "@test:rector",
             "@test:lint",
-            "@test:types"
+            "@test:types",
+            "@test:unit"
         ]
     },
     "extra": {
