@@ -22,13 +22,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-#      - name: Cache Dependencies PHP
-#        id: php-cache
-#        uses: actions/cache@v4
-#        with:
-#          path: vendor
-#          key: dependencies-php-composer-${{ hashFiles('composer.lock') }}
-
       - name: Cache Composer dependencies
         uses: actions/cache@v3
         with:
@@ -75,6 +68,7 @@ jobs:
 
       - name: Install PHP dependencies
         run: |
+            mkdir -p storage/framework/views
             composer install --no-interaction --no-progress --ansi --optimize-autoloader
 
       - name: Copy .env
@@ -84,7 +78,6 @@ jobs:
         run: |
           mkdir -p storage/framework/cache
           mkdir -p storage/framework/sessions
-          mkdir -p storage/framework/views
           mkdir -p storage/logs
           mkdir -p bootstrap/cache
 
