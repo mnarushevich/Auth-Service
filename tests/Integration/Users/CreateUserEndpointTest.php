@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Auth;
 
 use App\Enums\RolesEnum;
+use Junges\Kafka\Facades\Kafka;
 use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
@@ -90,6 +91,8 @@ describe('POST /users', function (): void {
     });
 
     it('creates new user with valid payload', function (): void {
+        Kafka::fake();
+
         $mockEmail = fake()->email();
         $mockFirstName = fake()->firstName();
         $mockLastName = fake()->lastName();
@@ -113,5 +116,7 @@ describe('POST /users', function (): void {
             ->assertJsonPath('data.last_name', $mockLastName)
             ->assertJsonPath('data.address.country', $mockCountry)
             ->assertJsonPath('data.email', $mockEmail);
+
+        Kafka::assertPublishedOn('default');
     });
 })->group('users', 'with-roles-and-permissions');
