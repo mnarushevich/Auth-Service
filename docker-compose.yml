@@ -1,34 +1,36 @@
 services:
-    auth_service:
-        build:
-            context: './docker/8.4'
-            dockerfile: Dockerfile
-            args:
-                WWWGROUP: '${WWWGROUP}'
-        image: 'sail-8.4/app'
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
-        ports:
-            - '${APP_PORT:-8701}:80'
-            - '${APP_DEBUG_PORT:-9001}:9003'
-            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
-        container_name: auth_service_app
-        environment:
-            WWWUSER: '${WWWUSER}'
-            LARAVEL_SAIL: 1
-            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
-            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal} client_port=9003'
-            IGNITION_LOCAL_SITES_PATH: '${PWD}'
-            PHP_IDE_CONFIG: "serverName=Docker"
-        volumes:
-            - '.:/var/www/html'
-        networks:
-            - sbc
-            - sbs-shared
-        depends_on:
-            - auth_mysql
-            - auth_redis
-            - kafka
+
+#    # Uncomment the following section to enable the auth service via Docker
+#    auth_service:
+#        build:
+#            context: './docker/8.4'
+#            dockerfile: Dockerfile
+#            args:
+#                WWWGROUP: '${WWWGROUP}'
+#        image: 'sail-8.4/app'
+#        extra_hosts:
+#            - 'host.docker.internal:host-gateway'
+#        ports:
+#            - '${APP_PORT:-8701}:80'
+#            - '${APP_DEBUG_PORT:-9001}:9003'
+#            - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+#        container_name: auth_service_app
+#        environment:
+#            WWWUSER: '${WWWUSER}'
+#            LARAVEL_SAIL: 1
+#            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+#            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal} client_port=9003'
+#            IGNITION_LOCAL_SITES_PATH: '${PWD}'
+#            PHP_IDE_CONFIG: "serverName=Docker"
+#        volumes:
+#            - '.:/var/www/html'
+#        networks:
+#            - herd
+#            - sbs-shared
+#        depends_on:
+#            - auth_mysql
+#            - auth_redis
+#            - kafka
 
     auth_mysql:
         image: 'mysql/mysql-server:8.0'
@@ -43,11 +45,11 @@ services:
             MYSQL_PASSWORD: '${DB_PASSWORD}'
             MYSQL_ALLOW_EMPTY_PASSWORD: 1
         volumes:
-            - 'sbc-auth-mysql:/var/lib/mysql'
+            - 'herd-auth-mysql:/var/lib/mysql'
             - './docker/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
         networks:
-            - sbc
-            - sbs-shared
+            - herd
+            - herd-shared
         healthcheck:
             test:
                 - CMD
@@ -62,10 +64,10 @@ services:
             - '${FORWARD_REDIS_PORT:-6379}:6379'
         container_name: auth_redis
         volumes:
-            - 'sbc-auth-redis:/data'
+            - 'herd-auth-redis:/data'
         networks:
-            - sbc
-            - sbs-shared
+            - herd
+            - herd-shared
         healthcheck:
             test:
                 - CMD
@@ -77,8 +79,8 @@ services:
     mailpit:
         image: axllent/mailpit
         networks:
-            - sbc
-            - sbs-shared
+            - herd
+            - herd-shared
         ports:
             - "8025:8025"
             - "1025:1025"
@@ -87,9 +89,10 @@ services:
         image: apache/kafka-native
         ports:
             - "9092:9092"
+            - "9093:9093"
         networks:
-            - sbc
-            - sbs-shared
+            - herd
+            - herd-shared
         environment:
             # Configure listeners for both docker and host communication
             KAFKA_LISTENERS: CONTROLLER://localhost:9091,HOST://0.0.0.0:9092,DOCKER://0.0.0.0:9093
@@ -117,20 +120,20 @@ services:
             KAFKA_CLUSTERS_0_NAME: local
             KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9093
         networks:
-            - sbc
-            - sbs-shared
+            - herd
+            - herd-shared
         depends_on:
             - kafka
 
 networks:
-    sbs-shared:
+    herd-shared:
         external: true
-    sbc:
+    herd:
         driver: bridge
 volumes:
-    sbc-auth-mysql:
+    herd-auth-mysql:
         driver: local
-    sbc-auth-redis:
+    herd-auth-redis:
         driver: local
     kafka-data:
         driver: local

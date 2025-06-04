@@ -11,8 +11,8 @@ use App\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
-describe('DELETE /roles', function () {
-    it('rejects for unauthorized', function () {
+describe('DELETE /roles', function (): void {
+    it('rejects for unauthorized', function (): void {
         $this->deleteJson(
             getUrl(BaseWebTestCase::DELETE_ROLES_ROUTE_NAME),
         )
@@ -25,7 +25,7 @@ describe('DELETE /roles', function () {
             );
     });
 
-    it('fails to delete role with invalid payload', function (array $payload, string $errorMessage) {
+    it('fails to delete role with invalid payload', function (array $payload, string $errorMessage): void {
         $this->deleteJson(
             getUrl(BaseWebTestCase::DELETE_ROLES_ROUTE_NAME),
             data: $payload,
@@ -45,7 +45,7 @@ describe('DELETE /roles', function () {
             [['name' => PermissionsEnum::USERS_VIEW->value, 'guard_name' => 1234], 'The selected guard name is invalid.'],
         ])->group('with-auth');
 
-    it('returns not found for invalid role name', function () {
+    it('returns not found for invalid role name', function (): void {
         $invalidName = 'invalid-name';
         $this->deleteJson(
             getUrl(BaseWebTestCase::DELETE_ROLES_ROUTE_NAME),
@@ -63,7 +63,7 @@ describe('DELETE /roles', function () {
             );
     })->group('with-auth');
 
-    it('deletes role by name and guard name', function () {
+    it('deletes role by name and guard name', function (): void {
         $role = Role::create([
             'name' => RolesEnum::USER->value,
             'guard_name' => GuardsEnum::API->value,

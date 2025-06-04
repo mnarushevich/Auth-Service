@@ -66,8 +66,8 @@ final class SendPasswordResetLinkController extends Controller
             }
 
             return response()->json(['message' => 'Failed to send reset link.'], Response::HTTP_BAD_REQUEST);
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (\Exception $exception) {
+            return response()->json(['message' => $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

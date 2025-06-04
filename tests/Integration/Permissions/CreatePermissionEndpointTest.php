@@ -10,8 +10,8 @@ use App\Models\Permission;
 use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
-describe('POST /permissions', function () {
-    it('rejects for unauthorized', function () {
+describe('POST /permissions', function (): void {
+    it('rejects for unauthorized', function (): void {
         $this->postJson(
             getUrl(BaseWebTestCase::CREATE_PERMISSION_ROUTE_NAME),
         )
@@ -24,7 +24,7 @@ describe('POST /permissions', function () {
             );
     });
 
-    it('fails to create permission with invalid payload', function (array $payload, string $errorMessage) {
+    it('fails to create permission with invalid payload', function (array $payload, string $errorMessage): void {
         $this->postJson(
             getUrl(BaseWebTestCase::CREATE_PERMISSION_ROUTE_NAME),
             data: $payload,
@@ -47,7 +47,7 @@ describe('POST /permissions', function () {
             ],
         ])->group('with-auth');
 
-    it('returns bad request response for existing permission name', function () {
+    it('returns bad request response for existing permission name', function (): void {
         $permission = Permission::create([
             'name' => PermissionsEnum::USERS_VIEW->value,
             'guard_name' => GuardsEnum::API->value,
@@ -64,12 +64,12 @@ describe('POST /permissions', function () {
             ->assertJson(
                 [
                     'status' => Response::HTTP_BAD_REQUEST,
-                    'message' => "Permission with name `$permission->name` already exist",
+                    'message' => sprintf('Permission with name `%s` already exist', $permission->name),
                 ]
             );
     })->group('with-auth');
 
-    it('crates permission with valid name and guard name', function () {
+    it('crates permission with valid name and guard name', function (): void {
         $this->postJson(
             getUrl(BaseWebTestCase::CREATE_PERMISSION_ROUTE_NAME),
             data: [

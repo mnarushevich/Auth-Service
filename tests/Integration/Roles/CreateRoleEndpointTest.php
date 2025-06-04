@@ -10,8 +10,8 @@ use App\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
-describe('POST /roles', function () {
-    it('rejects for unauthorized', function () {
+describe('POST /roles', function (): void {
+    it('rejects for unauthorized', function (): void {
         $this->postJson(
             getUrl(BaseWebTestCase::CREATE_ROLE_ROUTE_NAME),
         )
@@ -24,7 +24,7 @@ describe('POST /roles', function () {
             );
     });
 
-    it('fails to create role with invalid payload', function (array $payload, string $errorMessage) {
+    it('fails to create role with invalid payload', function (array $payload, string $errorMessage): void {
         $this->postJson(
             getUrl(BaseWebTestCase::CREATE_ROLE_ROUTE_NAME),
             data: $payload,
@@ -47,7 +47,7 @@ describe('POST /roles', function () {
             ],
         ])->group('with-auth');
 
-    it('returns bad request response for existing role name', function () {
+    it('returns bad request response for existing role name', function (): void {
         $role = Role::create([
             'name' => RolesEnum::USER->value,
             'guard_name' => GuardsEnum::API->value,
@@ -64,12 +64,12 @@ describe('POST /roles', function () {
             ->assertJson(
                 [
                     'status' => Response::HTTP_BAD_REQUEST,
-                    'message' => "Role with name `$role->name` already exist",
+                    'message' => sprintf('Role with name `%s` already exist', $role->name),
                 ]
             );
     })->group('with-auth');
 
-    it('crates role with valid name and guard name', function () {
+    it('crates role with valid name and guard name', function (): void {
         $this->postJson(
             getUrl(BaseWebTestCase::CREATE_ROLE_ROUTE_NAME),
             data: [

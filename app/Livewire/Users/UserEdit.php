@@ -18,6 +18,8 @@ class UserEdit extends Component implements HasForms
 {
     use InteractsWithForms;
 
+    protected Form $form;
+
     public ?array $data = [];
 
     public User $user;

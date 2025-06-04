@@ -9,7 +9,6 @@ use App\Http\Controllers\Auth\RefreshTokenController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\SendPasswordResetLinkController;
 use App\Http\Controllers\Auth\VerifyTokenController;
-use App\Http\Controllers\DynamoDBController;
 use App\Http\Controllers\Permissions\DeletePermissionController;
 use App\Http\Controllers\Permissions\ShowPermissionListController;
 use App\Http\Controllers\Permissions\StorePermissionController;
@@ -25,9 +24,9 @@ use App\Http\Controllers\User\StoreUserController;
 use App\Http\Controllers\User\UpdateUserController;
 use Illuminate\Support\Facades\Route;
 
-Route::as('api.')->group(function () {
-    Route::middleware(['auth:api'])->group(function () {
-        Route::prefix('users')->as('users.')->group(function () {
+Route::as('api.')->group(function (): void {
+    Route::middleware(['auth:api'])->group(function (): void {
+        Route::prefix('users')->as('users.')->group(function (): void {
             Route::get('/', ShowUserListController::class)->name('index');
             Route::post('/', StoreUserController::class)->name('store')->withoutMiddleware(['auth:api']);
             Route::get('/{user}', ShowUserController::class)->name('show');
@@ -38,7 +37,7 @@ Route::as('api.')->group(function () {
             Route::post('/{user}/remove-role', RemoveUserRoleController::class)->name('remove-user-role');
         });
 
-        Route::prefix('auth')->as('auth.')->group(function () {
+        Route::prefix('auth')->as('auth.')->group(function (): void {
             Route::post('login', LoginController::class)->name('login')->withoutMiddleware(['auth:api']);
             Route::post('logout', LogoutController::class)->name('logout');
             Route::post('refresh', RefreshTokenController::class)->name('refresh');
@@ -46,22 +45,17 @@ Route::as('api.')->group(function () {
             Route::post('verify', VerifyTokenController::class)->name('verify');
         });
 
-        Route::prefix('roles')->as('roles.')->group(function () {
+        Route::prefix('roles')->as('roles.')->group(function (): void {
             Route::get('/', ShowRoleListController::class)->name('index');
             Route::post('/', StoreRoleController::class)->name('store');
             Route::delete('/', DeleteRoleController::class)->name('destroy');
         });
 
-        Route::prefix('permissions')->as('permissions.')->group(function () {
+        Route::prefix('permissions')->as('permissions.')->group(function (): void {
             Route::get('/', ShowPermissionListController::class)->name('index');
             Route::post('/', StorePermissionController::class)->name('store');
             Route::delete('/', DeletePermissionController::class)->name('destroy');
         });
-
-        Route::get('/dynamodb/create-table', [DynamoDBController::class, 'createTable']);
-        Route::post('/dynamodb/store', [DynamoDBController::class, 'store']);
-        Route::get('/dynamodb/show/{id}', [DynamoDBController::class, 'show']);
-        Route::delete('/dynamodb/delete/{id}', [DynamoDBController::class, 'destroy']);
     });
 
     Route::post('password/send-reset-link', SendPasswordResetLinkController::class)->name('password.send-reset-link');

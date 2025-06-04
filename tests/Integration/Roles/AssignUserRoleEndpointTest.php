@@ -8,8 +8,8 @@ use App\Enums\RolesEnum;
 use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
-describe('POST /users/{uuid}/assign-role', function () {
-    it('rejects for unauthorized', function () {
+describe('POST /users/{uuid}/assign-role', function (): void {
+    it('rejects for unauthorized', function (): void {
         $this->postJson(
             getUrl(BaseWebTestCase::ASSIGN_USER_ROLE_ROUTE_NAME, ['user' => 'test']),
         )
@@ -22,7 +22,7 @@ describe('POST /users/{uuid}/assign-role', function () {
             );
     });
 
-    it('fails to assign a role with invalid payload', function (array $payload, string $errorMessage) {
+    it('fails to assign a role with invalid payload', function (array $payload, string $errorMessage): void {
         $this->postJson(
             getUrl(BaseWebTestCase::ASSIGN_USER_ROLE_ROUTE_NAME, ['user' => $this->user]),
             data: $payload,
@@ -41,7 +41,7 @@ describe('POST /users/{uuid}/assign-role', function () {
             [['role_name' => 123], 'The role name field must be a string.'],
         ])->group('with-auth');
 
-    it('returns not found response for non-existing user', function () {
+    it('returns not found response for non-existing user', function (): void {
         $invalidUuid = 'invalid-uuid';
         $this->postJson(
             getUrl(BaseWebTestCase::ASSIGN_USER_ROLE_ROUTE_NAME, ['user' => $invalidUuid]),
@@ -56,7 +56,7 @@ describe('POST /users/{uuid}/assign-role', function () {
             );
     })->group('with-auth');
 
-    it('returns bad request response for non-existing role name', function () {
+    it('returns bad request response for non-existing role name', function (): void {
         $invalidRoleName = 'invalid-role-name';
         $this->postJson(
             getUrl(BaseWebTestCase::ASSIGN_USER_ROLE_ROUTE_NAME, ['user' => $this->user]),
@@ -66,12 +66,12 @@ describe('POST /users/{uuid}/assign-role', function () {
             ->assertJson(
                 [
                     'status' => Response::HTTP_BAD_REQUEST,
-                    'message' => "Role with name `$invalidRoleName` does not exist",
+                    'message' => sprintf('Role with name `%s` does not exist', $invalidRoleName),
                 ]
             );
     })->group('with-auth');
 
-    it('fails to assign the same role to user', function () {
+    it('fails to assign the same role to user', function (): void {
         expect($this->user->getRoleNames()->toArray())
             ->toBeArray()
             ->toHaveCount(1)
@@ -91,7 +91,7 @@ describe('POST /users/{uuid}/assign-role', function () {
             );
     })->group('with-auth');
 
-    it('assigns a role to user', function () {
+    it('assigns a role to user', function (): void {
         $this->postJson(
             getUrl(BaseWebTestCase::ASSIGN_USER_ROLE_ROUTE_NAME, ['user' => $this->user]),
             data: ['role_name' => RolesEnum::ADMIN->value],

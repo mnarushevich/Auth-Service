@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace Tests\Integration\Auth;
 
 use App\Enums\RolesEnum;
+use Junges\Kafka\Facades\Kafka;
 use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
-describe('POST /users', function () {
-    beforeEach(function () {
+describe('POST /users', function (): void {
+    beforeEach(function (): void {
         $this->mockPass = fake()->password();
     });
 
-    it('rejects with invalid payload data', function () {
+    it('rejects with invalid payload data', function (): void {
         $dataset = [
             [
                 [
@@ -89,7 +90,9 @@ describe('POST /users', function () {
         }
     });
 
-    it('creates new user with valid payload', function () {
+    it('creates new user with valid payload', function (): void {
+        Kafka::fake();
+
         $mockEmail = fake()->email();
         $mockFirstName = fake()->firstName();
         $mockLastName = fake()->lastName();
@@ -113,5 +116,7 @@ describe('POST /users', function () {
             ->assertJsonPath('data.last_name', $mockLastName)
             ->assertJsonPath('data.address.country', $mockCountry)
             ->assertJsonPath('data.email', $mockEmail);
+
+        Kafka::assertPublishedOnTimes('default');
     });
 })->group('users', 'with-roles-and-permissions');

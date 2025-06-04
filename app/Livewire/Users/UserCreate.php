@@ -19,6 +19,8 @@ class UserCreate extends Component implements HasForms
 {
     use InteractsWithForms;
 
+    protected Form $form;
+
     public ?array $data = [];
 
     public function mount(): void

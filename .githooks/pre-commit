@@ -49,31 +49,5 @@ fi
 
 print_message "✅ Code style check passed!" "$GREEN"
 
-## Run PHPStan (if installed)
-#if command_exists "./vendor/bin/phpstan"; then
-#    print_message "🔍 Running PHPStan (static analysis)..." "$YELLOW"
-#    ./vendor/bin/phpstan analyse --no-progress
-#    PHPSTAN_STATUS=$?
-#
-#    if [ $PHPSTAN_STATUS -ne 0 ]; then
-#        print_message "❌ Static analysis issues found! Fix them before committing." "$RED"
-#        exit 1
-#    fi
-#    print_message "✅ Static analysis passed!" "$GREEN"
-#fi
-#
-## Run tests (if in a Laravel project)
-#if [ -f "vendor/bin/pest" ]; then
-#    print_message "🔍 Running tests..." "$YELLOW"
-#    ./vendor/bin/pest --parallel
-#    TEST_STATUS=$?
-#
-#    if [ $TEST_STATUS -ne 0 ]; then
-#        print_message "❌ Tests failed! Fix them before committing." "$RED"
-#        exit 1
-#    fi
-#    print_message "✅ Tests passed!" "$GREEN"
-#fi
-
 print_message "✨ All checks passed! You can commit your changes." "$GREEN"
 exit 0

@@ -13,14 +13,15 @@ use Tests\TestCase;
 
 uses(TestCase::class);
 
-beforeEach(function () {
+beforeEach(function (): void {
     if (! defined('RD_KAFKA_PARTITION_UA')) {
         define('RD_KAFKA_PARTITION_UA', 1);
     }
+
     $this->refreshApplication();
 });
-describe('UserService::publishUserCreatedEvent method', function () {
-    it('publishes correct message to Kafka', function () {
+describe('UserService::publishUserCreatedEvent method', function (): void {
+    it('publishes correct message to Kafka', function (): void {
         Kafka::fake();
 
         $now = now();

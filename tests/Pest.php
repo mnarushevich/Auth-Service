@@ -27,7 +27,7 @@ pest()->extend(BaseWebTestCase::class)
     ->use(RefreshDatabase::class)
     ->in('Integration');
 
-pest()->beforeEach(function () {
+pest()->beforeEach(function (): void {
     $this->mockPass = fake()->password();
     $this->mockEmail = TEST_USER_EMAIL;
     $this->user = UserFactory::new()->create(
@@ -61,9 +61,7 @@ pest()->beforeEach(function () {
 |
 */
 
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
-});
+expect()->extend('toBeOne', fn () => $this->toBe(1));
 
 /*
 |--------------------------------------------------------------------------

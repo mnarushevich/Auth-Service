@@ -9,8 +9,8 @@ use Illuminate\Testing\Fluent\AssertableJson;
 use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
-describe('POST /auth/me', function () {
-    it('rejects auth user data for unauthenticated', function () {
+describe('POST /auth/me', function (): void {
+    it('rejects auth user data for unauthenticated', function (): void {
         $this->postJson(getUrl(BaseWebTestCase::USER_INFO_ROUTE_NAME))
             ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson(
@@ -21,7 +21,7 @@ describe('POST /auth/me', function () {
             );
     });
 
-    it('gets auth user data for authenticated', function () {
+    it('gets auth user data for authenticated', function (): void {
         expect($this->user->getRoleNames()->toArray())
             ->toBeArray()
             ->toHaveCount(1)
@@ -32,7 +32,7 @@ describe('POST /auth/me', function () {
             headers: getAuthorizationHeader($this->token),
         )
             ->assertOk()
-            ->assertJson(fn (AssertableJson $json) => $json->hasAll(['user', 'payload']))
+            ->assertJson(fn (AssertableJson $json): \Illuminate\Testing\Fluent\AssertableJson => $json->hasAll(['user', 'payload']))
             ->assertJsonPath('user.uuid', $this->user->uuid)
             ->assertJsonPath('user.email', $this->user->email)
             ->assertJsonPath('user.roles', $this->user->getRoleNames()->toArray())

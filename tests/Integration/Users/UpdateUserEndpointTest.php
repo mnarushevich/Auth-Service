@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
-describe('PATCH /users/{uuid}', function () {
-    it('rejects for unauthorized', function () {
+describe('PATCH /users/{uuid}', function (): void {
+    it('rejects for unauthorized', function (): void {
         $this->patchJson(
             getUrl(BaseWebTestCase::UPDATE_USER_BY_UUID_ROUTE_NAME, ['user' => 'test']),
         )
@@ -24,7 +24,7 @@ describe('PATCH /users/{uuid}', function () {
             );
     });
 
-    it('rejects with invalid payload data', function (array $payload, string $errorMessage) {
+    it('rejects with invalid payload data', function (array $payload, string $errorMessage): void {
         $alreadyUsedEmail = 'test-used@test.com';
         UserFactory::new()->create(
             [
@@ -63,7 +63,7 @@ describe('PATCH /users/{uuid}', function () {
             ],
         ])->group('with-auth');
 
-    it('updates user with valid payload', function () {
+    it('updates user with valid payload', function (): void {
         $mockEmail = fake()->email();
         $mockFirstName = fake()->firstName();
         $mockLastName = fake()->lastName();
@@ -85,7 +85,7 @@ describe('PATCH /users/{uuid}', function () {
             ->assertJsonPath('data.email', $mockEmail);
     })->group('with-auth');
 
-    it('denied to update another user for non-admin', function () {
+    it('denied to update another user for non-admin', function (): void {
         $this->getJson(
             getUrl(BaseWebTestCase::GET_USER_BY_UUID_ROUTE_NAME, ['user' => $this->user->uuid]),
             headers: getAuthorizationHeader($this->token)

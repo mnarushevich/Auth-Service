@@ -27,7 +27,8 @@ final class LogoutController extends Controller
      */
     public function __invoke(): JsonResponse
     {
-        JWTAuth::invalidate(JWTAuth::getToken());
+        $forceForever = (bool) JWTAuth::getToken();
+        JWTAuth::invalidate(forceForever: $forceForever);
         Auth::logout();
 
         return response()->json(

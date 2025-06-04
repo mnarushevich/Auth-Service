@@ -1,3 +1,8 @@
+<?php
+
+declare(strict_types=1);
+
+?>
 <div class="px-20">
     <form wire:submit="create">
         {{ $this->form }}
@@ -10,3 +15,4 @@
 
     <x-filament-actions::modals />
 </div>
+<?php 

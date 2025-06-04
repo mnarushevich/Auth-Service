@@ -39,7 +39,7 @@ final class StoreRoleController extends Controller
         $roleName = $request->input('name');
 
         if (Role::query()->where('name', $roleName)->exists()) {
-            throw new BadRequestHttpException("Role with name `$roleName` already exist");
+            throw new BadRequestHttpException(sprintf('Role with name `%s` already exist', $roleName));
         }
 
         $role = new Role;

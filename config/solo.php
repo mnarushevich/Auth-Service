@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use SoloTerm\Solo\Commands\Command;
 use SoloTerm\Solo\Commands\EnhancedTailCommand;
 use SoloTerm\Solo\Commands\MakeCommand;
@@ -8,7 +10,7 @@ use SoloTerm\Solo\Themes;
 
 // Solo may not (should not!) exist in prod, so we have to
 // check here first to see if it's installed.
-if (! class_exists('\SoloTerm\Solo\Manager')) {
+if (! class_exists(\SoloTerm\Solo\Manager::class)) {
     return [
         //
     ];

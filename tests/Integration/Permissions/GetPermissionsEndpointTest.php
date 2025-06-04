@@ -10,8 +10,8 @@ use App\Models\Permission;
 use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
-describe('GET /permissions', function () {
-    it('rejects for unauthorized', function () {
+describe('GET /permissions', function (): void {
+    it('rejects for unauthorized', function (): void {
         $this->getJson(
             getUrl(BaseWebTestCase::GET_PERMISSIONS_ROUTE_NAME),
         )
@@ -24,7 +24,7 @@ describe('GET /permissions', function () {
             );
     });
 
-    it('returns permissions list', function () {
+    it('returns permissions list', function (): void {
         $permission = Permission::create([
             'name' => PermissionsEnum::USERS_VIEW->value,
             'guard_name' => GuardsEnum::API->value,

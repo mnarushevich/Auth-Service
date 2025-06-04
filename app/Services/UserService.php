@@ -33,8 +33,8 @@ final class UserService
                 ->onTopic('default')
                 ->withMessage($message)
                 ->send();
-        } catch (\Exception $e) {
-            throw new MessageIdNotSet($e->getMessage());
+        } catch (\Exception $exception) {
+            throw new MessageIdNotSet($exception->getMessage());
         }
     }
 }
