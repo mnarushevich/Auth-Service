@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Enums\RolesEnum;
-use App\Models\User;
 use App\Services\UserService;
 use Database\Factories\UserFactory;
 use Illuminate\Support\Str;
@@ -26,32 +24,29 @@ describe('UserService::publishUserCreatedEvent method', function (): void {
 
         $now = now();
         $uuid = Str::uuid()->toString();
-        $user = UserFactory::new()->make([
-            'uuid' => $uuid,
-            'email' => 'test@test.com',
-            'first_name' => 'John',
-            'last_name' => 'Doe',
-            'created_at' => $now,
-        ]);
-
-        /** @var User|Mockery $user */
-        $user = Mockery::mock($user);
-        $user->shouldReceive('getRoleNames')
-            ->once()
-            ->andReturn(collect([RolesEnum::USER]));
+        $user = UserFactory::new()
+            ->withUserRole()
+            ->make([
+                'uuid' => $uuid,
+                'email' => 'test@test.com',
+                'first_name' => 'John',
+                'last_name' => 'Doe',
+                'created_at' => $now,
+            ]);
 
         (new UserService)->publishUserCreatedEvent($user);
 
         $expectedMessage = new Message(
             headers: ['event-type' => 'user-created'],
-            body: [
+            body: json_encode([
                 'id' => $uuid,
-                'email' => 'test@test.com',
-                'first_name' => 'John',
-                'last_name' => 'Doe',
-                'roles' => [RolesEnum::USER],
+                'email' => $user->email,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'roles' => $user->getRoleNames()->toArray(),
                 'created_at' => $now->toIso8601String(),
-            ]
+            ]),
+            key: $user->getKey(),
         );
 
         Kafka::assertPublished($expectedMessage);
