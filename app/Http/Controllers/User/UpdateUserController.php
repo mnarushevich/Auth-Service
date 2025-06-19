@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 
 final class UpdateUserController extends Controller
@@ -46,6 +47,8 @@ final class UpdateUserController extends Controller
                 ['country' => $request->input('address.country')]
             );
         }
+
+        Cache::forget(sprintf('user-%s', $user->uuid));
 
         return new UserResource($user);
     }

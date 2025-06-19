@@ -14,9 +14,20 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [ 8.4 ]
+        php: [8.4]
 
     name: Tests
+
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 63791:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout
@@ -41,7 +52,7 @@ jobs:
       - name: Set up Node & NPM
         uses: actions/setup-node@v2
         with:
-            node-version: '22.x'
+          node-version: "22.x"
 
       - name: Setup Problem Matches
         run: |
@@ -69,8 +80,8 @@ jobs:
       - name: Install PHP dependencies
         if: steps.composer-cache.outputs.cache-hit != 'true'
         run: |
-            mkdir -p storage/framework/views
-            composer install --no-interaction --no-progress --ansi --optimize-autoloader
+          mkdir -p storage/framework/views
+          composer install --no-interaction --no-progress --ansi --optimize-autoloader
 
       - name: Setup test env configuration
         run: |
