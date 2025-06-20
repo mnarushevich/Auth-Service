@@ -37,9 +37,9 @@ describe('UserService::publishUserCreatedEvent method', function (): void {
         (new UserService)->publishUserCreatedEvent($user);
 
         $expectedMessage = new Message(
-            headers: ['event-type' => 'user-created'],
+            headers: ['event-type' => 'user.created'],
             body: json_encode([
-                'id' => $uuid,
+                'uuid' => $uuid,
                 'email' => $user->email,
                 'first_name' => $user->first_name,
                 'last_name' => $user->last_name,
