@@ -18,19 +18,20 @@ final class UserService
     {
         try {
             $message = new Message(
-                headers: ['event-type' => 'user-created'],
-                body: [
-                    'id' => $user->uuid,
+                headers: ['event-type' => 'user.created'],
+                body: json_encode([
+                    'uuid' => $user->uuid,
                     'email' => $user->email,
                     'first_name' => $user->first_name,
                     'last_name' => $user->last_name,
                     'roles' => $user->getRoleNames()->toArray(),
                     'created_at' => $user->created_at->toIso8601String(),
-                ],
+                ]),
+                key: $user->getKey(),
             );
 
             Kafka::publish(config('kafka.brokers'))
-                ->onTopic('default')
+                ->onTopic('user.created')
                 ->withMessage($message)
                 ->send();
         } catch (\Exception $exception) {

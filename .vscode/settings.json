@@ -4,14 +4,11 @@
         "Junges",
         "sasl"
     ],
-    "phpunit.command": "docker exec -t auth_service_app /bin/sh -c",
+    "phpunit.command": "herd",
     "phpunit.php": "php",
-    "phpunit.phpunit": "vendor/bin/pest", 
-    "phpunit.args": [
-        "-c",
-        "phpunit.xml"
-    ],
+    "phpunit.phpunit": "./vendor/bin/pest", 
     "phpunit.paths": {
-        "${workspaceFolder}": "/var/www/html",
-    }
+        "${workspaceFolder}": "./",
+    },
+    "postman.settings.dotenv-detection-notification-visibility": false
 }

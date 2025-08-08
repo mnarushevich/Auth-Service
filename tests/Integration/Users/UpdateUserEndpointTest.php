@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace Tests\Integration\Auth;
 
 use App\Enums\RolesEnum;
+use App\Http\Resources\UserResource;
 use Database\Factories\UserFactory;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 use tests\Integration\BaseWebTestCase;
 
 describe('PATCH /users/{uuid}', function (): void {
     it('rejects for unauthorized', function (): void {
+        Cache::expects('forget')->never();
         $this->patchJson(
             getUrl(BaseWebTestCase::UPDATE_USER_BY_UUID_ROUTE_NAME, ['user' => 'test']),
         )
@@ -32,6 +35,7 @@ describe('PATCH /users/{uuid}', function (): void {
                 'password' => Hash::make($this->mockPass),
             ]
         );
+        Cache::expects('forget')->never();
 
         $this->patchJson(
             getUrl(BaseWebTestCase::UPDATE_USER_BY_UUID_ROUTE_NAME, ['user' => $this->user->uuid]),
@@ -68,6 +72,7 @@ describe('PATCH /users/{uuid}', function (): void {
         $mockFirstName = fake()->firstName();
         $mockLastName = fake()->lastName();
         $mockPhoneNumber = fake()->phoneNumber();
+        Cache::expects('forget')->once()->with(sprintf('user-%s', $this->user->uuid));
         $this->patchJson(
             getUrl(BaseWebTestCase::UPDATE_USER_BY_UUID_ROUTE_NAME, ['user' => $this->user->uuid]),
             [
@@ -86,12 +91,16 @@ describe('PATCH /users/{uuid}', function (): void {
     })->group('with-auth');
 
     it('denied to update another user for non-admin', function (): void {
+        Cache::shouldReceive('remember')
+            ->once()
+            ->andReturn(new UserResource($this->user));
         $this->getJson(
             getUrl(BaseWebTestCase::GET_USER_BY_UUID_ROUTE_NAME, ['user' => $this->user->uuid]),
             headers: getAuthorizationHeader($this->token)
         )->assertOk();
 
         $newUser = UserFactory::new()->withUserRole()->create();
+        Cache::expects('forget')->never()->with(sprintf('user-%s', $newUser->uuid));
         expect($newUser->getRoleNames())->toContain(RolesEnum::USER->value);
         $this->patchJson(
             getUrl(BaseWebTestCase::UPDATE_USER_BY_UUID_ROUTE_NAME, ['user' => $newUser->uuid]),

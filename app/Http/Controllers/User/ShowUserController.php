@@ -7,6 +7,8 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 
 final class ShowUserController extends Controller
 {
@@ -36,13 +38,16 @@ final class ShowUserController extends Controller
      *     @OA\Response(response=404, description="Not Found.")
      * )
      */
-    public function __invoke(string $uuid): UserResource
+    public function __invoke(string $uuid): JsonResponse
     {
-        return new UserResource(
-            User::query()
-                ->with(['address', 'roles', 'permissions'])
-                ->where('uuid', $uuid)
-                ->firstOrFail()
-        );
+        $user = Cache::remember(sprintf('user-%s', $uuid), config('cache.default_ttl'),
+            fn (): UserResource => new UserResource(
+                User::query()
+                    ->with(['address', 'roles', 'permissions'])
+                    ->where('uuid', $uuid)
+                    ->firstOrFail()
+            ));
+
+        return response()->json(data: ['data' => $user]);
     }
 }

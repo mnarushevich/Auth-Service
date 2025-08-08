@@ -117,6 +117,6 @@ describe('POST /users', function (): void {
             ->assertJsonPath('data.address.country', $mockCountry)
             ->assertJsonPath('data.email', $mockEmail);
 
-        Kafka::assertPublishedOnTimes('default');
+        Kafka::assertPublishedOnTimes('user.created');
     });
 })->group('users', 'with-roles-and-permissions');

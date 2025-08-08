@@ -7,6 +7,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 
 final class DeleteUserController extends Controller
@@ -41,6 +42,7 @@ final class DeleteUserController extends Controller
     {
         Gate::authorize('delete', $user);
         $user->delete();
+        Cache::forget(sprintf('user-%s', $user->uuid));
 
         return response()->json([
             'status' => 'ok',

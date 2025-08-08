@@ -19,6 +19,8 @@ return [
 
     'default' => env('CACHE_STORE', 'database'),
 
+    'default_ttl' => env('CACHE_DEFAULT_TTL', 86400),  // 1 day in seconds
+
     /*
     |--------------------------------------------------------------------------
     | Cache Stores
