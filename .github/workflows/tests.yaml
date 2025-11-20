@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [8.4]
+        php: [8.5]
 
     name: Tests
 
@@ -41,7 +41,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
 
-      - name: Setup PHP
+      - name: Install librdkafka
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y librdkafka-dev
+
+      - name: Setup PHP for testing
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}

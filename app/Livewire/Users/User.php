@@ -11,6 +11,7 @@ use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
+use Illuminate\Contracts\View\View;
 use Livewire\Component;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -55,7 +56,7 @@ class User extends Component implements HasActions, HasForms
         $this->user = $user;
     }
 
-    public function render()
+    public function render(): View
     {
         return view('livewire.users.user');
     }
