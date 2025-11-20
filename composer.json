@@ -70,6 +70,7 @@
         "lint": "pint",
         "test:rector": "rector --dry-run",
         "test:lint": "pint --test",
+        "test:lint:fix": "pint",
         "test:types": "phpstan analyse --memory-limit=512M",
         "test:unit": "pest --colors=always --stop-on-failure",
         "test:type-coverage": "php -d memory_limit=2G ./vendor/bin/pest --type-coverage --compact --min=95",
