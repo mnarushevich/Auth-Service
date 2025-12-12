@@ -12,10 +12,6 @@ use Tests\TestCase;
 uses(TestCase::class);
 
 beforeEach(function (): void {
-    if (! defined('RD_KAFKA_PARTITION_UA')) {
-        define('RD_KAFKA_PARTITION_UA', 1);
-    }
-
     $this->refreshApplication();
 });
 describe('UserService::publishUserCreatedEvent method', function (): void {
