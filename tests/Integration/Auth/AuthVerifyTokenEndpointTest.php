@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
+use App\Enums\AppRouteNamesEnum;
 use Symfony\Component\HttpFoundation\Response;
-use tests\Integration\BaseWebTestCase;
 
 describe('POST /auth/verify', function (): void {
     it('rejects auth token verify for unauthenticated', function (): void {
-        $this->postJson(getUrl(BaseWebTestCase::VERIFY_TOKEN_ROUTE_NAME))
+        $this->postJson(getUrl(AppRouteNamesEnum::VERIFY_TOKEN_ROUTE_NAME->value))
             ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson(
                 [
@@ -21,7 +21,7 @@ describe('POST /auth/verify', function (): void {
 
     it('verifies token for authenticated', function (): void {
         $this->postJson(
-            getUrl(BaseWebTestCase::VERIFY_TOKEN_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::VERIFY_TOKEN_ROUTE_NAME->value),
             headers: getAuthorizationHeader($this->token),
         )
             ->assertOk()

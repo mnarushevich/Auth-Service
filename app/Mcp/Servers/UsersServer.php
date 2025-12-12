@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mcp\Servers;
 
+use App\Mcp\Resources\UsersApiDocResource;
 use App\Mcp\Tools\UsersTool;
 use Laravel\Mcp\Server;
 
@@ -23,7 +24,10 @@ class UsersServer extends Server
      * The MCP server's instructions for the LLM.
      */
     protected string $instructions = <<<'MARKDOWN'
-        Instructions describing how to use the server and its features.
+        Instructions describing the server and its features.
+        You can use the following tools to get information about the users:
+        - UsersTool: Get information about a user by their name.
+        - UsersApiDocResource: Get the API documentation for the users.
     MARKDOWN;
 
     /**
@@ -41,7 +45,7 @@ class UsersServer extends Server
      * @var array<int, class-string<\Laravel\Mcp\Server\Resource>>
      */
     protected array $resources = [
-        //
+        UsersApiDocResource::class,
     ];
 
     /**

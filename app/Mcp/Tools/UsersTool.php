@@ -44,7 +44,12 @@ class UsersTool extends Tool
             return Response::text('User not found');
         }
 
-        return Response::text($user->email);
+        return Response::json([
+            'email' => $user->email,
+            'phone' => $user->phone,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+        ]);
     }
 
     /**
@@ -72,6 +77,15 @@ class UsersTool extends Tool
         return [
             'email' => $schema->string()
                 ->description('The email of the user')
+                ->required(),
+            'phone' => $schema->string()
+                ->description('The phone of the user')
+                ->required(),
+            'first_name' => $schema->string()
+                ->description('The first name of the user')
+                ->required(),
+            'last_name' => $schema->string()
+                ->description('The last name of the user')
                 ->required(),
         ];
     }

@@ -13,6 +13,7 @@ declare(strict_types=1);
 |
 */
 
+use App\Enums\AppRouteNamesEnum;
 use App\Enums\RolesEnum;
 use App\Models\User;
 use Database\Factories\UserFactory;
@@ -31,13 +32,19 @@ pest()->beforeEach(function (): void {
     $this->mockPass = fake()->password();
     $this->mockEmail = TEST_USER_EMAIL;
     $this->user = UserFactory::new()->create(
-        ['email' => $this->mockEmail, 'password' => Hash::make($this->mockPass)]
+        [
+            'email' => $this->mockEmail,
+            'password' => Hash::make($this->mockPass),
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'phone' => '1234567890',
+        ]
     );
     $this->user->address()->create(['country' => fake()->country]);
 
     if (in_array('with-auth', test()->groups())) {
         $response = $this->postJson(
-            getUrl(BaseWebTestCase::LOGIN_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::LOGIN_ROUTE_NAME->value),
             ['email' => $this->user->email, 'password' => $this->mockPass]
         )->decodeResponseJson();
 

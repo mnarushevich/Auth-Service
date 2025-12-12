@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
+use App\Enums\AppRouteNamesEnum;
 use App\Enums\RolesEnum;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Symfony\Component\HttpFoundation\Response;
-use tests\Integration\BaseWebTestCase;
 
 describe('POST /auth/me', function (): void {
     it('rejects auth user data for unauthenticated', function (): void {
-        $this->postJson(getUrl(BaseWebTestCase::USER_INFO_ROUTE_NAME))
+        $this->postJson(getUrl(AppRouteNamesEnum::USER_INFO_ROUTE_NAME->value))
             ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson(
                 [
@@ -28,7 +28,7 @@ describe('POST /auth/me', function (): void {
             ->toEqual([RolesEnum::USER->value]);
 
         $this->postJson(
-            getUrl(BaseWebTestCase::USER_INFO_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::USER_INFO_ROUTE_NAME->value),
             headers: getAuthorizationHeader($this->token),
         )
             ->assertOk()

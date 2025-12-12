@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
+use App\Enums\AppRouteNamesEnum;
 use App\Enums\RolesEnum;
 use Junges\Kafka\Facades\Kafka;
 use Symfony\Component\HttpFoundation\Response;
-use tests\Integration\BaseWebTestCase;
 
 describe('POST /users', function (): void {
     beforeEach(function (): void {
@@ -78,7 +78,8 @@ describe('POST /users', function (): void {
 
         foreach ($dataset as [$payload, $errorMessage]) {
             $this->postJson(
-                getUrl(BaseWebTestCase::CREATE_USER_ROUTE_NAME), $payload,
+                getUrl(AppRouteNamesEnum::CREATE_USER_ROUTE_NAME->value),
+                $payload,
             )
                 ->assertStatus(Response::HTTP_BAD_REQUEST)
                 ->assertJson(
@@ -98,7 +99,7 @@ describe('POST /users', function (): void {
         $mockLastName = fake()->lastName();
         $mockCountry = fake()->country();
         $this->postJson(
-            getUrl(BaseWebTestCase::CREATE_USER_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::CREATE_USER_ROUTE_NAME->value),
             [
                 'email' => $mockEmail,
                 'first_name' => $mockFirstName,

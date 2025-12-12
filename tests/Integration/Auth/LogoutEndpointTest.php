@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
+use App\Enums\AppRouteNamesEnum;
 use Symfony\Component\HttpFoundation\Response;
-use tests\Integration\BaseWebTestCase;
 
 describe('POST /auth/me', function (): void {
     it('rejects logout user for unauthenticated', function (): void {
-        $this->postJson(getUrl(BaseWebTestCase::LOGOUT_ROUTE_NAME))
+        $this->postJson(getUrl(AppRouteNamesEnum::LOGOUT_ROUTE_NAME->value))
             ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson(
                 [
@@ -21,7 +21,7 @@ describe('POST /auth/me', function (): void {
 
     it('logout user for authenticated', function (): void {
         $this->postJson(
-            getUrl(BaseWebTestCase::LOGOUT_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::LOGOUT_ROUTE_NAME->value),
             headers: getAuthorizationHeader($this->token),
         )
             ->assertOk()
