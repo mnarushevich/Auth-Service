@@ -17,6 +17,14 @@ class ApiExceptionHandler
 {
     public static function handle(Throwable $exception, Request $request): ?Response
     {
+        if ($request->is('mcp/*')) {
+            if (str_contains($exception->getMessage(), 'not enabled')) {
+                return response()->json(['status' => Response::HTTP_NOT_FOUND, 'message' => 'MCP server is not enabled'], Response::HTTP_NOT_FOUND);
+            }
+
+            return response()->json(['status' => Response::HTTP_BAD_REQUEST, 'message' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
+
         if (! $request->is('api/*')) {
             return null;
         }
