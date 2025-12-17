@@ -99,8 +99,8 @@ class User extends Authenticatable implements JWTSubject
 
     protected function fullName(): Attribute
     {
-        return new Attribute(
-            get: fn (): string => $this->first_name.' '.$this->last_name
+        return Attribute::make(
+            get: fn (): string => trim(sprintf('%s %s', $this->first_name, $this->last_name)),
         );
     }
 }
