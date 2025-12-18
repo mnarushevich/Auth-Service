@@ -29,7 +29,8 @@ final class AuthUserInfoController extends Controller
         return response()->json([
             'user' => new UserResource(
                 resource: Auth::user()->load('roles', 'permissions'),
-                isAuthUser: true),
+                isAuthUser: true
+            ),
             'payload' => Auth::payload(),
         ]);
     }
