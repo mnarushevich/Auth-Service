@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
+use App\Enums\AppRouteNamesEnum;
 use App\Enums\GuardsEnum;
 use App\Enums\PermissionsEnum;
 use App\Models\Permission;
 use Symfony\Component\HttpFoundation\Response;
-use tests\Integration\BaseWebTestCase;
 
 describe('POST /permissions', function (): void {
     it('rejects for unauthorized', function (): void {
         $this->postJson(
-            getUrl(BaseWebTestCase::CREATE_PERMISSION_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::CREATE_PERMISSION_ROUTE_NAME->value),
         )
             ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson(
@@ -26,7 +26,7 @@ describe('POST /permissions', function (): void {
 
     it('fails to create permission with invalid payload', function (array $payload, string $errorMessage): void {
         $this->postJson(
-            getUrl(BaseWebTestCase::CREATE_PERMISSION_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::CREATE_PERMISSION_ROUTE_NAME->value),
             data: $payload,
             headers: getAuthorizationHeader($this->token),
         )
@@ -45,7 +45,8 @@ describe('POST /permissions', function (): void {
                 ['name' => PermissionsEnum::USERS_VIEW->value, 'guard_name' => 1234],
                 'The selected guard name is invalid.',
             ],
-        ])->group('with-auth');
+        ]
+    )->group('with-auth');
 
     it('returns bad request response for existing permission name', function (): void {
         $permission = Permission::create([
@@ -54,7 +55,7 @@ describe('POST /permissions', function (): void {
         ]);
 
         $this->postJson(
-            getUrl(BaseWebTestCase::CREATE_PERMISSION_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::CREATE_PERMISSION_ROUTE_NAME->value),
             data: [
                 'name' => $permission->name,
                 'guard_name' => GuardsEnum::API->value,
@@ -71,7 +72,7 @@ describe('POST /permissions', function (): void {
 
     it('crates permission with valid name and guard name', function (): void {
         $this->postJson(
-            getUrl(BaseWebTestCase::CREATE_PERMISSION_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::CREATE_PERMISSION_ROUTE_NAME->value),
             data: [
                 'name' => PermissionsEnum::USERS_VIEW->value,
                 'guard_name' => GuardsEnum::API->value,

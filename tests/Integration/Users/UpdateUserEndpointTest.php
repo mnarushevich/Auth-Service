@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
+use App\Enums\AppRouteNamesEnum;
 use App\Enums\RolesEnum;
 use App\Http\Resources\UserResource;
 use Database\Factories\UserFactory;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
-use tests\Integration\BaseWebTestCase;
 
 describe('PATCH /users/{uuid}', function (): void {
     it('rejects for unauthorized', function (): void {
         Cache::expects('forget')->never();
         $this->patchJson(
-            getUrl(BaseWebTestCase::UPDATE_USER_BY_UUID_ROUTE_NAME, ['user' => 'test']),
+            getUrl(AppRouteNamesEnum::UPDATE_USER_BY_UUID_ROUTE_NAME->value, ['user' => 'test']),
         )
             ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson(
@@ -38,7 +38,7 @@ describe('PATCH /users/{uuid}', function (): void {
         Cache::expects('forget')->never();
 
         $this->patchJson(
-            getUrl(BaseWebTestCase::UPDATE_USER_BY_UUID_ROUTE_NAME, ['user' => $this->user->uuid]),
+            getUrl(AppRouteNamesEnum::UPDATE_USER_BY_UUID_ROUTE_NAME->value, ['user' => $this->user->uuid]),
             $payload,
         )
             ->assertStatus(Response::HTTP_BAD_REQUEST)
@@ -65,7 +65,8 @@ describe('PATCH /users/{uuid}', function (): void {
                 ],
                 'The email has already been taken.',
             ],
-        ])->group('with-auth');
+        ]
+    )->group('with-auth');
 
     it('updates user with valid payload', function (): void {
         $mockEmail = fake()->email();
@@ -74,7 +75,7 @@ describe('PATCH /users/{uuid}', function (): void {
         $mockPhoneNumber = fake()->phoneNumber();
         Cache::expects('forget')->once()->with(sprintf('user-%s', $this->user->uuid));
         $this->patchJson(
-            getUrl(BaseWebTestCase::UPDATE_USER_BY_UUID_ROUTE_NAME, ['user' => $this->user->uuid]),
+            getUrl(AppRouteNamesEnum::UPDATE_USER_BY_UUID_ROUTE_NAME->value, ['user' => $this->user->uuid]),
             [
                 'email' => $mockEmail,
                 'first_name' => $mockFirstName,
@@ -95,7 +96,7 @@ describe('PATCH /users/{uuid}', function (): void {
             ->once()
             ->andReturn(new UserResource($this->user));
         $this->getJson(
-            getUrl(BaseWebTestCase::GET_USER_BY_UUID_ROUTE_NAME, ['user' => $this->user->uuid]),
+            getUrl(AppRouteNamesEnum::GET_USER_BY_UUID_ROUTE_NAME->value, ['user' => $this->user->uuid]),
             headers: getAuthorizationHeader($this->token)
         )->assertOk();
 
@@ -103,7 +104,7 @@ describe('PATCH /users/{uuid}', function (): void {
         Cache::expects('forget')->never()->with(sprintf('user-%s', $newUser->uuid));
         expect($newUser->getRoleNames())->toContain(RolesEnum::USER->value);
         $this->patchJson(
-            getUrl(BaseWebTestCase::UPDATE_USER_BY_UUID_ROUTE_NAME, ['user' => $newUser->uuid]),
+            getUrl(AppRouteNamesEnum::UPDATE_USER_BY_UUID_ROUTE_NAME->value, ['user' => $newUser->uuid]),
             [
                 'email' => fake()->email,
                 'first_name' => fake()->firstName,

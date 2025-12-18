@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
+use App\Enums\AppRouteNamesEnum;
 use App\Enums\GuardsEnum;
 use App\Enums\PermissionsEnum;
 use App\Models\Permission;
 use Symfony\Component\HttpFoundation\Response;
-use tests\Integration\BaseWebTestCase;
 
 describe('GET /permissions', function (): void {
     it('rejects for unauthorized', function (): void {
         $this->getJson(
-            getUrl(BaseWebTestCase::GET_PERMISSIONS_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::GET_PERMISSIONS_ROUTE_NAME->value),
         )
             ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson(
@@ -31,7 +31,7 @@ describe('GET /permissions', function (): void {
         ]);
 
         $this->getJson(
-            getUrl(BaseWebTestCase::GET_PERMISSIONS_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::GET_PERMISSIONS_ROUTE_NAME->value),
             headers: getAuthorizationHeader($this->token)
         )
             ->assertOk()

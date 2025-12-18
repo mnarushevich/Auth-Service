@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
+use App\Enums\AppRouteNamesEnum;
 use App\Enums\GuardsEnum;
 use App\Enums\PermissionsEnum;
 use App\Enums\RolesEnum;
 use App\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
-use tests\Integration\BaseWebTestCase;
 
 describe('DELETE /roles', function (): void {
     it('rejects for unauthorized', function (): void {
         $this->deleteJson(
-            getUrl(BaseWebTestCase::DELETE_ROLES_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::DELETE_ROLES_ROUTE_NAME->value),
         )
             ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson(
@@ -27,7 +27,7 @@ describe('DELETE /roles', function (): void {
 
     it('fails to delete role with invalid payload', function (array $payload, string $errorMessage): void {
         $this->deleteJson(
-            getUrl(BaseWebTestCase::DELETE_ROLES_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::DELETE_ROLES_ROUTE_NAME->value),
             data: $payload,
             headers: getAuthorizationHeader($this->token),
         )
@@ -43,12 +43,13 @@ describe('DELETE /roles', function (): void {
             [[], 'The name field is required. (and 1 more error)'],
             [['name' => PermissionsEnum::USERS_VIEW->value], 'The guard name field is required.'],
             [['name' => PermissionsEnum::USERS_VIEW->value, 'guard_name' => 1234], 'The selected guard name is invalid.'],
-        ])->group('with-auth');
+        ]
+    )->group('with-auth');
 
     it('returns not found for invalid role name', function (): void {
         $invalidName = 'invalid-name';
         $this->deleteJson(
-            getUrl(BaseWebTestCase::DELETE_ROLES_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::DELETE_ROLES_ROUTE_NAME->value),
             data: [
                 'name' => $invalidName,
                 'guard_name' => GuardsEnum::API->value,
@@ -70,7 +71,7 @@ describe('DELETE /roles', function (): void {
         ]);
 
         $this->deleteJson(
-            getUrl(BaseWebTestCase::DELETE_ROLES_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::DELETE_ROLES_ROUTE_NAME->value),
             data: [
                 'name' => $role->name,
                 'guard_name' => $role->guard_name,

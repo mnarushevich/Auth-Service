@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
+use App\Enums\AppRouteNamesEnum;
 use App\Enums\GuardsEnum;
 use App\Enums\RolesEnum;
 use App\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
-use tests\Integration\BaseWebTestCase;
 
 describe('POST /roles', function (): void {
     it('rejects for unauthorized', function (): void {
         $this->postJson(
-            getUrl(BaseWebTestCase::CREATE_ROLE_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::CREATE_ROLE_ROUTE_NAME->value),
         )
             ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson(
@@ -26,7 +26,7 @@ describe('POST /roles', function (): void {
 
     it('fails to create role with invalid payload', function (array $payload, string $errorMessage): void {
         $this->postJson(
-            getUrl(BaseWebTestCase::CREATE_ROLE_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::CREATE_ROLE_ROUTE_NAME->value),
             data: $payload,
             headers: getAuthorizationHeader($this->token),
         )
@@ -45,7 +45,8 @@ describe('POST /roles', function (): void {
                 ['name' => RolesEnum::USER->value, 'guard_name' => 1234],
                 'The selected guard name is invalid.',
             ],
-        ])->group('with-auth');
+        ]
+    )->group('with-auth');
 
     it('returns bad request response for existing role name', function (): void {
         $role = Role::create([
@@ -54,7 +55,7 @@ describe('POST /roles', function (): void {
         ]);
 
         $this->postJson(
-            getUrl(BaseWebTestCase::CREATE_ROLE_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::CREATE_ROLE_ROUTE_NAME->value),
             data: [
                 'name' => $role->name,
                 'guard_name' => GuardsEnum::API->value,
@@ -71,7 +72,7 @@ describe('POST /roles', function (): void {
 
     it('crates role with valid name and guard name', function (): void {
         $this->postJson(
-            getUrl(BaseWebTestCase::CREATE_ROLE_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::CREATE_ROLE_ROUTE_NAME->value),
             data: [
                 'name' => RolesEnum::USER->value,
                 'guard_name' => GuardsEnum::API->value,

@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
+use App\Enums\AppRouteNamesEnum;
 use App\Enums\RolesEnum;
 use App\Http\Resources\UserResource;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
-use tests\Integration\BaseWebTestCase;
 
 describe('DELETE /users/{uuid}', function (): void {
     it('rejects for unauthorized', function (): void {
         Cache::expects('forget')->never();
         $this->deleteJson(
-            getUrl(BaseWebTestCase::DELETE_USER_BY_UUID_ROUTE_NAME, ['user' => 'test']),
+            getUrl(AppRouteNamesEnum::DELETE_USER_BY_UUID_ROUTE_NAME->value, ['user' => 'test']),
         )
             ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson(
@@ -30,7 +30,7 @@ describe('DELETE /users/{uuid}', function (): void {
     it('returns not found for invalid UUID', function (): void {
         Cache::expects('forget')->never();
         $this->deleteJson(
-            getUrl(BaseWebTestCase::DELETE_USER_BY_UUID_ROUTE_NAME, ['user' => 'test']),
+            getUrl(AppRouteNamesEnum::DELETE_USER_BY_UUID_ROUTE_NAME->value, ['user' => 'test']),
             headers: getAuthorizationHeader($this->token)
         )
             ->assertStatus(Response::HTTP_NOT_FOUND)
@@ -57,17 +57,17 @@ describe('DELETE /users/{uuid}', function (): void {
         Cache::expects('forget')->once()->with(sprintf('user-%s', $this->user->uuid));
 
         $this->getJson(
-            getUrl(BaseWebTestCase::GET_USER_BY_UUID_ROUTE_NAME, ['user' => $this->user->uuid]),
+            getUrl(AppRouteNamesEnum::GET_USER_BY_UUID_ROUTE_NAME->value, ['user' => $this->user->uuid]),
             headers: getAuthorizationHeader($this->token)
         )->assertOk();
 
         $this->deleteJson(
-            getUrl(BaseWebTestCase::DELETE_USER_BY_UUID_ROUTE_NAME, ['user' => $this->user->uuid]),
+            getUrl(AppRouteNamesEnum::DELETE_USER_BY_UUID_ROUTE_NAME->value, ['user' => $this->user->uuid]),
             headers: getAuthorizationHeader($this->token)
         )->assertOk();
 
         $this->getJson(
-            getUrl(BaseWebTestCase::GET_USER_BY_UUID_ROUTE_NAME, ['user' => $this->user->uuid]),
+            getUrl(AppRouteNamesEnum::GET_USER_BY_UUID_ROUTE_NAME->value, ['user' => $this->user->uuid]),
             headers: getAuthorizationHeader($this->token)
         )->assertStatus(Response::HTTP_NOT_FOUND);
     })->group('with-auth');
@@ -76,14 +76,14 @@ describe('DELETE /users/{uuid}', function (): void {
         Cache::expects('remember')->once()->andReturn(new UserResource($this->user));
         Cache::expects('forget')->never();
         $this->getJson(
-            getUrl(BaseWebTestCase::GET_USER_BY_UUID_ROUTE_NAME, ['user' => $this->user->uuid]),
+            getUrl(AppRouteNamesEnum::GET_USER_BY_UUID_ROUTE_NAME->value, ['user' => $this->user->uuid]),
             headers: getAuthorizationHeader($this->token)
         )->assertOk();
 
         $newUser = UserFactory::new()->withUserRole()->create();
         expect($newUser->getRoleNames())->toContain(RolesEnum::USER->value);
         $this->deleteJson(
-            getUrl(BaseWebTestCase::DELETE_USER_BY_UUID_ROUTE_NAME, ['user' => $newUser->uuid]),
+            getUrl(AppRouteNamesEnum::DELETE_USER_BY_UUID_ROUTE_NAME->value, ['user' => $newUser->uuid]),
             headers: getAuthorizationHeader($this->token)
         )->assertStatus(Response::HTTP_FORBIDDEN);
     })->group('with-auth');

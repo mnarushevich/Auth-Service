@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
+use App\Enums\AppRouteNamesEnum;
 use App\Enums\RolesEnum;
 use App\Http\Resources\UserResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Symfony\Component\HttpFoundation\Response;
-use tests\Integration\BaseWebTestCase;
 
 describe('GET /users/{uuid}', function (): void {
     it('rejects for unauthorized', function (): void {
         Cache::expects('remember')->never();
         $this->getJson(
-            getUrl(BaseWebTestCase::GET_USER_BY_UUID_ROUTE_NAME, ['user' => 'test']),
+            getUrl(AppRouteNamesEnum::GET_USER_BY_UUID_ROUTE_NAME->value, ['user' => 'test']),
         )
             ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson(
@@ -30,7 +30,7 @@ describe('GET /users/{uuid}', function (): void {
     it('returns not found for invalid UUID', function (): void {
         Cache::expects('remember')->once()->andThrows(new ModelNotFoundException);
         $this->getJson(
-            getUrl(BaseWebTestCase::GET_USER_BY_UUID_ROUTE_NAME, ['user' => 'test']),
+            getUrl(AppRouteNamesEnum::GET_USER_BY_UUID_ROUTE_NAME->value, ['user' => 'test']),
             headers: getAuthorizationHeader($this->token)
         )
             ->assertStatus(Response::HTTP_NOT_FOUND)
@@ -50,7 +50,7 @@ describe('GET /users/{uuid}', function (): void {
             ->toEqual([RolesEnum::USER->value]);
 
         $this->getJson(
-            getUrl(BaseWebTestCase::GET_USER_BY_UUID_ROUTE_NAME, ['user' => $this->user->uuid]),
+            getUrl(AppRouteNamesEnum::GET_USER_BY_UUID_ROUTE_NAME->value, ['user' => $this->user->uuid]),
             headers: getAuthorizationHeader($this->token)
         )
             ->assertOk()
@@ -74,7 +74,7 @@ describe('GET /users/{uuid}', function (): void {
             ->toEqual([RolesEnum::ADMIN->value]);
 
         $this->getJson(
-            getUrl(BaseWebTestCase::GET_USER_BY_UUID_ROUTE_NAME, ['user' => $this->user->uuid]),
+            getUrl(AppRouteNamesEnum::GET_USER_BY_UUID_ROUTE_NAME->value, ['user' => $this->user->uuid]),
             headers: getAuthorizationHeader($this->token)
         )
             ->assertOk()

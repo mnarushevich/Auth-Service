@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
+use App\Enums\AppRouteNamesEnum;
 use Database\Factories\UserFactory;
 use Symfony\Component\HttpFoundation\Response;
-use tests\Integration\BaseWebTestCase;
 
 describe('GET /users', function (): void {
     it('rejects for unauthorized', function (): void {
         $this->getJson(
-            getUrl(BaseWebTestCase::GET_USERS_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::GET_USERS_ROUTE_NAME->value),
         )
             ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson(
@@ -25,7 +25,7 @@ describe('GET /users', function (): void {
     it('returns users for authenticated', function (): void {
         UserFactory::new()->count(10)->withUserRole()->create();
         $this->getJson(
-            getUrl(BaseWebTestCase::GET_USERS_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::GET_USERS_ROUTE_NAME->value),
             headers: getAuthorizationHeader($this->token)
         )
             ->assertOk()

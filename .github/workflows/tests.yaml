@@ -111,5 +111,8 @@ jobs:
       - name: Run migrations
         run: php artisan migrate --force
 
+      - name: Generate API documentation
+        run: php artisan l5-swagger:generate
+
       - name: Run tests
         run: composer test

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
+use App\Enums\AppRouteNamesEnum;
 use App\Enums\RolesEnum;
 use Symfony\Component\HttpFoundation\Response;
-use tests\Integration\BaseWebTestCase;
 
 describe('POST /users/{uuid}/remove-role', function (): void {
     it('rejects for unauthorized', function (): void {
         $this->postJson(
-            getUrl(BaseWebTestCase::REMOVE_USER_ROLE_ROUTE_NAME, ['user' => 'test']),
+            getUrl(AppRouteNamesEnum::REMOVE_USER_ROLE_ROUTE_NAME->value, ['user' => 'test']),
         )
             ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJson(
@@ -24,7 +24,7 @@ describe('POST /users/{uuid}/remove-role', function (): void {
 
     it('fails to remove a role with invalid payload', function (array $payload, string $errorMessage): void {
         $this->postJson(
-            getUrl(BaseWebTestCase::REMOVE_USER_ROLE_ROUTE_NAME, ['user' => $this->user]),
+            getUrl(AppRouteNamesEnum::REMOVE_USER_ROLE_ROUTE_NAME->value, ['user' => $this->user]),
             data: $payload,
             headers: getAuthorizationHeader($this->token),
         )
@@ -39,12 +39,13 @@ describe('POST /users/{uuid}/remove-role', function (): void {
         [
             [[], 'The role name field is required.'],
             [['role_name' => 123], 'The role name field must be a string.'],
-        ])->group('with-auth');
+        ]
+    )->group('with-auth');
 
     it('returns not found response for non-existing user', function (): void {
         $invalidUuid = 'invalid-uuid';
         $this->postJson(
-            getUrl(BaseWebTestCase::REMOVE_USER_ROLE_ROUTE_NAME, ['user' => $invalidUuid]),
+            getUrl(AppRouteNamesEnum::REMOVE_USER_ROLE_ROUTE_NAME->value, ['user' => $invalidUuid]),
             data: ['role_name' => RolesEnum::USER->value],
             headers: getAuthorizationHeader($this->token),
         )->assertNotFound()
@@ -59,7 +60,7 @@ describe('POST /users/{uuid}/remove-role', function (): void {
     it('returns bad request response for non-existing role name', function (): void {
         $invalidRoleName = 'invalid-role-name';
         $this->postJson(
-            getUrl(BaseWebTestCase::REMOVE_USER_ROLE_ROUTE_NAME, ['user' => $this->user]),
+            getUrl(AppRouteNamesEnum::REMOVE_USER_ROLE_ROUTE_NAME->value, ['user' => $this->user]),
             data: ['role_name' => $invalidRoleName],
             headers: getAuthorizationHeader($this->token),
         )->assertBadRequest()
@@ -78,7 +79,7 @@ describe('POST /users/{uuid}/remove-role', function (): void {
             ->toEqual([RolesEnum::USER->value]);
 
         $this->postJson(
-            getUrl(BaseWebTestCase::REMOVE_USER_ROLE_ROUTE_NAME, ['user' => $this->user]),
+            getUrl(AppRouteNamesEnum::REMOVE_USER_ROLE_ROUTE_NAME->value, ['user' => $this->user]),
             data: ['role_name' => RolesEnum::ADMIN->value],
             headers: getAuthorizationHeader($this->token),
         )
@@ -98,7 +99,7 @@ describe('POST /users/{uuid}/remove-role', function (): void {
             ->toEqual([RolesEnum::USER->value]);
 
         $this->postJson(
-            getUrl(BaseWebTestCase::REMOVE_USER_ROLE_ROUTE_NAME, ['user' => $this->user]),
+            getUrl(AppRouteNamesEnum::REMOVE_USER_ROLE_ROUTE_NAME->value, ['user' => $this->user]),
             data: ['role_name' => RolesEnum::USER->value],
             headers: getAuthorizationHeader($this->token),
         )

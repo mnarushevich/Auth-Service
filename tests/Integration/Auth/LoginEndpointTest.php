@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Auth;
 
+use App\Enums\AppRouteNamesEnum;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Symfony\Component\HttpFoundation\Response;
-use tests\Integration\BaseWebTestCase;
 
 describe('POST /auth/login', function (): void {
     it('rejects login for invalid credentials', function (): void {
         $this->postJson(
-            getUrl(BaseWebTestCase::LOGIN_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::LOGIN_ROUTE_NAME->value),
             ['email' => 'email@test.com', 'password' => $this->mockPass]
         )
             ->assertStatus(Response::HTTP_UNAUTHORIZED)
@@ -25,7 +25,7 @@ describe('POST /auth/login', function (): void {
 
     it('rejects login for empty email', function (): void {
         $this->postJson(
-            getUrl(BaseWebTestCase::LOGIN_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::LOGIN_ROUTE_NAME->value),
             ['email' => '', 'password' => $this->mockPass]
         )
             ->assertStatus(Response::HTTP_BAD_REQUEST)
@@ -39,7 +39,7 @@ describe('POST /auth/login', function (): void {
 
     it('login with correct payload', function (): void {
         $this->postJson(
-            getUrl(BaseWebTestCase::LOGIN_ROUTE_NAME),
+            getUrl(AppRouteNamesEnum::LOGIN_ROUTE_NAME->value),
             ['email' => $this->user->email, 'password' => $this->mockPass]
         )
             ->assertOk()
