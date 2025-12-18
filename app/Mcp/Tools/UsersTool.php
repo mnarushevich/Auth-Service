@@ -36,9 +36,10 @@ class UsersTool extends Tool
             'name' => 'required|string|max:100',
         ]);
 
-        $user = User::where('first_name', $validated['name'])
-            ->orWhere('last_name', $validated['name'])
-            ->first();
+        $user = User::where(function ($query) use ($validated): void {
+            $query->where('first_name', 'like', '%'.$validated['name'].'%')
+                ->orWhere('last_name', 'like', '%'.$validated['name'].'%');
+        })->first();
 
         if (! $user) {
             return Response::text('User not found');
