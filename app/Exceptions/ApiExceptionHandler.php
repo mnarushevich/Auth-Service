@@ -6,6 +6,7 @@ namespace App\Exceptions;
 
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -17,6 +18,8 @@ class ApiExceptionHandler
 {
     public static function handle(Throwable $exception, Request $request): ?Response
     {
+        self::notifyBugsnag($exception);
+
         if (! $request->is('api/*')) {
             return null;
         }
@@ -35,5 +38,14 @@ class ApiExceptionHandler
         };
 
         return response()->json(['status' => $status, 'message' => $message], $status);
+    }
+
+    private static function notifyBugsnag(Throwable $exception): void
+    {
+        Log::channel('bugsnag')->error($exception->getMessage(), [
+            'exception' => $exception,
+            'file' => $exception->getFile(),
+            'line' => $exception->getLine(),
+        ]);
     }
 }
