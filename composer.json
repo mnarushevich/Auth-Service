@@ -10,6 +10,7 @@
     "require": {
         "php": "^8.5",
         "aws/aws-sdk-php": "^3.359.11",
+        "bugsnag/bugsnag-laravel": "^2.0",
         "darkaonline/l5-swagger": "^8.6",
         "filament/filament": "^3.3.2",
         "laravel/framework": "^v12.38.1",
