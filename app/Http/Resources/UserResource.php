@@ -7,6 +7,7 @@ namespace App\Http\Resources;
 use App\Enums\RolesEnum;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Carbon;
 
 /**
  * @property string $uuid
@@ -15,9 +16,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property string $role
  * @property string $phone
  * @property string $email
- * @property \Illuminate\Support\Carbon $created_at
- * @property \Illuminate\Support\Carbon $updated_at
- * @property \App\Http\Resources\AddressResource $address
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property AddressResource $address
  *
  * @method getRoleNames()
  * @method getAllPermissions()

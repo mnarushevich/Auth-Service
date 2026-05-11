@@ -78,7 +78,7 @@ describe('GET /users/{uuid}', function (): void {
             headers: getAuthorizationHeader($this->token)
         )
             ->assertOk()
-            ->assertJson(fn (AssertableJson $json): \Illuminate\Testing\Fluent\AssertableJson => $json->hasAll(['data.roles', 'data.permissions']))
+            ->assertJson(fn (AssertableJson $json): AssertableJson => $json->hasAll(['data.roles', 'data.permissions']))
             ->assertJsonPath('data.uuid', $this->user->uuid)
             ->assertJsonPath('data.first_name', $this->user->first_name)
             ->assertJsonPath('data.last_name', $this->user->last_name)

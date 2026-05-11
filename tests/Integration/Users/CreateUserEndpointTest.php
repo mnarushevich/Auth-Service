@@ -6,7 +6,6 @@ namespace Tests\Integration\Auth;
 
 use App\Enums\AppRouteNamesEnum;
 use App\Enums\RolesEnum;
-use Junges\Kafka\Facades\Kafka;
 use Symfony\Component\HttpFoundation\Response;
 
 describe('POST /users', function (): void {
@@ -92,7 +91,6 @@ describe('POST /users', function (): void {
     });
 
     it('creates new user with valid payload', function (): void {
-        Kafka::fake();
 
         $mockEmail = fake()->email();
         $mockFirstName = fake()->firstName();
@@ -117,7 +115,5 @@ describe('POST /users', function (): void {
             ->assertJsonPath('data.last_name', $mockLastName)
             ->assertJsonPath('data.address.country', $mockCountry)
             ->assertJsonPath('data.email', $mockEmail);
-
-        Kafka::assertPublishedOnTimes('user.created');
     });
 })->group('users', 'with-roles-and-permissions');

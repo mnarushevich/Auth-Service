@@ -1,6 +1,9 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use Bugsnag\BugsnagLaravel\BugsnagServiceProvider;
+
 return [
-    App\Providers\AppServiceProvider::class,
-    Bugsnag\BugsnagLaravel\BugsnagServiceProvider::class,
+    AppServiceProvider::class,
+    BugsnagServiceProvider::class,
 ];

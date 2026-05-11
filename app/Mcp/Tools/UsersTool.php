@@ -6,6 +6,7 @@ namespace App\Mcp\Tools;
 
 use App\Models\User;
 use Illuminate\JsonSchema\JsonSchema;
+use Illuminate\JsonSchema\Types\Type;
 use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
 use Laravel\Mcp\Server\Tool;
@@ -56,7 +57,7 @@ class UsersTool extends Tool
     /**
      * Get the tool's input schema.
      *
-     * @return array<string, \Illuminate\JsonSchema\JsonSchema>
+     * @return array<string, JsonSchema>
      */
     #[\Override]
     public function schema(JsonSchema $schema): array
@@ -71,8 +72,9 @@ class UsersTool extends Tool
     /**
      * Get the tool's output schema.
      *
-     * @return array<string, \Illuminate\JsonSchema\Types\Type>
+     * @return array<string, Type>
      */
+    #[\Override]
     public function outputSchema(JsonSchema $schema): array
     {
         return [

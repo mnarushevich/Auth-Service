@@ -26,7 +26,7 @@ describe('POST /auth/refresh', function (): void {
             headers: getAuthorizationHeader($this->token),
         )
             ->assertOk()
-            ->assertJson(fn (AssertableJson $json): \Illuminate\Testing\Fluent\AssertableJson => $json->hasAll(['access_token', 'token_type', 'expires_in']))
+            ->assertJson(fn (AssertableJson $json): AssertableJson => $json->hasAll(['access_token', 'token_type', 'expires_in']))
             ->assertJsonPath('token_type', 'bearer');
     })->group('with-auth');
 })->group('auth');
