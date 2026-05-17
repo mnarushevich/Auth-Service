@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 use L5Swagger\Generator;
+use OpenApi\Analysers\AttributeAnnotationFactory;
+use OpenApi\Analysers\DocBlockAnnotationFactory;
+use OpenApi\Analysers\ReflectionAnalyser;
 use OpenApi\scan;
 
 return [
@@ -112,7 +115,10 @@ return [
              *
              * @see scan
              */
-            'analyser' => null,
+            'analyser' => new ReflectionAnalyser([
+                new AttributeAnnotationFactory,
+                new DocBlockAnnotationFactory,
+            ]),
 
             /**
              * analysis: defaults to a new \OpenApi\Analysis .
