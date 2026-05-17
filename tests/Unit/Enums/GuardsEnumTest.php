@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Enums\GuardsEnum;
-use ValueError;
 
 test('it has expected values', function (): void {
     expect(GuardsEnum::API->value)->toBe('api')

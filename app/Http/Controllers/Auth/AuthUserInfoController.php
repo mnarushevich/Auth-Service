@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use LogicException;
+use Tymon\JWTAuth\JWTGuard;
 
 final class AuthUserInfoController extends Controller
 {
@@ -26,12 +28,18 @@ final class AuthUserInfoController extends Controller
      */
     public function __invoke(): JsonResponse
     {
+        $guard = Auth::guard('api');
+
+        if (! $guard instanceof JWTGuard) {
+            throw new LogicException('The api guard must be a JWT guard.');
+        }
+
         return response()->json([
             'user' => new UserResource(
                 resource: Auth::user()->load('roles', 'permissions'),
                 isAuthUser: true
             ),
-            'payload' => Auth::payload(),
+            'payload' => $guard->payload(),
         ]);
     }
 }

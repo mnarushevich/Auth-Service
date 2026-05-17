@@ -2,6 +2,12 @@
 
 This file provides guidance to Codex (Codex.ai/code) when working with code in this repository.
 
+## Agent Instructions
+
+- **All `php` and `composer` commands MUST be prefixed with `herd`** (e.g., `herd php artisan ...`, `herd composer ...`). Never run `php` or `composer` directly.
+- The test framework is **Pest**.
+- **Git commit messages** must start with the branch ticket prefix. Extract the prefix from the branch name (e.g., branch `MN-40-upgrade-laravel-to-13` → prefix `MN-40`) and format commits as `MN-40: <commit text>`. Keep commit texts short and precise.
+
 ## Project Overview
 
 Auth Service is a Laravel 13 microservice for user authentication and management. It provides JWT-based authentication, RBAC using Spatie Permission, and publishes user events to Kafka.
@@ -33,7 +39,7 @@ herd php artisan test
 herd php artisan test tests/Integration/Users/CreateUserEndpointTest.php
 
 # Run tests matching a name
-php artisan test --filter=testName
+herd php artisan test --filter=testName
 ```
 
 ### Code Quality

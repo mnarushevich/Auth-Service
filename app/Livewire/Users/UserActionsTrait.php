@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Livewire\Users;
 
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\EditAction;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 
 trait UserActionsTrait
 {
-    public function getCreateActionButton(): \Filament\Actions\Action
+    public function getCreateActionButton(): Action
     {
-        return \Filament\Actions\Action::make('create')
+        return Action::make('create')
             ->icon('heroicon-m-plus-circle')
             ->button()
             ->url(route('users.create'))

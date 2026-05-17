@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 describe('POST /users', function (): void {
     beforeEach(function (): void {
-        $this->mockPass = fake()->password();
+        $this->mockPass = fake()->password(8);
     });
 
     it('rejects with invalid payload data', function (): void {

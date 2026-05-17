@@ -78,6 +78,7 @@
         "test": [
             "@test:type-coverage",
             "@test:rector",
+            "@test:types",
             "@test:lint",
             "@test:unit"
         ]
