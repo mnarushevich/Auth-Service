@@ -4,24 +4,20 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-/**
- * @OA\Info(
- *      version="1.0.0",
- *      title="Auth Service API",
- *      description="L5 Swagger OpenApi description"
- * )
- *
- * @OA\Server(
- *      url="/api/v1",
- *  ),
- *
- * @OA\SecurityScheme(
- *       securityScheme="bearerAuth",
- *       in="header",
- *       name="bearerAuth",
- *       type="http",
- *       scheme="bearer",
- *       bearerFormat="JWT",
- *  )
- */
+use OpenApi\Attributes as OA;
+
+#[OA\Info(
+    version: '1.0.0',
+    description: 'L5 Swagger OpenApi description',
+    title: 'Auth Service API',
+)]
+#[OA\Server(url: '/api/v1')]
+#[OA\SecurityScheme(
+    securityScheme: 'bearerAuth',
+    type: 'http',
+    name: 'bearerAuth',
+    in: 'header',
+    bearerFormat: 'JWT',
+    scheme: 'bearer',
+)]
 abstract class Controller {}

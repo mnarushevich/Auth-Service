@@ -29,7 +29,7 @@ pest()->extend(BaseWebTestCase::class)
     ->in('Integration');
 
 pest()->beforeEach(function (): void {
-    $this->mockPass = fake()->password();
+    $this->mockPass = fake()->password(8);
     $this->mockEmail = TEST_USER_EMAIL;
     $this->user = UserFactory::new()->create(
         [

@@ -48,7 +48,7 @@ describe('Reset password flow', function (): void {
     it('it sends email with password reset code', function (): void {
         Notification::fake();
         $email = fake()->email;
-        $password = fake()->password();
+        $password = fake()->password(8);
         $user = createUser($email, $password);
         $resetToken = null;
         $this->postJson(
@@ -75,7 +75,7 @@ describe('Reset password flow', function (): void {
 
         expect($resetToken)->not->toBeNull();
 
-        $newPassword = fake()->password();
+        $newPassword = fake()->password(8);
         $this->postJson(
             getUrl(AppRouteNamesEnum::PASSWORD_RESET_ROUTE_NAME->value),
             [

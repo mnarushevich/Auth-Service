@@ -10,15 +10,14 @@ use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
+use LogicException;
 
 class UserEdit extends Component implements HasForms
 {
     use InteractsWithForms;
-
-    protected Form $form;
 
     public ?array $data = [];
 
@@ -26,12 +25,12 @@ class UserEdit extends Component implements HasForms
 
     public function mount(): void
     {
-        $this->form->fill($this->user->attributesToArray());
+        $this->formSchema()->fill($this->user->attributesToArray());
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 TextInput::make('first_name')->filled(),
                 TextInput::make('last_name')->filled(),
@@ -57,11 +56,22 @@ class UserEdit extends Component implements HasForms
 
     public function save(): void
     {
-        $data = $this->form->getState();
+        $data = $this->formSchema()->getState();
 
         $this->user->update($data);
 
         $this->redirectRoute('users.show', ['user' => $this->user]);
+    }
+
+    private function formSchema(): Schema
+    {
+        $schema = $this->getSchema('form');
+
+        if (! $schema instanceof Schema) {
+            throw new LogicException('The user edit form schema is not registered.');
+        }
+
+        return $schema;
     }
 
     public function render(): View

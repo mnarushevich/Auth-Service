@@ -32,7 +32,7 @@ describe('POST /auth/me', function (): void {
             headers: getAuthorizationHeader($this->token),
         )
             ->assertOk()
-            ->assertJson(fn (AssertableJson $json): \Illuminate\Testing\Fluent\AssertableJson => $json->hasAll(['user', 'payload']))
+            ->assertJson(fn (AssertableJson $json): AssertableJson => $json->hasAll(['user', 'payload']))
             ->assertJsonPath('user.uuid', $this->user->uuid)
             ->assertJsonPath('user.email', $this->user->email)
             ->assertJsonPath('user.roles', $this->user->getRoleNames()->toArray())

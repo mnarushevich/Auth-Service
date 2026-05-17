@@ -11,7 +11,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use LogicException;
 use Symfony\Component\HttpFoundation\Response;
+use Tymon\JWTAuth\JWTGuard;
 
 final class LoginController extends Controller
 {
@@ -65,19 +67,24 @@ final class LoginController extends Controller
             throw new AuthenticationException;
         }
 
-        if (! $token = Auth::claims(['internal_user_id' => $user->uuid])->attempt($validated)) {
-            return response()->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+        $guard = Auth::guard('api');
+
+        if (! $guard instanceof JWTGuard) {
+            throw new LogicException('The api guard must be a JWT guard.');
         }
 
-        return $this->respondWithToken($token);
+        $guard->claims(['internal_user_id' => $user->uuid]);
+        $token = $guard->login($user);
+
+        return $this->respondWithToken($guard, $token);
     }
 
-    private function respondWithToken($token): JsonResponse
+    private function respondWithToken(JWTGuard $guard, string $token): JsonResponse
     {
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => Auth::factory()->getTTL() * 60,
+            'expires_in' => $guard->factory()->getTTL() * 60,
         ]);
     }
 }

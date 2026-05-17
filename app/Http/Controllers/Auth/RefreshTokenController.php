@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use LogicException;
+use Tymon\JWTAuth\JWTGuard;
 
 final class RefreshTokenController extends Controller
 {
@@ -25,15 +27,21 @@ final class RefreshTokenController extends Controller
      */
     public function __invoke(): JsonResponse
     {
-        return $this->respondWithToken(Auth::refresh());
+        $guard = Auth::guard('api');
+
+        if (! $guard instanceof JWTGuard) {
+            throw new LogicException('The api guard must be a JWT guard.');
+        }
+
+        return $this->respondWithToken($guard, $guard->refresh());
     }
 
-    private function respondWithToken($token): JsonResponse
+    private function respondWithToken(JWTGuard $guard, string $token): JsonResponse
     {
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => Auth::factory()->getTTL() * 60,
+            'expires_in' => $guard->factory()->getTTL() * 60,
         ]);
     }
 }

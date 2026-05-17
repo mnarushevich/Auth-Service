@@ -10,27 +10,26 @@ use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
+use Filament\Schemas\Schema;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
+use LogicException;
 
 class UserCreate extends Component implements HasForms
 {
     use InteractsWithForms;
 
-    protected Form $form;
-
     public ?array $data = [];
 
     public function mount(): void
     {
-        $this->form->fill();
+        $this->formSchema()->fill();
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->schema([
                 TextInput::make('first_name')->required(),
                 TextInput::make('last_name')->required(),
@@ -58,11 +57,22 @@ class UserCreate extends Component implements HasForms
 
     public function create(): void
     {
-        $data = $this->form->getState();
+        $data = $this->formSchema()->getState();
         $data['password'] = Hash::make($data['password']);
         $user = UserModel::create($data);
 
         $this->redirectRoute('users.show', ['user' => $user]);
+    }
+
+    private function formSchema(): Schema
+    {
+        $schema = $this->getSchema('form');
+
+        if (! $schema instanceof Schema) {
+            throw new LogicException('The user create form schema is not registered.');
+        }
+
+        return $schema;
     }
 
     public function render(): View

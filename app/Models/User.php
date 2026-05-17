@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use MNarushevich\AuditLogs\Traits\HasAuditLogs;
 use Ramsey\Uuid\Uuid;
 use Spatie\Permission\Traits\HasRoles;
@@ -22,8 +23,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string $password
  * @property string $phone
  * @property string $email
- * @property \Illuminate\Support\Carbon $created_at
- * @property \Illuminate\Support\Carbon $updated_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  */
 class User extends Authenticatable implements JWTSubject
 {
@@ -53,6 +54,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @return array<string, string>
      */
+    #[\Override]
     protected function casts(): array
     {
         return [
@@ -82,6 +84,7 @@ class User extends Authenticatable implements JWTSubject
         return (string) Uuid::uuid4();
     }
 
+    #[\Override]
     public function uniqueIds(): array
     {
         return ['uuid'];
@@ -92,6 +95,7 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasOne(Address::class, 'user_uuid');
     }
 
+    #[\Override]
     public function sendPasswordResetNotification($token): void
     {
         $this->notify(new ResetPasswordNotification($token));

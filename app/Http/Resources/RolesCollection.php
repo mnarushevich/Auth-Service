@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-/** @see \App\Models\Role */
+/** @see Role */
 class RolesCollection extends ResourceCollection
 {
     #[\Override]

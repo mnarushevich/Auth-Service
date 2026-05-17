@@ -43,7 +43,7 @@ describe('POST /auth/login', function (): void {
             ['email' => $this->user->email, 'password' => $this->mockPass]
         )
             ->assertOk()
-            ->assertJson(fn (AssertableJson $json): \Illuminate\Testing\Fluent\AssertableJson => $json->hasAll(['access_token', 'token_type', 'expires_in']))
+            ->assertJson(fn (AssertableJson $json): AssertableJson => $json->hasAll(['access_token', 'token_type', 'expires_in']))
             ->assertJsonPath('token_type', 'bearer')
             ->assertJsonPath('expires_in', 3600);
     });
